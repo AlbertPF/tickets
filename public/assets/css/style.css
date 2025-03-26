@@ -1,0 +1,568 @@
+.account-user-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    background-color: #727cf5; 
+    color: #fff; 
+    font-size: 24px; 
+    font-weight: bold; 
+    text-align: center;
+    line-height: 50px; 
+    left: 6px !important;
+}
+
+.avatar-letter {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    line-height: 42px; 
+}
+
+/* =========== Tabla Archivo ===============*/
+
+/* table.tablaOficina th{
+    background-color: #727cf5 !important;
+    border-color: #727cf5 !important;
+    color: #e6e9eb;
+} */
+
+
+table.tablaOficina th,
+table.tablaOficina td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaOficina th:nth-child(1),
+table.tablaOficina td:nth-child(1) {
+    width: 5% !important; 
+    text-align: justify !important;
+}
+
+table.tablaOficina th:nth-child(2),
+table.tablaOficina td:nth-child(2) {
+    width: 20% !important; 
+    text-align: justify !important;
+}
+
+table.tablaOficina th:nth-child(3),
+table.tablaOficina td:nth-child(3) {
+    width: 20% !important; 
+}
+
+table.tablaOficina th:nth-child(4),
+table.tablaOficina td:nth-child(4) {
+    width: 5% !important; 
+}
+
+table.tablaOficina th:nth-child(5),
+table.tablaOficina td:nth-child(5) {
+    width: 30% !important; 
+}
+
+table.tablaOficina th:nth-child(6),
+table.tablaOficina td:nth-child(6) {
+    width: 10% !important; 
+}
+
+table.tablaOficina th:nth-child(6),
+table.tablaOficina td:nth-child(6) {
+    width: 10% !important; 
+}
+
+/* ============== Tabla Tickets ================*/
+
+
+table.tablaTickets th,
+table.tablaTickets td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaTickets th:nth-child(1),
+table.tablaTickets td:nth-child(1) {
+    width: 5% !important; 
+    text-align: justify !important;
+}
+
+table.tablaTickets th:nth-child(2),
+table.tablaTickets td:nth-child(2) {
+    width: 15% !important; 
+    text-align: justify !important;
+}
+
+table.tablaTickets th:nth-child(3),
+table.tablaTickets td:nth-child(3) {
+    width: 20% !important; 
+}
+
+table.tablaTickets th:nth-child(4),
+table.tablaTickets td:nth-child(4) {
+    width: 30% !important; 
+    text-align: justify !important;
+}
+
+table.tablaTickets th:nth-child(5),
+table.tablaTickets td:nth-child(5) {
+    width: 10% !important; 
+}
+
+table.tablaTickets th:nth-child(6),
+table.tablaTickets td:nth-child(6) {
+    width: 10% !important; 
+}
+
+table.tablaTickets th:nth-child(7),
+table.tablaTickets td:nth-child(7) {
+    width: 10% !important; 
+}
+
+
+/* ============== Tabla tablaTicketsAsig  ================*/
+
+
+table.tablaTicketsAsig th,
+table.tablaTicketsAsig td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaTicketsAsig th:nth-child(1),
+table.tablaTicketsAsig td:nth-child(1) {
+    width: 5% !important; 
+    text-align: justify !important;
+}
+
+table.tablaTicketsAsig th:nth-child(2),
+table.tablaTicketsAsig td:nth-child(2) {
+    width: 15% !important; 
+    text-align: justify !important;
+}
+
+table.tablaTicketsAsig th:nth-child(3),
+table.tablaTicketsAsig td:nth-child(3) {
+    width: 10% !important; 
+}
+
+table.tablaTicketsAsig th:nth-child(4),
+table.tablaTicketsAsig td:nth-child(4) {
+    width: 10% !important; 
+    text-align: justify !important;
+}
+
+table.tablaTicketsAsig th:nth-child(5),
+table.tablaTicketsAsig td:nth-child(5) {
+    width: 10% !important; 
+}
+
+table.tablaTicketsAsig th:nth-child(6),
+table.tablaTicketsAsig td:nth-child(6) {
+    width: 30% !important; 
+}
+
+table.tablaTicketsAsig th:nth-child(7),
+table.tablaTicketsAsig td:nth-child(7) {
+    width: 10% !important; 
+}
+
+table.tablaTicketsAsig th:nth-child(8),
+table.tablaTicketsAsig td:nth-child(8) {
+    width: 10% !important; 
+}
+
+
+
+/* ============== Tabla tablaTicketsAsigGeneral  ================*/
+
+
+table.tablaTicketsAsigGeneral th,
+table.tablaTicketsAsigGeneral td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+
+}
+
+
+table.tablaTicketsAsigGeneral th:nth-child(1),
+table.tablaTicketsAsigGeneral td:nth-child(1) {
+    width: 5% !important; 
+    text-align: justify !important;
+}
+
+table.tablaTicketsAsigGeneral th:nth-child(2),
+table.tablaTicketsAsigGeneral td:nth-child(2) {
+    width: 15% !important; 
+    text-align: justify !important;
+}
+
+table.tablaTicketsAsigGeneral th:nth-child(3),
+table.tablaTicketsAsigGeneral td:nth-child(3) {
+    width: 10% !important; 
+}
+table.tablaTicketsAsigGeneral th:nth-child(4),
+table.tablaTicketsAsigGeneral td:nth-child(4) {
+    width: 10% !important; 
+    /* text-align: justify !important; */
+}
+table.tablaTicketsAsigGeneral th:nth-child(5),
+table.tablaTicketsAsigGeneral td:nth-child(5) {
+    width: 10% !important; 
+    text-align: justify !important;
+}
+
+table.tablaTicketsAsigGeneral th:nth-child(6),
+table.tablaTicketsAsigGeneral td:nth-child(6) {
+    width: 10% !important; 
+}
+
+table.tablaTicketsAsigGeneral th:nth-child(7),
+table.tablaTicketsAsigGeneral td:nth-child(7) {
+    width: 25% !important; 
+}
+
+table.tablaTicketsAsigGeneral th:nth-child(8),
+table.tablaTicketsAsigGeneral td:nth-child(8) {
+    width: 10% !important; 
+}
+
+table.tablaTicketsAsigGeneral th:nth-child(9),
+table.tablaTicketsAsigGeneral td:nth-child(9) {
+    width: 5% !important; 
+}
+
+
+
+/* =========== Tabla Incidencia ===============*/
+
+
+table.tablaIncidencia th,
+table.tablaIncidencia td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaIncidencia th:nth-child(1),
+table.tablaIncidencia td:nth-child(1) {
+    width: 5% !important; 
+    /* text-align: justify !important; */
+}
+
+table.tablaIncidencia th:nth-child(2),
+table.tablaIncidencia td:nth-child(2) {
+    width: 25% !important; 
+    text-align: justify !important;
+}
+
+table.tablaIncidencia th:nth-child(3),
+table.tablaIncidencia td:nth-child(3) {
+    width: 50% !important; 
+}
+
+table.tablaIncidencia th:nth-child(4),
+table.tablaIncidencia td:nth-child(4) {
+    width: 10% !important; 
+}
+
+table.tablaIncidencia th:nth-child(5),
+table.tablaIncidencia td:nth-child(5) {
+    width: 10% !important; 
+}
+
+
+
+
+/* =========== Tabla tablaRLaboral ===============*/
+
+
+table.tablaRLaboral th,
+table.tablaRLaboral td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaRLaboral th:nth-child(1),
+table.tablaRLaboral td:nth-child(1) {
+    width: 5% !important; 
+    text-align: justify !important;
+}
+
+table.tablaRLaboral th:nth-child(2),
+table.tablaRLaboral td:nth-child(2) {
+    width: 25% !important; 
+    /* text-align: justify !important; */
+}
+
+table.tablaRLaboral th:nth-child(3),
+table.tablaRLaboral td:nth-child(3) {
+    width: 60% !important; 
+}
+
+table.tablaRLaboral th:nth-child(4),
+table.tablaRLaboral td:nth-child(4) {
+    width: 10% !important; 
+}
+
+
+
+/* =========== Tabla tablaDashboard ===============*/
+
+
+table.tablaDashboard th,
+table.tablaDashboard td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaDashboard th:nth-child(1),
+table.tablaDashboard td:nth-child(1) {
+    width: 10% !important; 
+    /* text-align: justify !important; */
+}
+
+table.tablaDashboard th:nth-child(2),
+table.tablaDashboard td:nth-child(2) {
+    width: 15% !important; 
+    /* text-align: justify !important; */
+}
+
+table.tablaDashboard th:nth-child(3),
+table.tablaDashboard td:nth-child(3) {
+    width: 10% !important; 
+}
+
+table.tablaDashboard th:nth-child(4),
+table.tablaDashboard td:nth-child(4) {
+    width: 25% !important; 
+}
+
+table.tablaDashboard th:nth-child(5),
+table.tablaDashboard td:nth-child(5) {
+    width: 10% !important; 
+}
+
+table.tablaDashboard th:nth-child(6),
+table.tablaDashboard td:nth-child(6) {
+    width: 10% !important; 
+}
+
+table.tablaDashboard th:nth-child(7),
+table.tablaDashboard td:nth-child(7) {
+    width: 10% !important; 
+}
+
+table.tablaDashboard th:nth-child(8),
+table.tablaDashboard td:nth-child(8) {
+    width: 10% !important; 
+}
+
+
+/* =========== Tabla tablaBitacora===============*/
+
+
+table.tablaBitacora th,
+table.tablaBitacora td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaBitacora th:nth-child(1),
+table.tablaBitacora td:nth-child(1) {
+    width: 5% !important; 
+    /* text-align: justify !important; */
+}
+
+table.tablaBitacora th:nth-child(2),
+table.tablaBitacora td:nth-child(2) {
+    width: 20% !important; 
+    /* text-align: justify !important; */
+}
+
+table.tablaBitacora th:nth-child(3),
+table.tablaBitacora td:nth-child(3) {
+    width: 20% !important; 
+}
+
+table.tablaBitacora th:nth-child(4),
+table.tablaBitacora td:nth-child(4) {
+    width: 10% !important; 
+}
+
+table.tablaBitacora th:nth-child(5),
+table.tablaBitacora td:nth-child(5) {
+    width: 10% !important; 
+}
+
+table.tablaBitacora th:nth-child(6),
+table.tablaBitacora td:nth-child(6) {
+    width: 15% !important; 
+}
+
+table.tablaBitacora th:nth-child(7),
+table.tablaBitacora td:nth-child(7) {
+    width: 10% !important; 
+}
+
+table.tablaBitacora th:nth-child(8),
+table.tablaBitacora td:nth-child(8) {
+    width: 10% !important; 
+}
+
+
+
+/* =========== Tabla tablaListBitacora===============*/
+
+
+table.tablaListBitacora th,
+table.tablaListBitacora td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaListBitacora th:nth-child(1),
+table.tablaListBitacora td:nth-child(1) {
+    width: 5% !important; 
+    /* text-align: justify !important; */
+}
+
+table.tablaListBitacora th:nth-child(2),
+table.tablaListBitacora td:nth-child(2) {
+    width: 15% !important; 
+    /* text-align: justify !important; */
+}
+
+table.tablaListBitacora th:nth-child(3),
+table.tablaListBitacora td:nth-child(3) {
+    width: 20% !important; 
+}
+
+table.tablaListBitacora th:nth-child(4),
+table.tablaListBitacora td:nth-child(4) {
+    width: 10% !important; 
+}
+
+table.tablaListBitacora th:nth-child(5),
+table.tablaListBitacora td:nth-child(5) {
+    width: 10% !important; 
+}
+
+table.tablaListBitacora th:nth-child(6),
+table.tablaListBitacora td:nth-child(6) {
+    width: 15% !important; 
+}
+
+table.tablaListBitacora th:nth-child(7),
+table.tablaListBitacora td:nth-child(7) {
+    width: 10% !important; 
+}
+
+table.tablaListBitacora th:nth-child(8),
+table.tablaListBitacora td:nth-child(8) {
+    width: 10% !important; 
+}
+
+table.tablaListBitacora th:nth-child(9),
+table.tablaListBitacora td:nth-child(9) {
+    width: 5% !important; 
+}
+
+/* =========== Tabla tablaActividad ===============*/
+
+
+table.tablaActividad th,
+table.tablaActividad td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaActividad th:nth-child(1),
+table.tablaActividad td:nth-child(1) {
+    width: 5% !important; 
+    text-align: justify !important;
+}
+
+table.tablaActividad th:nth-child(2),
+table.tablaActividad td:nth-child(2) {
+    width: 25% !important; 
+    /* text-align: justify !important; */
+}
+
+table.tablaActividad th:nth-child(3),
+table.tablaActividad td:nth-child(3) {
+    width: 60% !important; 
+}
+
+table.tablaActividad th:nth-child(4),
+table.tablaActividad td:nth-child(4) {
+    width: 10% !important; 
+}
+
+/* =========== Tabla tablaActGeneral ===============*/
+
+
+table.tablaActGeneral th,
+table.tablaActGeneral td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaActGeneral th:nth-child(1),
+table.tablaActGeneral td:nth-child(1) {
+    width: 5% !important; 
+    text-align: justify !important;
+}
+
+table.tablaActGeneral th:nth-child(2),
+table.tablaActGeneral td:nth-child(2) {
+    width: 15% !important; 
+    /* text-align: justify !important; */
+}
+
+table.tablaActGeneral th:nth-child(3),
+table.tablaActGeneral td:nth-child(3) {
+    width: 15% !important; 
+}
+
+table.tablaActGeneral th:nth-child(4),
+table.tablaActGeneral td:nth-child(4) {
+    width: 25% !important; 
+}
+
+table.tablaActGeneral th:nth-child(5),
+table.tablaActGeneral td:nth-child(5) {
+    width: 10% !important; 
+    /* text-align: justify !important; */
+}
+
+table.tablaActGeneral th:nth-child(6),
+table.tablaActGeneral td:nth-child(6) {
+    width: 10% !important; 
+}
+
+table.tablaActGeneral th:nth-child(7),
+table.tablaActGeneral td:nth-child(7) {
+    width: 10% !important; 
+}

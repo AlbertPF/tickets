@@ -134,6 +134,10 @@
     <!-- end demo js-->   
 
     <script src="{{ url('assets/js/vendor/apexcharts.min.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script> <!-- Para Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script> <!-- Fuentes para PDF -->
     
     <script>
         $(document).ready(function() {
@@ -177,6 +181,33 @@
             $('#selectUsuario, #fecha_inicio, #fecha_fin').on('change', aplicarFiltros);
         });
 
+        function imgPathToBase64(imagePath, callback) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', imagePath, true);
+            xhr.responseType = 'blob';  // Solicitar la imagen como un blob
+
+            xhr.onload = function(e) {
+                if (this.status === 200) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const base64Data = event.target.result;
+                        callback(base64Data); // Llamar a la función de devolución de llamada con la cadena Base64
+                    };
+                    reader.readAsDataURL(this.response);
+                } else {
+                    console.error('Error al cargar la imagen:', imagePath);
+                    callback(undefined); // Handle error in callback
+                }
+            };
+
+            xhr.onerror = function() {
+                console.error('Error XHR al cargar la imagen:', imagePath);
+                callback(undefined); // Handle error in callback
+            };
+
+            xhr.send();
+        }
+
         function mostrar_tabla() {
             //console.log('mostrar tabla');
             $.ajax({
@@ -212,7 +243,7 @@
 
         }
 
-        function InicializacionTabla() {
+        /*function InicializacionTabla() {
 
             $("#alternative-page-datatable").DataTable({
                 pagingType: "full_numbers",
@@ -235,6 +266,207 @@
                 },
                 responsive: true,
                 scrollX: true
+            });
+        }*/
+
+        function InicializacionTabla() {
+            const imagePath1 = "{{url('Images/Gore/logoFile.png')}}";
+            const imagePath2 = "{{url('Images/Gore/logo-GORE.png')}}";
+
+            imgPathToBase64(imagePath1, function(base64Data1) {
+                if (base64Data1) {
+                    imgPathToBase64(imagePath2, function(base64Data2) {
+                        if (base64Data2) {
+                            $("#alternative-page-datatable").DataTable({
+                                pagingType: "full_numbers",
+                                language: {
+                                    paginate: {
+                                        first: "Primero",
+                                        last: "Último",
+                                        previous: "<i class='mdi mdi-chevron-left'>",
+                                        next: "<i class='mdi mdi-chevron-right'>"
+                                    },
+                                    lengthMenu: "Mostrar _MENU_ registros por página",
+                                    search: "Buscar:", // Cambia el texto del buscador
+                                    info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                                    infoEmpty: "Mostrando 0 a 0 de 0 registros",
+                                    infoFiltered: "(filtrado de _MAX_ registros totales)",
+                                    zeroRecords: "No se encontraron registros coincidentes"
+                                },
+                                order: [
+                                    [4, 'desc']
+                                ],
+                                lengthMenu: [10, 25, 50, 100], // Opciones de cuántos registros mostrar por página
+                                responsive: true,
+                                //scrollX: true,
+                                dom:
+                                    // Botones en una fila superior y debajo el lengthMenu alineado con el buscador
+                                    "<'row'<'col-md-12'B>>" + // Botones en una fila independiente con margen superior
+                                    "<'row mt-2'<'col-md-6'l><'col-md-6'f>>" + // LengthMenu y buscador alineados en la misma fila
+                                    "<'row'<'col-sm-12'tr>>" + // Tabla de datos
+                                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>", // Información y paginación en la última fila
+                                buttons: [{
+                                        extend: 'copyHtml5', // Copia al portapapeles
+                                        text: 'Copiar',
+                                        className: 'btn btn-secondary'
+                                    },
+                                    {
+                                        extend: 'excelHtml5', // Exporta a Excel
+                                        text: 'Exportar a Excel',
+                                        className: 'btn btn-success'
+                                    },
+                                    /*{
+                                        extend: 'csvHtml5', // Exporta a CSV
+                                        text: 'Exportar a CSV',
+                                        className: 'btn btn-warning'
+                                    },*/
+                                    {
+                                        extend: 'pdfHtml5', // Exporta a PDF
+                                        text: 'Exportar a PDF',
+                                        className: 'btn btn-danger',
+                                        orientation: 'landscape', // Opción para orientación horizontal
+                                        pageSize: 'A4', // Tamaño de página PDF
+                                        customize: function (doc) {
+                                            doc.pageMargins = [30, 70, 30, 50];
+                                        
+                                            const headerHeight = 60;
+
+                                            // Encabezado
+                                            doc['header'] = (currentPage, pageCount, pageSize) => {
+                                                return {
+                                                    margin: [10, 0, 10, 0], 
+                                                    height: headerHeight,
+                                                    columns: [
+                                                        {
+                                                            image: base64Data1,
+                                                            width: 50,
+                                                            height: 50,
+                                                            margin: [30, 10, 0, 0], 
+                                                            alignment: 'left'  
+                                                        },
+                                                        {
+                                                            stack: [ 
+                                                                {
+                                                                    text: 'Gobierno Regional de Apurímac',
+                                                                    fontSize: 13,
+                                                                    margin: [0, 15, 0, 0], // Ajuste del margen superior
+                                                                    alignment: 'center'
+                                                                },
+                                                                {
+                                                                    text: 'Sub Gerencia de Desarrollo Institucional Estadística e Informática',
+                                                                    fontSize: 10,
+                                                                    margin: [0, 5, 0, 0], // Menor margen superior para moverlo más abajo
+                                                                    alignment: 'center'
+                                                                }
+                                                            ]
+                                                            
+                                                        },
+                                                        {
+                                                            image: base64Data2,
+                                                            width: 50,
+                                                            height: 50,
+                                                            absolutePosition: { x: pageSize.width - 80, y: 10 }
+                                                        }
+                                                    ],
+                                                };
+                                            };
+
+                                            // Pie de página
+                                            doc['footer'] = (currentPage, pageCount) => {
+                                                return {
+                                                    columns: [
+                                                        {
+                                                            text: 'Página ' + currentPage + ' de ' + pageCount,
+                                                            alignment: 'right',
+                                                            margin: [0, 0, 20, 0]
+                                                        }
+                                                    ],
+                                                    margin: [20, 10]
+                                                };
+                                            };
+
+                                            // Personaliza el archivo PDF
+                                            doc.styles.title = {
+                                                color: '#1B4F72',
+                                                fontSize: 20,
+                                                alignment: 'center',
+                                            };
+                                            doc.styles.tableHeader = {
+                                                fillColor: '#2874A6',
+                                                color: 'white',
+                                                alignment: 'center',
+                                            };
+                                            doc.styles.tableBodyEven = {
+                                                fillColor: '#f3f3f3',
+                                            };
+                                            doc.styles.tableBodyOdd = {
+                                                fillColor: '#fff',
+                                            };
+
+                                            // Ajusta el padding de las celdas
+                                            doc.content[1].table.body.forEach(function(row) {
+                                                row.forEach(function(cell) {
+                                                    cell.margin = [5, 5, 5, 5]; // margen de 5 unidades en todos los lados
+                                                });
+                                            });
+                                        }
+                                    },
+                                    {
+                                        extend: 'print', // Vista para imprimir
+                                        text: 'Imprimir',
+                                        className: 'btn btn-info',
+                                        //title: 'Tickets | Asistencia Técnica - Gobierno Regional Apurímac',
+                                        customize: function(win) {
+                                            // Configura el estilo del cuerpo del documento
+                                            $(win.document.body)
+                                                .css('font-size', '10pt')
+                                                .prepend(
+                                                    '<div id="printHeader" style="margin: 30px 0;">' + // Encabezado
+                                                    '<img src="' + base64Data1 + '" style="width:70px; height:70px; float:left; margin-right:50px; margin-top: -20px"/>' +
+                                                    '<h3 style="text-align: center;">Gobierno Regional de Apurímac</h3>' +
+                                                    '<h4 style="text-align: center;">Sub Genrencia de Desarrollo Institucional Estadística e Informática</h4>' +
+                                                    '<img src="' + base64Data2 + '" style="width:70px; height:70px; float:right; margin-left:50px; margin-top: -80px"/>' +
+                                                    '</div>'
+                                                );
+
+                                            // Añadir estilos para asegurar que el encabezado se repita en cada página
+                                            $(win.document.head).append(
+                                                '<style>' +
+                                                '@media print {' +
+                                                '  @page { margin: 5mm; }' + // Define el margen de 20mm en la página
+                                                '  body { -webkit-print-color-adjust: exact; }' + // Asegura que los colores se impriman correctamente
+                                                '  #printHeader {' +
+                                                '    position: relative;' + // Deja que el encabezado se posicione relativo al flujo de contenido
+                                                '    margin-bottom: 10px;' + // Añade un margen inferior para separarlo del contenido
+                                                '    width: 100%;' +
+                                                '    height: 100px;' + // Ajusta la altura del encabezado si es necesario
+                                                '    background-color: white;' +
+                                                '    text-align: center;' +
+                                                '    z-index: 1000;' + // Asegura que el encabezado esté encima de otros elementos si es necesario
+                                                '  }' +
+                                                '  table { margin-top: 20px; }' + // Añade un margen superior para que no se superponga con el contenido
+                                                '}' +
+                                                '</style>'
+                                            );
+
+                                            // Estilo para la tabla
+                                            const table = $(win.document.body).find('table');
+                                            table.addClass('compact').css('font-size', 'inherit');
+
+                                            // Agregar pie de página
+                                            $(win.document.body).append(
+                                                '<div style="margin-top: 20px; text-align: right; position: absolute; bottom: 0; width: 100%;">Página ' + $(win.document.body).find('table').length + '</div>'
+                                            );
+                                        }
+                                    },
+                                ],
+                                drawCallback: function() {
+                                    $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                                }
+                            });
+                        }
+                    });
+                }
             });
         }
 

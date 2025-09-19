@@ -23,9 +23,9 @@
                         <div class="col-xl-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="text-muted fw-normal mt-0 text-truncate" title="Campaign Sent">Información del Personal:</h5>
 
                                     <div class="row">
+                                        <h5 class="text-muted fw-normal mt-2 text-truncate" title="Campaign Sent">Información del Personal:</h5>
                                         <div class="col-4">
                                             <!-- start due date -->
                                             <p class="mt-2 mb-1 text-muted fw-bold font-12 text-uppercase">Nombre:</p>
@@ -58,6 +58,21 @@
                                                 <i class='mdi mdi-card-account-details-outline font-18 text-primary me-1'></i>
                                                 <div>
                                                     <h5 class="mt-1 font-14 apeMaterno"></h5>
+                                                </div>
+                                            </div>
+                                            <!-- end assignee -->
+                                        </div> <!-- end col -->
+
+                                        <h5 class="text-muted fw-normal mt-4 text-truncate" title="Campaign Sent">Información del Ticket:</h5>
+
+                                        <div class="col-12">
+                                            <!-- assignee -->
+                                            <p class="mt-2 mb-1 text-muted fw-bold font-12 text-uppercase">Código de Ticket:</p>
+                                            <div class="d-flex">
+                                                {{-- <img src="assets/images/users/avatar-9.jpg" alt="Arya S" class="rounded-circle me-2" height="24" /> --}}
+                                                <i class='mdi mdi-ticket-confirmation font-18 text-primary me-1'></i>
+                                                <div>
+                                                    <h5 class="mt-1 font-14 codigo"></h5>
                                                 </div>
                                             </div>
                                             <!-- end assignee -->
@@ -147,16 +162,6 @@
                                         ---
                                     </p>
 
-                                    
-
-                                </div> <!-- end card-body-->
-                            </div> <!-- end card-->
-                        </div> <!-- end col-->
-
-                        <div class="col-xl-12">
-                            <div class="card">
-                                <div class="card-body">
-
                                     <h5 class="text-muted fw-normal mt-0 text-truncate" title="Campaign Sent">Observación del personal de Soporte Técnico:</h5>
 
                                     <div class="row">
@@ -204,9 +209,14 @@
                                         ---
                                     </p>
 
-                                </div>
-                            </div>    
-                        </div>
+                                    <button class="btn btn-outline-primary generar-pdf" onclick="generar_pdf()">
+                                        <i class="mdi mdi-file-download"></i> Generar PDF
+                                    </button>
+
+                                </div> <!-- end card-body-->
+                            </div> <!-- end card-->
+                        </div> <!-- end col-->
+
                     </div>
                     <!-- end row-->
 
@@ -289,6 +299,7 @@
 
     function verDataAsigTickets(data) {
         // Asegúrate de que estás accediendo a los datos correctos
+        $('.codigo').html(data.tickets.ticket.id_ticket);
         $('.personal').html(data.tickets.ticket.oficina_personal.personal.nombre);
         $('.apePaterno').html(data.tickets.ticket.oficina_personal.personal.apellidoPaterno);
         $('.apeMaterno').html(data.tickets.ticket.oficina_personal.personal.apellidoMaterno);
@@ -311,5 +322,57 @@
         $('.fecha_finalizacion').html(formatDate(data.tickets.fecha_fin));
         $('.hora_finalizacion').html(formatTime(data.tickets.fecha_fin));
         $('.descripcionUsuarioInf').html(data.tickets.descripcion);
+        $('.generar-pdf').data('id', data.tickets.id_Asigticket );
     }
+
+    function generar_pdf() {
+        const id_Asigticket = $('.generar-pdf').data('id');
+        if (!id_Asigticket) {
+            Swal.fire({
+                icon: "error",
+                title: "ID no encontrado",
+                text: "No se pudo obtener el ID de la asignación.",
+            });
+            return;
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: `ticketsAsig/${id_Asigticket}/pdf`, // Usa ruta absoluta
+            xhrFields: {
+                responseType: 'blob' // <-- importante para manejar blob (PDF)
+            },
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Generando PDF...',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            success: function(data) {
+                Swal.close(); // Cierra el loading
+                const blob = new Blob([data], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                window.open(url, '_blank');
+            },
+            error: function(xhr) {
+                Swal.close();
+                let mensaje = "Ocurrió un error.";
+                try {
+                    const errorJson = JSON.parse(xhr.responseText);
+                    mensaje = errorJson.message;
+                } catch (e) {}
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: mensaje,
+                    footer: '<a href="">Vuelva a intentarlo</a>'
+                });
+            }
+        });
+    }
+
 </script>

@@ -2,6 +2,7 @@
     <thead>
         <tr>
             <th>N°</th>
+            <th>Código</th>
             <th>Personal</th>
             <th>Incidencia</th>
             <th>Descripción</th>
@@ -15,6 +16,7 @@
         @foreach ($tickets as $ticket => $row)
             <tr>
                 <td scope ="row"><strong> {{ $ticket + 1 }}</strong></td>
+                <td> <strong>{{ $row->id_ticket }}</strong></td>
                 <td>{{ $row->oficinaPersonal->personal->nombre }} {{ $row->oficinaPersonal->personal->apellidoPaterno }} {{ $row->oficinaPersonal->personal->apellidoMaterno }}</td>
                 <td>{{ $row->soporte->nombre }}</td>
                 <td>{{ $row->descripcion }}</td>

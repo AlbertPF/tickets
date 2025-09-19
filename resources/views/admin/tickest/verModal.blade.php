@@ -23,9 +23,9 @@
                         <div class="col-xl-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="text-muted fw-normal mt-0 text-truncate" title="Campaign Sent">Información del Personal:</h5>
 
                                     <div class="row">
+                                        <h5 class="text-muted fw-normal mt-2 text-truncate" title="Campaign Sent">Información del Personal:</h5>
                                         <div class="col-4">
                                             <!-- start due date -->
                                             <p class="mt-2 mb-1 text-muted fw-bold font-12 text-uppercase">Nombre:</p>
@@ -58,6 +58,21 @@
                                                 <i class='mdi mdi-card-account-details-outline font-18 text-primary me-1'></i>
                                                 <div>
                                                     <h5 class="mt-1 font-14 apeMaterno"></h5>
+                                                </div>
+                                            </div>
+                                            <!-- end assignee -->
+                                        </div> <!-- end col -->
+
+                                        <h5 class="text-muted fw-normal mt-4 text-truncate" title="Campaign Sent">Información del Ticket:</h5>
+
+                                        <div class="col-12">
+                                            <!-- assignee -->
+                                            <p class="mt-2 mb-1 text-muted fw-bold font-12 text-uppercase">Código de Ticket:</p>
+                                            <div class="d-flex">
+                                                {{-- <img src="assets/images/users/avatar-9.jpg" alt="Arya S" class="rounded-circle me-2" height="24" /> --}}
+                                                <i class='mdi mdi-ticket-confirmation font-18 text-primary me-1'></i>
+                                                <div>
+                                                    <h5 class="mt-1 font-14 codigo"></h5>
                                                 </div>
                                             </div>
                                             <!-- end assignee -->
@@ -147,7 +162,6 @@
                                         ---
                                     </p>
 
-                                    
 
                                 </div> <!-- end card-body-->
                             </div> <!-- end card-->
@@ -159,7 +173,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-outline-primary descargar-pdf" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -228,6 +242,7 @@
 
     function verDataTickets(data) {
         codTickets = data.tickets.id_ticket;
+        $('.codigo').html(data.tickets.id_ticket);
         $('.personal').html(data.tickets.oficina_personal.personal.nombre);
         $('.apePaterno').html(data.tickets.oficina_personal.personal.apellidoPaterno);
         $('.apeMaterno').html(data.tickets.oficina_personal.personal.apellidoMaterno);

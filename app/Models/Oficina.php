@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class Oficina extends Model
@@ -106,18 +107,27 @@ class Oficina extends Model
         return 'ofi' . str_pad($lastIdNumber, 4, '0', STR_PAD_LEFT);
     } 
 
-    // Método para generar el código de categoría
-    /*public function generateOfficeCode()
+    public function generateOfficeCode()
     {
-        // Si no tiene una oficina padre, es de nivel 1
-        if (is_null($this->id_oficina_padre) || $this->id_categoria_padre == null) {
-            // Encontrar el máximo código de nivel 1
+        if ($this->isDuplicated) {
+            // Obtener el máximo código como número
             $maxCode = self::whereNull('id_oficina_padre')
-                ->max('codigo');
+                ->whereRaw('codigo REGEXP "^[0-9]+$"') // Filtrar solo códigos numéricos
+                ->max(DB::raw('CAST(codigo AS UNSIGNED)'));
 
-            return $maxCode ? intval($maxCode) + 1 : 1;
+            return $maxCode ? $maxCode + 1 : 1;
+        }
+
+        // Si no tiene una oficina padre, es de nivel 1
+        if (is_null($this->id_oficina_padre)) {
+            // Obtener el máximo código como número
+            $maxCode = self::whereNull('id_oficina_padre')
+                ->whereRaw('codigo REGEXP "^[0-9]+$"') // Filtrar solo códigos numéricos
+                ->max(DB::raw('CAST(codigo AS UNSIGNED)'));
+
+            return $maxCode ? $maxCode + 1 : 1;
         } else {
-            // Si tiene una oficina padre, encontrar el máximo código de suboficina
+            // Si tiene una oficina padre, obtener el código de la oficina padre
             $parentOffice = self::find($this->id_oficina_padre);
             $parentCode = $parentOffice->codigo;
 
@@ -135,9 +145,9 @@ class Oficina extends Model
                 return $parentCode . '.1';
             }
         }
-    }*/
+    }
 
-    public function generateOfficeCode()
+    /*public function generateOfficeCode()
     {
         if ($this->isDuplicated) {
             // Encontrar el máximo código de nivel 1
@@ -169,7 +179,9 @@ class Oficina extends Model
                 return $parentCode . '.1';
             }
         }
-    }
+    }*/
+
+
 
     public function updateSubOfficeCodes($newParentCode, $parentId = null)
     {

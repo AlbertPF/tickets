@@ -172,18 +172,20 @@ class HomeAdminController extends Controller
             $anio = $r->anio ?? date('Y'); // Si no se envía año, usa el actual
 
             $TikectResultadosPorUsuario = DB::table('usuarios as u')
-                ->leftJoin(DB::raw('(SELECT a.id_usuario, COUNT(a.id_ticket) as tickets_resueltos 
+                ->join(DB::raw('(SELECT a.id_usuario, COUNT(a.id_ticket) as tickets_resueltos 
                                     FROM asignacion_ticket as a 
                                     JOIN tickets as t ON a.id_ticket = t.id_ticket 
                                     WHERE a.estado = 3 
                                     AND t.estado = 3 
                                     AND YEAR(a.fecha_fin) = ? 
                                     AND MONTH(a.fecha_fin) = ? 
-                                    GROUP BY a.id_usuario) as res'), 
+                                    GROUP BY a.id_usuario
+                                    HAVING COUNT(a.id_ticket) > 0 )as res'), 
                 'u.id_usuario', '=', 'res.id_usuario')
                 ->select('u.id_usuario', 
                         DB::raw("CONCAT(u.nombre, ' ', u.apellidoPaterno) AS nombre_completo"),
-                        DB::raw("IFNULL(res.tickets_resueltos, 0) AS tickets_resueltos"))
+                        DB::raw("IFNULL(res.tickets_resueltos, 0) AS tickets_resueltos")
+                    )
                 ->setBindings([$anio, $mes]) // Pasar los valores correctamente para evitar SQL Injection
                 ->get();
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AsignacionTicket;
 use App\Models\OficinaPersonal;
 use App\Models\Ticket;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -55,16 +56,30 @@ class AsignarTicketController extends Controller
                     ->whereIn('estado', [1, 4])  // Filtrar por estados "registrado" y "no logrado"
                     ->orderBy('fecha_env', 'asc') // Ordenar por fecha de creación
                     ->first();*/
+                
+                // Verificar si el ticket ya está en proceso (estado 2) o tiene una asignación en proceso
+                $ticket = Ticket::find($r->id_ticket);
+                $asignacionEnProceso = AsignacionTicket::where('id_ticket', $r->id_ticket)
+                    ->where('estado', 2)
+                    ->exists();
 
-                    $primerTicketPendiente = Ticket::whereIn('estado', [1, 4])
-                        ->orderBy('fecha_env', 'asc')
-                        ->first();
+                if ($ticket->estado == 2 || $asignacionEnProceso) {
+                    return response()->json([
+                        'code' => 409,
+                        'msg' => 'warning',
+                        'message' => 'El ticket ya está siendo atendido por otro usuario.'
+                    ], 409);
+                }
+
+                $primerTicketPendiente = Ticket::whereIn('estado', [1, 4])
+                    ->orderBy('fecha_env', 'asc')
+                    ->first();
 
                 // Verificar si el ticket que se intenta asignar es el primer ticket pendiente del día
                 if (!$primerTicketPendiente || $primerTicketPendiente->id_ticket != $r->id_ticket) {
                     return response()->json([
-                        'code' => 403,
-                        'msg' => 'error',
+                        'code' => 409,
+                        'msg' => 'warning',
                         'message' => 'Debe asignarse al primer ticket pendiente del día.'
                     ], 403);
                 }
@@ -611,5 +626,16 @@ class AsignarTicketController extends Controller
                 'message' => 'Ocurrió un problema, por favor comunicarse con el administrador.'
             ], 404);
         }
+    }
+
+    public function actGenerarPdf($id_Asigticket )
+    {
+        $ticketsAsig= AsignacionTicket::with(['ticket.soporte', 'ticket.oficinaPersonal.personal', 'ticket.oficinaPersonal.oficina', 'usuario'])->findOrfail($id_Asigticket );
+        
+        $pdf = Pdf::loadView('admin.pdf.reporteAsigTickets', compact('ticketsAsig'));
+
+        //return $pdf->download('reporte_ticket_'.$ticket->id_tickets.'.pdf');
+
+        return $pdf->stream('reporte_ticket_'.$ticketsAsig->ticket->id_ticket.'.pdf');
     }
 }

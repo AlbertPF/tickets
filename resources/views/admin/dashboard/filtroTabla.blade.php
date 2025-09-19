@@ -89,7 +89,7 @@
                             order: [
                                 [4, 'desc']
                             ],
-                            lengthMenu: [5, 10, 25, 50, 100], // Opciones de cuántos registros mostrar por página
+                            lengthMenu: [10, 25, 50, 100], // Opciones de cuántos registros mostrar por página
                             responsive: true,
                             //scrollX: true,
                             dom:

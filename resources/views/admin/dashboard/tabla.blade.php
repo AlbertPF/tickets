@@ -1,10 +1,10 @@
 <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100 tablaDashboard">
     <thead>
         <tr>
-            <th>Nombre</th>
+            <th>Oficina</th>
             <th>Incidencia</th>
             <th>Personal</th>
-            <th>Oficina</th>
+            <th>Usuario Inf.</th>
             <th>Fecha Env.</th>
             <th>Fecha Asig.</th>
             <th>Fecha Fin.</th>
@@ -15,10 +15,10 @@
     <tbody>
         @forelse ($asignacionUsu as $asignacion)
             <tr>
-                <td>{{ $asignacion->usuario->nombre }} {{ $asignacion->usuario->apellidoPaterno }}</td>
+                <td>{{ $asignacion->ticket->oficinaPersonal->oficina->nombre ?? 'Sin oficina' }}</td>
                 <td>{{ $asignacion->ticket->soporte->nombre }}</td>
                 <td>{{ $asignacion->ticket->oficinaPersonal->personal->nombre }} {{ $asignacion->ticket->oficinaPersonal->personal->apellidoPaterno }}</td>
-                <td>{{ $asignacion->ticket->oficinaPersonal->oficina->nombre ?? 'Sin oficina' }}</td>
+                <td>{{ $asignacion->usuario->nombre }} {{ $asignacion->usuario->apellidoPaterno }}</td>
                 <td>{{ $asignacion->ticket->fecha_env }}</td>
                 <td>{{ $asignacion->fecha_asig ? $asignacion->fecha_asig : 'No asignado' }}</td>
                 <td>{{ $asignacion->fecha_fin ? $asignacion->fecha_fin : 'No finalizado' }}</td>

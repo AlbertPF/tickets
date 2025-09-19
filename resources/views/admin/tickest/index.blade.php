@@ -113,9 +113,11 @@
     <!-- end demo js-->
 
     <script>
-         $(document).ready(function() {
+        $(document).ready(function() {
 
             mostrar_tabla();
+
+            setInterval(mostrar_tabla, 5 * 60 * 1000); 
 
             $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
                 var target = $(e.target).attr("href");
@@ -212,8 +214,8 @@
                     processing: "Procesando...",
                 },
                 order: [
-                    [4, 'desc', 'estado-prioridad'], // Ordenar por estado con prioridad
-                    [5, 'desc'] // Luego por fecha (columna 5)
+                    [5, 'desc', 'estado-prioridad'], // Ordenar por estado con prioridad
+                    [6, 'desc'] // Luego por fecha (columna 5)
                 ],
                 columnDefs: [
                     { orderDataType: 'estado-prioridad', targets: 4 }, // Aplicar la función personalizada en la columna 4 (Estado)
@@ -226,7 +228,6 @@
                 scrollX: true
             });
         }
-
 
         function mostrar_tablaAsig() {
             //console.log('listar tickets');
@@ -350,7 +351,8 @@
                                 mostrar_tabla();
                             },
                             error: function(error) {
-                                if (error.status === 403) {
+                                let response = error.responseJSON;
+                                /*if (error.status === 403) {
                                     Swal.fire({
                                         title: "Oops...",
                                         text: "Debe asignarse al primer ticket pendiente del día.",
@@ -362,12 +364,14 @@
                                         text: "No se pudo asignar el ticket.",
                                         icon: "error",
                                     });
-                                }
-                                /*Swal.fire({
-                                    title: "Error",
-                                    text: "No se pudo asignar el ticket.",
-                                    icon: "error",
-                                });*/
+                                }*/
+                                Swal.fire({
+                                    title: "Oops...",
+                                    text: response.message,
+                                    icon: response.msg || "error",
+                                }).then(() => {
+                                    mostrar_tabla();
+                                });
                             }
                         });
                     }

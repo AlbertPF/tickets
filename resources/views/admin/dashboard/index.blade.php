@@ -1069,7 +1069,30 @@
                             title: {
                                 text: 'Top 5 Oficinas con Más Solicitudes',
                                 align: 'center'
-                            }
+                            },
+                            legend: {
+                                position: 'right',
+                                floating: false,
+                                fontSize: '14px',
+                                labels: {
+                                    useSeriesColors: false
+                                },
+                                formatter: function(seriesName) {
+                                    // Forzar salto de línea en nombres largos cada 25 caracteres aprox.
+                                    return seriesName.match(/.{1,25}/g).join('<br>');
+                                },
+                                itemMargin: {
+                                    vertical: 5
+                                }
+                            },
+                            responsive: [{
+                                breakpoint: 768,
+                                options: {
+                                    legend: {
+                                        position: 'bottom'
+                                    }
+                                }
+                            }]
                         };
 
                         var chart = new ApexCharts(document.querySelector("#graficoTopOficinas"), options);
@@ -1109,7 +1132,30 @@
                             title: {
                                 text: 'Top 5 Problemas más Comunes',
                                 align: 'center'
-                            }
+                            },
+                            legend: {
+                                position: 'right',
+                                floating: false,
+                                fontSize: '14px',
+                                labels: {
+                                    useSeriesColors: false
+                                },
+                                formatter: function(seriesName) {
+                                    // Forzar salto de línea en nombres largos cada 25 caracteres aprox.
+                                    return seriesName.match(/.{1,25}/g).join('<br>');
+                                },
+                                itemMargin: {
+                                    vertical: 5
+                                }
+                            },
+                            responsive: [{
+                                breakpoint: 768,
+                                options: {
+                                    legend: {
+                                        position: 'bottom'
+                                    }
+                                }
+                            }]
                         };
 
                         var chart = new ApexCharts(document.querySelector("#graficoTopProblemas"), options);

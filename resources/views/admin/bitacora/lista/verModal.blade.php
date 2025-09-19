@@ -257,8 +257,8 @@
     function verDataListActividad(data) {
         
         $(".nombre").html(data.ListBitacora.usuario.nombre || ' ');
-        $(".apPaterno").html(data.ListBitacora.usuario.apellioPaterno || '');
-        $(".apMaterno").html(data.ListBitacora.usuario.apellioMaterno || ' ');
+        $(".apPaterno").html(data.ListBitacora.usuario.apellidoPaterno || '');
+        $(".apMaterno").html(data.ListBitacora.usuario.apellidoMaterno || ' ');
         $(".actividad").html(data.ListBitacora.actividad || ' ');
         $(".doc_ref").html(data.ListBitacora.doc_ref || ' ');
         $('.estado').html(`

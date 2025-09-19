@@ -94,24 +94,24 @@ table.tablaTickets td:nth-child(1) {
 
 table.tablaTickets th:nth-child(2),
 table.tablaTickets td:nth-child(2) {
-    width: 15% !important; 
+    width: 5% !important; 
     text-align: justify !important;
 }
 
 table.tablaTickets th:nth-child(3),
 table.tablaTickets td:nth-child(3) {
-    width: 20% !important; 
+    width: 15% !important; 
 }
 
 table.tablaTickets th:nth-child(4),
 table.tablaTickets td:nth-child(4) {
-    width: 30% !important; 
+    width: 20% !important; 
     text-align: justify !important;
 }
 
 table.tablaTickets th:nth-child(5),
 table.tablaTickets td:nth-child(5) {
-    width: 10% !important; 
+    width: 25% !important; 
 }
 
 table.tablaTickets th:nth-child(6),
@@ -121,6 +121,11 @@ table.tablaTickets td:nth-child(6) {
 
 table.tablaTickets th:nth-child(7),
 table.tablaTickets td:nth-child(7) {
+    width: 10% !important; 
+}
+
+table.tablaTickets th:nth-child(8),
+table.tablaTickets td:nth-child(8) {
     width: 10% !important; 
 }
 
@@ -331,7 +336,7 @@ table.tablaDashboard td  {
 
 table.tablaDashboard th:nth-child(1),
 table.tablaDashboard td:nth-child(1) {
-    width: 10% !important; 
+    width: 25% !important; 
     /* text-align: justify !important; */
 }
 
@@ -348,7 +353,7 @@ table.tablaDashboard td:nth-child(3) {
 
 table.tablaDashboard th:nth-child(4),
 table.tablaDashboard td:nth-child(4) {
-    width: 25% !important; 
+    width: 10% !important;
 }
 
 table.tablaDashboard th:nth-child(5),

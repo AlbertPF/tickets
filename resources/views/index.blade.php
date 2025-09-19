@@ -105,7 +105,7 @@
                 <div class="d-flex flex-column justify-content-center align-items-center">
                     <h1 data-aos="fade-up">Bienvenidos a <span>Asistencia Técnica</span></h1>
                     <p data-aos="fade-up" data-aos-delay="100">Soluciones rápidas y efectivas para sus requerimientos
-                        técnicos en el GORE Apurímac.<br></p>
+                        técnicos en el GORE Apurímac<br></p>
                     <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
                         <a href="#incidencias" class="btn-get-started">Reportar Incidencia</a>
                         <a href="../Manuales/Manual del Personal.pdf" target="_blank" class="glightbox btn-watch-video d-flex align-items-center">

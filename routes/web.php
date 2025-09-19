@@ -135,6 +135,8 @@ Route::middleware([AuthAdministrador::class])->group(function () {
     Route::get('ticketsAsig/ModalAsignar', [AsignarTicketController::class, 'actVerModal'])->name('modalAsignar.tickets');
     Route::post('ticketsAsig/asignar', [AsignarTicketController::class, 'actAsignar'])->name('asignar.ticketsAsig');
 
+    Route::get('ticketsAsig/{id}/pdf', [AsignarTicketController::class, 'actGenerarPdf']);
+
     Route::post('Asignacion/editar2', [AsignarTicketController::class, 'actEditar2'])->name('editar2.ticketsAsig2');
     Route::post('Asignacion/final2', [AsignarTicketController::class, 'actFinalizacion2'])->name('final2.ticketsAsig2');
 

@@ -1,4 +1,12 @@
 <div class="row">
+    <div class="col-12">
+        <div class="page-title-box">            
+            <h4 class="page-title">Metricas del ChatBot</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
     <!-- Cards para métricas totales -->
     <div class="col-xl-3">
         <div class="card">

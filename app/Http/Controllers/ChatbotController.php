@@ -234,13 +234,14 @@ class ChatbotController extends Controller
 
     private function getSystemPrompt()
     {
-        return "Eres un asistente técnico amigable para un sistema de tickets de asistencia. Ayuda solo con problemas simples y frecuentes, basándote en esta documentación. Si el problema es complejo, sugiere crear un ticket. Responde en español, de forma clara y paso a paso.
+        $path = storage_path('app/prompts/system_prompt.txt');
 
-Documentación de problemas frecuentes:
-- Problema con impresora no imprime: 1. Verifica que esté encendida y conectada por USB o WiFi. 2. Reinicia la impresora y la PC. 3. Actualiza drivers desde el sitio del fabricante (ej. HP, Epson). 4. Limpia la cola de impresión en Configuración > Dispositivos.
-- Problema con conexión a internet lenta o inestable: 1. Reinicia el router/módem desconectándolo 30 segundos. 2. Verifica cables Ethernet si usas cableado. 3. Cambia a banda 2.4GHz si estás en 5GHz. 4. Ejecuta el solucionador de problemas en Configuración > Red e Internet > Estado.
-- Problema con lentitud de PC: 1. Reinicia la computadora. 2. Cierra programas innecesarios en el Administrador de tareas. 3. Libera espacio en disco eliminando archivos temporales. 4. Verifica actualizaciones de Windows.
-- Problema con email/Outlook: 1. Verifica conexión a internet. 2. Reinicia Outlook. 3. Verifica configuración de servidor (IMAP/POP). 4. Intenta acceder desde webmail del proveedor.";
+        if (file_exists($path)) {
+            return file_get_contents($path);
+        }
+
+        // Mensaje por defecto en caso de que no se encuentre el archivo
+        return "Eres un asistente técnico amigable. Si el problema es complejo, sugiere crear un ticket.";
     }
 
     private function getFallbackResponse()

@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Tickets | Asistencia Técnica - Gobierno Regional Apurímac</title>
 
     <!-- Favicons -->
@@ -40,10 +41,21 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
+    <!-- Styles -->
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+
+
+    <!-- Tailwind CSS desde CDN (si no tienes Vite configurado) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Driverr js -->
+    <script src="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.js.iife.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.css" />
+
     <style>
         .dni-input {
-            padding-right: 2.5rem; 
-            position: relative; 
+            padding-right: 2.5rem;
+            position: relative;
         }
 
         .input-group-text {
@@ -51,7 +63,7 @@
             right: 0;
             top: 0;
             height: 100%;
-            width: 2.5rem; 
+            width: 2.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -108,15 +120,16 @@
                         técnicos en el GORE Apurímac<br></p>
                     <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
                         <a href="#incidencias" class="btn-get-started">Reportar Incidencia</a>
-                        <a href="../Manuales/Manual del Personal.pdf" target="_blank" class="glightbox btn-watch-video d-flex align-items-center">
+                        <a href="../Manuales/Manual del Personal.pdf" target="_blank"
+                            class="glightbox btn-watch-video d-flex align-items-center">
                             <i class="bi bi-file-earmark-text"></i><span>Ver Manual</span>
                         </a>
                         {{-- <a href="https://www.youtube.com/watch?v=t7bQwwqW-Hc&list=RDt7bQwwqW-Hc&start_radio=1"
                             class="glightbox btn-watch-video d-flex align-items-center"><i
                                 class="bi bi-play-circle"></i><span>Ver Tutorial</span></a> --}}
                     </div>
-                    <img src="{{ url('portal/assets/img/hero-services-img.webp') }}" class="img-fluid hero-img" alt=""
-                        data-aos="zoom-out" data-aos-delay="300">
+                    <img src="{{ url('portal/assets/img/hero-services-img.webp') }}" class="img-fluid hero-img"
+                        alt="" data-aos="zoom-out" data-aos-delay="300">
                 </div>
             </div>
 
@@ -132,7 +145,8 @@
                                 <div class="icon flex-shrink-0"><i class="bi bi-headset"></i></div>
                             </a>
                             <div>
-                                <h4 class="title"><a href="#inicio" class="stretched-link">Soporte Técnico Especializado</a></h4>
+                                <h4 class="title"><a href="#inicio" class="stretched-link">Soporte Técnico
+                                        Especializado</a></h4>
                                 <p class="description">Soluciones rápidas y efectivas a sus problemas tecnológicos,
                                     desde fallos de software hasta consultas sobre equipos, asegurando un soporte
                                     completo para los sistemas administrativos en uso.</p>
@@ -146,7 +160,8 @@
                                 <div class="icon flex-shrink-0"><i class="bi bi-pencil-square"></i></div>
                             </a>
                             <div>
-                                <h4 class="title"><a href="#incidencias" class="stretched-link">Registro de Incidencias</a></h4>
+                                <h4 class="title"><a href="#incidencias" class="stretched-link">Registro de
+                                        Incidencias</a></h4>
                                 <p class="description">Facilite el registro de incidencias técnicas de manera rápida y
                                     sencilla a través de nuestro sistema centralizado, cubriendo problemas en los
                                     sistemas administrativos utilizados en el GORE Apurímac, como SIGA y SIAF.</p>
@@ -159,10 +174,12 @@
                             <a href="#seguimiento">
                                 <div class="icon flex-shrink-0"><i class="bi bi-eye-fill"></i></div>
                             </a>
-                            
+
                             <div>
-                                <h4 class="title"><a href="#seguimiento" class="stretched-link">Seguimiento de Incidencias</a></h4>
-                                <p class="description">Monitorea fácilmente el progreso de tus tickets y mantente informado en cada etapa 
+                                <h4 class="title"><a href="#seguimiento" class="stretched-link">Seguimiento de
+                                        Incidencias</a></h4>
+                                <p class="description">Monitorea fácilmente el progreso de tus tickets y mantente
+                                    informado en cada etapa
                                     del proceso de atención.</p>
                             </div>
                         </div>
@@ -188,33 +205,43 @@
                 <div class="row gy-4 mt-1">
 
                     <div class="col-lg-6">
-                        <form id="guardarTicket" class="php-form" data-aos="fade-up" data-aos-delay="400" style="border-radius: 15px">
+                        <form id="guardarTicket" class="php-form" data-aos="fade-up" data-aos-delay="400"
+                            style="border-radius: 15px">
                             @csrf
                             <div class="row gy-4">
 
                                 <!-- DNI input -->
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input type="text" id="dni" name="dni" class="form-control dni-input" placeholder="DNI">
+                                        <input type="text" id="dni" name="dni"
+                                            class="form-control dni-input" placeholder="DNI">
                                         <span class="input-group-text"><i class="fas fa-search"></i></span>
                                     </div>
-                                    <input type="hidden" id="id_OfiPer" name="id_OfiPer" class="form-control" readonly>
+                                    <input type="hidden" id="id_OfiPer" name="id_OfiPer" class="form-control"
+                                        readonly>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" style="background-color: #ebeff3;" readonly>
+                                    <input type="text" id="nombre" name="nombre" class="form-control"
+                                        placeholder="Nombre" style="background-color: #ebeff3;" readonly>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <input type="text" id="apellidoPaterno" name="apellidoPaterno" class="form-control" placeholder="Apellido Paterno" style="background-color: #ebeff3;" readonly>
+                                    <input type="text" id="apellidoPaterno" name="apellidoPaterno"
+                                        class="form-control" placeholder="Apellido Paterno"
+                                        style="background-color: #ebeff3;" readonly>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <input type="text" id="apellidoMaterno" name="apellidoMaterno" class="form-control" placeholder="Apellido Materno" style="background-color: #ebeff3;" readonly>
+                                    <input type="text" id="apellidoMaterno" name="apellidoMaterno"
+                                        class="form-control" placeholder="Apellido Materno"
+                                        style="background-color: #ebeff3;" readonly>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <input type="text" id="nombre_oficina" name="nombre_oficina" class="form-control" placeholder="Oficina Asignada" style="background-color: #ebeff3;" readonly >
+                                    <input type="text" id="nombre_oficina" name="nombre_oficina"
+                                        class="form-control" placeholder="Oficina Asignada"
+                                        style="background-color: #ebeff3;" readonly>
                                     {{-- <input type="hidden" id="id_oficina" name="id_oficina" class="form-control" readonly> --}}
                                 </div>
 
@@ -250,8 +277,8 @@
                         <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
 
                             <div class="tab-pane fade active show" id="features-tab-1">
-                                <img src="{{ url('portal/assets/img/Soporte-Tecnico.jpg') }}" alt="" class="img-fluid"
-                                    style="border-radius: 15px;">
+                                <img src="{{ url('portal/assets/img/Soporte-Tecnico.jpg') }}" alt=""
+                                    class="img-fluid" style="border-radius: 15px;">
                             </div>
 
                         </div>
@@ -271,7 +298,7 @@
                 <h2>Seguimiento de Tickets</h2>
                 <p>Ingresa tu DNI para consultar el estado de tus tickets generados.</p>
             </div><!-- End Section Title -->
-    
+
             <div class="container">
                 <div class="row gy-12">
                     <div class="col-lg-12" data-aos="zoom-in" data-aos-delay="200">
@@ -279,16 +306,18 @@
                             <div class="tracking-item featured">
                                 <h3>Consultar estado de ticket</h3>
                                 {{-- <p class="description">Ingresa tu número de DNI para consultar el estado de tus tickets.</p> --}}
-                                
+
                                 <!-- Formulario para seguimiento de tickets -->
                                 <form id="ConsultarTicket">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-9">
-                                            <input type="text" name="dni_cons" id="dni_cons" class="form-control" placeholder="Ingresa su DNI">
+                                            <input type="text" name="dni_cons" id="dni_cons"
+                                                class="form-control" placeholder="Ingresa su DNI">
                                         </div>
                                         <div class="col-md-3">
-                                            <button type="submit" class="cta-btn w-100" style="padding: 5px 35px; margin-top: 0px;">Consultar</button>
+                                            <button type="submit" class="cta-btn w-100"
+                                                style="padding: 5px 35px; margin-top: 0px;">Consultar</button>
                                             {{-- <button type="submit" class="cta-btn">Consultar</button> --}}
                                         </div>
                                     </div>
@@ -321,10 +350,8 @@
                     </div><!-- End Pricing Item -->
                 </div>
             </div>
-    
-        </section><!-- /Pricing Section -->
 
-        
+        </section><!-- /Pricing Section -->
 
     </main>
 
@@ -334,7 +361,8 @@
             <div class="row gy-4">
                 <div class="col-lg-4 col-md-6 footer-about">
                     <a href="{{ url('/') }}" class="logo d-flex align-items-center">
-                        <img src="{{ url('portal/assets/img/Gore/PNG - GOREAPU  (Horizontal).png') }}" alt="">
+                        <img src="{{ url('portal/assets/img/Gore/PNG - GOREAPU  (Horizontal).png') }}"
+                            alt="">
                     </a>
                     <div class="footer-contact pt-3">
                         <p>Jr. Puno N° 107</p>
@@ -388,6 +416,9 @@
 
     </footer>
 
+    <!-- Scripts -->
+
+
     <!-- Scroll Top -->
     <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
@@ -410,10 +441,10 @@
 
 
     <script>
-        document.getElementById('dni').addEventListener('keypress', function (e) {
+        document.getElementById('dni').addEventListener('keypress', function(e) {
             // Solo permitir números (0-9)
             if (e.charCode < 48 || e.charCode > 57) {
-                e.preventDefault();  // Evitar que se escriba el carácter no permitido
+                e.preventDefault(); // Evitar que se escriba el carácter no permitido
             }
         });
     </script>
@@ -426,7 +457,7 @@
                         return "No se encontraron resultados";
                     }
                 },
-                placeholder: 'Seleccionar Oficina', 
+                placeholder: 'Seleccionar Oficina',
                 //allowClear: true 
             });
 
@@ -450,7 +481,7 @@
 
             // Búsqueda al presionar Enter
             $('#dni').on('keypress', function(e) {
-                if (e.which === 13) { 
+                if (e.which === 13) {
                     e.preventDefault(); // Evitar que se envíe el formulario
                     buscarPorDni(); // Llamar a la función de búsqueda
                 }
@@ -489,7 +520,7 @@
                     },
                     descripcion: {
                         required: true,
-                    } 
+                    }
                 },
                 messages: {
                     dni: {
@@ -518,7 +549,7 @@
                     },
                     descripcion: {
                         required: "La descripción de la incidencia es obligatorio, para un mayor entendimiento",
-                    } 
+                    }
                 },
                 errorElement: 'span',
                 errorPlacement: function(error, element) {
@@ -530,16 +561,16 @@
                     }
                 },
                 highlight: function(element) {
-                     $(element).addClass('is-invalid').removeClass('is-valid');
+                    $(element).addClass('is-invalid').removeClass('is-valid');
                 },
                 unhighlight: function(element) {
-                     $(element).removeClass('is-invalid').addClass('is-valid');
+                    $(element).removeClass('is-invalid').addClass('is-valid');
                 },
                 submitHandler: function(form) {
                     registrar_tickets();
                 }
             });
-            
+
 
             listar_oficina();
             listar_incidencia();
@@ -573,10 +604,10 @@
                     }
                 },
                 highlight: function(element) {
-                     $(element).addClass('is-invalid').removeClass('is-valid');
+                    $(element).addClass('is-invalid').removeClass('is-valid');
                 },
                 unhighlight: function(element) {
-                     $(element).removeClass('is-invalid').addClass('is-valid');
+                    $(element).removeClass('is-invalid').addClass('is-valid');
                 },
                 submitHandler: function(form) {
                     Consulta_Tickets();
@@ -591,7 +622,9 @@
                 $.ajax({
                     url: '{{ route('buscar.personal') }}',
                     method: 'GET',
-                    data: { dni: dni},
+                    data: {
+                        dni: dni
+                    },
                     success: function(response) {
                         $('#id_OfiPer').val(response.id_OfiPer);
                         $('#nombre').val(response.nombre);
@@ -601,9 +634,9 @@
                         // $('#id_oficina').val(response.id_oficina);
                     },
                     error: function(xhr) {
-                        
+
                         let errorJson = JSON.parse(xhr.responseText);
-                            
+
                         Swal.fire({
                             icon: "error",
                             title: "Oops...",
@@ -612,7 +645,7 @@
                             showConfirmButton: false,
                             timerProgressBar: true
                         });
-                            
+
                         // Colorear el campo de DNI en rojo
                         $('#dni').addClass('is-invalid').removeClass('is-valid');
 
@@ -664,7 +697,9 @@
                 type: 'POST',
                 url: '{{ route('incSelect.listarIncidencia') }}',
                 dataType: 'json',
-                data: {_token: '{{ csrf_token() }}'},
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
                 success: function(data) {
                     //console.log('Oficinas:', data);
                     if (data.code === 200) {
@@ -737,7 +772,7 @@
                             showConfirmButton: false,
                             timerProgressBar: true
                         });
-                        return false; 
+                        return false;
 
                     });
                 },
@@ -766,7 +801,7 @@
                         if (confirmar.isConfirmed || confirmar.dismiss === Swal.DismissReason.timer) {
                             $('#guardarTicket')[0].reset();
                             listar_incidencia();
-                            
+
                         }
                     });
                 } else if (result.isDenied) {
@@ -780,7 +815,10 @@
             $("#tablaIndex").DataTable({
                 pagingType: "full_numbers",
                 pageLength: 10,
-                lengthMenu: [[10, 25, 50, -1], [5, 10, 15, "Todos"]],
+                lengthMenu: [
+                    [10, 25, 50, -1],
+                    [5, 10, 15, "Todos"]
+                ],
                 language: {
                     paginate: {
                         first: "Primero",
@@ -798,12 +836,14 @@
                     infoEmpty: "Mostrando 0 a 0 de 0 registros",
                     infoFiltered: "(filtrado de _MAX_ registros en total)"
                 },
-                order: [[6, 'desc']],
+                order: [
+                    [6, 'desc']
+                ],
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                 },
                 responsive: true,
-                destroy: true,  // Permite la reinicialización del DataTable
+                destroy: true, // Permite la reinicialización del DataTable
                 scrollX: true
             });
         }
@@ -813,7 +853,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '{{ route("mostrarConsul.tabla") }}',
+                url: '{{ route('mostrarConsul.tabla') }}',
                 dataType: 'json',
                 data: {
                     _token: '{{ csrf_token() }}',
@@ -848,18 +888,19 @@
         }*/
 
         function Consulta_Tickets() {
-            var dni = $('input[name="dni_cons"]').val(); 
+            var dni = $('input[name="dni_cons"]').val();
 
             $.ajax({
                 type: 'POST',
-                url: '{{ route("mostrarConsul.tabla") }}',
+                url: '{{ route('mostrarConsul.tabla') }}',
                 dataType: 'json',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    dni: dni 
+                    dni: dni
                 },
                 beforeSend: function() {
-                    var spinner = `<div class="spinner-border text-info ms-auto cargando" role="status" aria-hidden="true"></div>`;
+                    var spinner =
+                        `<div class="spinner-border text-info ms-auto cargando" role="status" aria-hidden="true"></div>`;
                     $("#tablaIndex tbody").html('<tr><td colspan="8">' + spinner + '</td></tr>');
                 },
                 error: function(data) {
@@ -897,14 +938,46 @@
                     if ($("#tablaIndex tbody tr").length > 1 || !$("#tablaIndex tbody tr td").attr('colspan')) {
                         InicializacionTabla();
                     }
-                    
+
                     /*if ($("#tablaIndex tbody tr td[colspan]").length === 0) {
                         InicializacionTabla();
                     }*/
                 }
             });
         }
+    </script>
 
+    <!-- ChatBot -->
+    @include('chatbot')
+
+    <script>
+        // Verificar si el tour ya se mostró
+        if (!localStorage.getItem('chatbot-tour-shown')) {
+            const driver = window.driver.js.driver;
+            const driverObj = driver();
+
+            driverObj.highlight({
+                element: "#chat-toggle",
+                popover: {
+                    title: "Nuevo chat de asistencia",
+                    description: "Ya está disponible el chat virtual para resolver problemas técnicos. Haz clic en el botón flotante en la esquina inferior derecha.",
+                    side: "top",
+                    align: 'center'
+                },
+                onHighlightStarted: function() {
+                    // Opcional: Log o acción al iniciar el tour
+                    console.log('Tour iniciado');
+                },
+                onHighlighted: function() {
+                    // Guardar que el tour se mostró (después de completarse)
+                    localStorage.setItem('chatbot-tour-shown', 'true');
+                    console.log('Tour completado, no se mostrará de nuevo');
+                },
+                onDestroyed: function() {
+                    // Opcional: Limpieza si el usuario cierra el tour manualmente
+                }
+            }).drive(); // .drive() inicia el tour; usa .highlight() si solo quieres resaltar sin pasos
+        }
     </script>
 
 </body>

@@ -15,6 +15,7 @@ use App\Http\Controllers\RLaboralController;
 use App\Http\Controllers\SoporteController;
 use App\Http\Controllers\TicketsController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Middleware\AuthAdministrador;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,7 @@ use Illuminate\Support\Facades\Route;
     return view('index');
 });*/
 
+
 Route::get('/', HomeController::class);
 Route::post('home/listOficinas', [HomeController::class, 'actListaOficinas'])->name('HomeSelect.listaOficinas');
 Route::post('home/listarIncidencia', [HomeController::class, 'actListaIncidencias'])->name('incSelect.listarIncidencia');
@@ -46,8 +48,6 @@ Route::post('home/consultar-tickets', [HomeController::class, 'consultarTickets'
 Route::get('login', [loginController::class, 'actionLogin'])->name('login');
 Route::post('login/sigin', [LoginController::class, 'sigin']);
 Route::get('login/logout', [loginController::class, 'logout'])->name('logout');
-
-
 
 // Rutas protegidas por autenticación
 Route::middleware([AuthAdministrador::class])->group(function () {
@@ -169,6 +169,8 @@ Route::middleware([AuthAdministrador::class])->group(function () {
     Route::get('resumen', [ResumenGeneralController::class, 'index'])->name('resumen.index');
     Route::post('resumen/listar', [ResumenGeneralController::class, 'actListar'])->name('listar.resumen');
     Route::post('resumen/filtrar', [ResumenGeneralController::class, 'actFiltrar'])->name('filtrar.resumen');
+
+    Route::get('chatbot/metrics', [ChatbotController::class, 'getMetrics'])->name('chatbot.metrics');
 });
 
 

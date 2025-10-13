@@ -1,15 +1,14 @@
 @extends('layout.app')
 
 @section('css-styles-home')
-<link href="{{ url('assets/css/vendor/dataTables.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
-<link href="{{ url('assets/css/vendor/responsive.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
-<link href="{{ url('assets/css/vendor/buttons.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
-<link href="{{ url('assets/css/vendor/select.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
-<link href="{{ url('assets/css/vendor/fixedHeader.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
-<link href="{{ url('assets/css/vendor/fixedColumns.bootstrap5.css') }}" rel="stylesheet" type="text/css" /> 
-{{-- <link href="{{ asset('assets/css/stylePortal.css') }}"  rel="stylesheet"> --}}
-<link href="{{ url('assets/css/style.css') }}" rel="stylesheet">
-
+    <link href="{{ url('assets/css/vendor/dataTables.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ url('assets/css/vendor/responsive.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ url('assets/css/vendor/buttons.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ url('assets/css/vendor/select.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ url('assets/css/vendor/fixedHeader.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ url('assets/css/vendor/fixedColumns.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
+    {{-- <link href="{{ asset('assets/css/stylePortal.css') }}"  rel="stylesheet"> --}}
+    <link href="{{ url('assets/css/style.css') }}" rel="stylesheet">
 @endsection
 
 @section('contenido')
@@ -36,32 +35,32 @@
                     <i class="mdi mdi-notebook float-end text-white"></i>
                     <h6 class="text-uppercase mt-0">Tickets</h6>
                     <h2 class="my-2" id="cantTickets">0</h2>
-                      <p class="mb-0 text-muted">
+                    <p class="mb-0 text-muted">
                         <!--<span class="text-white me-2"><span class="mdi mdi-arrow-down-bold"></span> 1.08%</span> -->
                         <span class="text-white">registrados</span>
                     </p>
-                        <!-- <div class="row">
-                            <div class="col-md-3 col-xl-3">
-                                <span class="text-white">R:</span>
-                                <span class="text-white me-2"><span class="mdi mdi-arrow-up-bold registrados">0</span></span>
-                            </div>
-                            <div class="col-md-3 col-xl-3">
-                                <span class="text-white">A:</span>
-                                <span class="text-white me-2"><span class="mdi mdi-arrow-up-bold atendidos">0</span></span>
-                            </div>
-                            <div class="col-md-3 col-xl-3">
-                                <span class="text-white">P:</span>
-                                <span class="text-white me-2"><span class="mdi mdi-arrow-up-bold proceso">0</span></span>
-                            </div>
-                            <div class="col-md-3 col-xl-3">
-                                <span class="text-white">NA:</span>
-                                <span class="text-white me-2"><span class="mdi mdi-arrow-up-bold noAtendidos">0</span></span>
-                            </div>
-                            <div class="col-md-3 col-xl-3">
-                                <span class="text-white">C:</span>
-                                <span class="text-white me-2"><span class="mdi mdi-arrow-up-bold cancelados">0</span></span>
-                            </div>
-                        </div> -->
+                    <!-- <div class="row">
+                                <div class="col-md-3 col-xl-3">
+                                    <span class="text-white">R:</span>
+                                    <span class="text-white me-2"><span class="mdi mdi-arrow-up-bold registrados">0</span></span>
+                                </div>
+                                <div class="col-md-3 col-xl-3">
+                                    <span class="text-white">A:</span>
+                                    <span class="text-white me-2"><span class="mdi mdi-arrow-up-bold atendidos">0</span></span>
+                                </div>
+                                <div class="col-md-3 col-xl-3">
+                                    <span class="text-white">P:</span>
+                                    <span class="text-white me-2"><span class="mdi mdi-arrow-up-bold proceso">0</span></span>
+                                </div>
+                                <div class="col-md-3 col-xl-3">
+                                    <span class="text-white">NA:</span>
+                                    <span class="text-white me-2"><span class="mdi mdi-arrow-up-bold noAtendidos">0</span></span>
+                                </div>
+                                <div class="col-md-3 col-xl-3">
+                                    <span class="text-white">C:</span>
+                                    <span class="text-white me-2"><span class="mdi mdi-arrow-up-bold cancelados">0</span></span>
+                                </div>
+                            </div> -->
                 </div> <!-- end card-body-->
             </div>
             <!--end card-->
@@ -89,7 +88,7 @@
                     <p class="mb-0 text-muted">
                         {{-- <span class="text-white me-2"><span class="mdi mdi-arrow-down-bold"></span> 1.08%</span> --}}
                         <span class="text-white">registrados</span>
-                    </p> 
+                    </p>
                 </div> <!-- end card-body-->
             </div>
             <!--end card-->
@@ -122,7 +121,8 @@
                                 <a href="{{ route('index.tickets') }}">
                                     <div class="card-body text-center">
                                         {{-- <i class="dripicons-briefcase text-muted" style="font-size: 24px;"></i> --}}
-                                        <h3><i class="mdi mdi-file-document text-info"></i><span class="registrados" style="color: var(--ct-body-color);">0</span></h3>
+                                        <h3><i class="mdi mdi-file-document text-info"></i><span class="registrados"
+                                                style="color: var(--ct-body-color);">0</span></h3>
                                         <p class="text-muted font-15 mb-0">Tickets Pendientes</p>
                                     </div>
                                 </a>
@@ -133,7 +133,8 @@
                             <div class="card shadow-none m-0 border-start">
                                 <div class="card-body text-center">
                                     {{-- <i class="dripicons-checklist text-muted" style="font-size: 24px;"></i> --}}
-                                    <h3><i class="mdi mdi-check-circle-outline text-success"></i><span class="atendidos">0</span></h3>
+                                    <h3><i class="mdi mdi-check-circle-outline text-success"></i><span
+                                            class="atendidos">0</span></h3>
                                     <p class="text-muted font-15 mb-0">Tickets Atendidos</p>
                                 </div>
                             </div>
@@ -143,7 +144,8 @@
                             <div class="card shadow-none m-0 border-start">
                                 <div class="card-body text-center">
                                     {{-- <i class="dripicons-user-group text-muted" style="font-size: 24px;"></i> --}}
-                                    <h3><i class="mdi mdi-progress-clock text-warning"></i><span class="proceso">0</span></h3>
+                                    <h3><i class="mdi mdi-progress-clock text-warning"></i><span class="proceso">0</span>
+                                    </h3>
                                     <p class="text-muted font-15 mb-0">Tickets en Proceso</p>
                                 </div>
                             </div>
@@ -153,7 +155,8 @@
                             <div class="card shadow-none m-0 border-start">
                                 <div class="card-body text-center">
                                     {{-- <i class="dripicons-graph-line text-muted" style="font-size: 24px;"></i> --}}
-                                    <h3><i class="mdi mdi-close-circle-outline text-secondary"></i><span class="noAtendidos">0</span></h3>
+                                    <h3><i class="mdi mdi-close-circle-outline text-secondary"></i><span
+                                            class="noAtendidos">0</span></h3>
                                     <p class="text-muted font-15 mb-0">Tickets no Atendidos</p>
                                 </div>
                             </div>
@@ -255,8 +258,8 @@
                             </div>
                         </div>
                     </div>
-                    
-                    
+
+
                     <div dir="ltr">
                         <div id="cantTikectResultadosPorUsuario" class="apex-charts"></div>
                     </div>
@@ -322,6 +325,9 @@
     </div>
     <!-- end row-->
 
+    {{-- metricas-interaccion --}}    
+    @include('admin.dashboard.metricas')
+
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -332,7 +338,8 @@
                     <div class="row">
                         <div class="col-lg-3">
                             <label class="form-label">Usuario Informático :</label>
-                            <select class="form-control" id="selectUsuario" name="id_usuario" data-toggle="select2" title="Usuarios Informáticos">
+                            <select class="form-control" id="selectUsuario" name="id_usuario" data-toggle="select2"
+                                title="Usuarios Informáticos">
                                 <option value="" disabled selected>Seleccionar Usuario</option>
                                 <!-- Las opciones serán llenadas dinámicamente -->
                             </select>
@@ -355,62 +362,64 @@
                                 <option value="" disabled selected>Seleccionar Oficina</option>
                             </select>
                         </div>
-                    </div> <!-- end row --> 
+                    </div> <!-- end row -->
 
-                    <br>    
+                    <br>
 
-                    <label class="form-label text-info">Filtro por Rango de Fechas <strong class="buscador-text"></strong></label>
+                    <label class="form-label text-info">Filtro por Rango de Fechas <strong
+                            class="buscador-text"></strong></label>
                     {{-- <p class="mb-1 fw-bold text-muted">Buscador avanzado de solo ........</p> --}}
 
                     <div class="row">
                         <div class="col-lg-3">
-                            <input type="text" class="form-control date" id="fecha_inicio" name="fecha_inicio" placeholder="Fecha Inicio">
+                            <input type="text" class="form-control date" id="fecha_inicio" name="fecha_inicio"
+                                placeholder="Fecha Inicio">
                             {{-- <input type="text" class="form-control date" id="birthdatepicker" data-toggle="date-picker" data-single-date-picker="true"> --}}
                         </div> <!-- end col -->
                         <div class="col-lg-3">
-                            <input type="text" class="form-control date" id="fecha_fin" name="fecha_fin" placeholder="Fecha Fin">
+                            <input type="text" class="form-control date" id="fecha_fin" name="fecha_fin"
+                                placeholder="Fecha Fin">
                             {{-- <input type="text" class="form-control date" id="birthdatepicker" data-toggle="date-picker" data-single-date-picker="true"> --}}
                         </div>
                         <div class="col-lg-6">
                             <div class="app-search dropdown d-none d-lg-block">
                                 <div class="input-group">
-                                    <input type="text" id="buscar" name="buscar" class="form-control" placeholder="Palabra Clave" aria-label="Buscar">
+                                    <input type="text" id="buscar" name="buscar" class="form-control"
+                                        placeholder="Palabra Clave" aria-label="Buscar">
                                     <span class="mdi mdi-magnify search-icon"></span>
-                                    <button class="btn btn-info"  id="buscar-btn" type="button">Buscar</button>
+                                    <button class="btn btn-info" id="buscar-btn" type="button">Buscar</button>
                                 </div>
                             </div>
                         </div>
-                    </div> <!-- end row --> 
+                    </div> <!-- end row -->
 
                     <br>
 
                     <div class="progress progress-sm">
-                        <div class="progress-bar progress-lg bg-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+                        <div class="progress-bar progress-lg bg-info" role="progressbar" aria-valuenow="100"
+                            aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
                         </div>
                     </div>
 
                     <br>
-                    
+
                     <div class="tab-content">
                         <div class="tab-pane show active" id="buttons-table-preview">
                             <div class="table-responsive" id="contenedorRegistros">
-                                   
-                            </div>                              
+
+                            </div>
                         </div> <!-- end preview-->
-                    
-                    </div> <!-- end tab-content--> 
+
+                    </div> <!-- end tab-content-->
 
                 </div> <!-- end card body-->
             </div> <!-- end card -->
         </div><!-- end col-->
     </div>
     <!-- end row-->
-    
-
 @endsection
 
 @section('js-styles-home')
-
     <script>
         $(document).ready(function() {
 
@@ -426,7 +435,7 @@
             // Cargar gráfico con el mes y año actual
             cantidadTicketPorSoporte(currentMonthst, currentYearst);
 
-            $('#tsmes, #tsanio').change(function () {
+            $('#tsmes, #tsanio').change(function() {
                 let selectedMonthst = $('#tsmes').val();
                 let selectedYearst = $('#tsanio').val();
                 cantidadTicketPorSoporte(selectedMonthst, selectedYearst);
@@ -444,7 +453,7 @@
             cantTikectResultadosPorUsuario(currentMonth, currentYear);
 
             // Evento para cambiar los filtros
-            $('#mes, #anio').change(function () {
+            $('#mes, #anio').change(function() {
                 let selectedMonth = $('#mes').val();
                 let selectedYear = $('#anio').val();
                 cantTikectResultadosPorUsuario(selectedMonth, selectedYear);
@@ -455,7 +464,7 @@
 
             mostrarTicketsPorDia();
 
-            mostrarGraficoTopOficinas(); 
+            mostrarGraficoTopOficinas();
             mostrarGraficoTopProblemas();
 
             mostrar_tabla();
@@ -489,20 +498,23 @@
 
             $('#buscar-btn').click(function() {
                 var query = $('#buscar').val(); // Obtener el valor del campo de búsqueda
-                
+
                 $.ajax({
                     url: '{{ route('dashBuscar.pCalve') }}', // La ruta del controlador para manejar la búsqueda
                     type: 'GET',
-                    data: { buscar: query }, // Pasar el valor del campo de búsqueda
+                    data: {
+                        buscar: query
+                    }, // Pasar el valor del campo de búsqueda
                     beforeSend: function() {
-                        var spinner = `<div class="spinner-border text-info ms-auto cargando" role="status" aria-hidden="true"></div>`;
+                        var spinner =
+                            `<div class="spinner-border text-info ms-auto cargando" role="status" aria-hidden="true"></div>`;
                         $("#contenedorRegistros").html(spinner);
                     },
                     success: function(data) {
                         // Renderiza la tabla con los resultados de la búsqueda
                         //$('#tabla-archivos').html(response.html); 
                         //console.log(data);  
-                        
+
                         if (data.code === 200) {
                             $("#contenedorRegistros").html(data.html);
                             InicializacionTabla();
@@ -528,11 +540,12 @@
                 });
             });
 
-            $('#selectPersonal, #selectUsuario, #selectIncidencia, #selectOficina, #fecha_inicio, #fecha_fin').on('change', aplicarFiltros);
+            $('#selectPersonal, #selectUsuario, #selectIncidencia, #selectOficina, #fecha_inicio, #fecha_fin').on(
+                'change', aplicarFiltros);
 
         });
 
-        function CantidadDatos(){
+        function CantidadDatos() {
             $.ajax({
                 url: "{{ route('cantidadDatos') }}",
                 method: 'GET',
@@ -579,7 +592,7 @@
             }
         }
 
-         /*====================Tickets  por soporte sin filtro de fecha=====================*/
+        /*====================Tickets  por soporte sin filtro de fecha=====================*/
         /*function cantidadTicketPorSoporte() {
             $.ajax({
                 url: '{{ route('cantTicketSoporte') }}',
@@ -685,12 +698,16 @@
             });
         }*/
         var chart = null;
+
         function cantidadTicketPorSoporte(tsmes, tsanio) {
             //console.log("Mes:", tsmes, "Año:", tsanio);
             $.ajax({
                 url: '{{ route('cantTicketSoporte') }}',
                 method: 'GET',
-                data: {tsmes: tsmes, tsanio: tsanio }, // Enviar datos en la petición
+                data: {
+                    tsmes: tsmes,
+                    tsanio: tsanio
+                }, // Enviar datos en la petición
                 success: function(data) {
                     var soporteNames = [];
                     var ticketCounts = [];
@@ -701,8 +718,8 @@
                     });
 
                     var colors = [
-                        "#727cf5", "#0acf97", "#fa5c7c", "#6c757d", 
-                        "#39afd1", "#2b908f", "#ffbc00", "#90ee7e", 
+                        "#727cf5", "#0acf97", "#fa5c7c", "#6c757d",
+                        "#39afd1", "#2b908f", "#ffbc00", "#90ee7e",
                         "#f48024", "#212730"
                     ];
 
@@ -725,8 +742,10 @@
                         dataLabels: {
                             enabled: true,
                             textAnchor: "start",
-                            style: { colors: ["#fff"] },
-                            formatter: function (val, opt) {
+                            style: {
+                                colors: ["#fff"]
+                            },
+                            formatter: function(val, opt) {
                                 return opt.w.globals.labels[opt.dataPointIndex] + ": " + val;
                             },
                             offsetX: 0,
@@ -734,25 +753,42 @@
                                 enabled: false
                             }
                         },
-                        series: [{ name: 'Tickets', data: ticketCounts }],
-                        stroke: {width: 2,colors: ["#fff"]},
-                        xaxis: { categories: soporteNames },
-                        yaxis: { labels: { show: false } },
-                        grid: {borderColor: "#f1f3fa"},
+                        series: [{
+                            name: 'Tickets',
+                            data: ticketCounts
+                        }],
+                        stroke: {
+                            width: 2,
+                            colors: ["#fff"]
+                        },
+                        xaxis: {
+                            categories: soporteNames
+                        },
+                        yaxis: {
+                            labels: {
+                                show: false
+                            }
+                        },
+                        grid: {
+                            borderColor: "#f1f3fa"
+                        },
                         tooltip: {
-                            theme: "dark",  // Tema oscuro para el tooltip
+                            theme: "dark", // Tema oscuro para el tooltip
                             x: {
-                                show: false   // Ocultar nombres en el tooltip
+                                show: false // Ocultar nombres en el tooltip
                             },
                             y: {
                                 title: {
-                                    formatter: function () {
+                                    formatter: function() {
                                         return "";
                                     }
                                 }
                             }
                         },
-                        title: { text: 'Tickets por Soporte', align: 'center' }
+                        title: {
+                            text: 'Tickets por Soporte',
+                            align: 'center'
+                        }
                     };
 
                     $("#cantTicketPorSoporte").html(""); // Resetear gráfico
@@ -885,7 +921,10 @@
             $.ajax({
                 url: '{{ route('cantticketsResueltosUsu') }}',
                 method: 'GET',
-                data: { mes: mes, anio: anio }, // Enviar los filtros al backend
+                data: {
+                    mes: mes,
+                    anio: anio
+                }, // Enviar los filtros al backend
                 success: function(data) {
                     var nombres = [];
                     var ticketsResueltos = [];
@@ -895,7 +934,9 @@
                         ticketsResueltos.push(usuario.tickets_resueltos);
                     });
 
-                    var colors = ["#727cf5", "#6c757d", "#0acf97", "#fa5c7c", "#ffbc00", "#39afd1", "#e3eaef", "#313a46"];
+                    var colors = ["#727cf5", "#6c757d", "#0acf97", "#fa5c7c", "#ffbc00", "#39afd1", "#e3eaef",
+                        "#313a46"
+                    ];
                     var options = {
                         chart: {
                             height: 450,
@@ -944,7 +985,7 @@
                         },
                         yaxis: {
                             labels: {
-                                formatter: function (value) {
+                                formatter: function(value) {
                                     return value;
                                 }
                             }
@@ -962,7 +1003,8 @@
                     };
 
                     $("#cantTikectResultadosPorUsuario").html(""); // Limpiar el contenedor antes de renderizar
-                    var chart = new ApexCharts(document.querySelector("#cantTikectResultadosPorUsuario"), options);
+                    var chart = new ApexCharts(document.querySelector("#cantTikectResultadosPorUsuario"),
+                        options);
                     chart.render();
                 },
                 error: function(data) {
@@ -1173,12 +1215,11 @@
                 }
             });
         }
-
     </script>
 
     @include('admin.dashboard.filtroTabla')
 
-   <script src="{{ url('assets/js/vendor/apexcharts.min.js') }}"></script>
+    <script src="{{ url('assets/js/vendor/apexcharts.min.js') }}"></script>
 
     {{-- JS Tabla --}}
 
@@ -1198,11 +1239,10 @@
 
     <script src="{{ url('assets/js/pages/demo.datatable-init.js') }}"></script>
 
-    <script src="{{ url('assets/js/pages/demo.timepicker.js') }}"></script> 
+    <script src="{{ url('assets/js/pages/demo.timepicker.js') }}"></script>
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script> <!-- Para Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script> <!-- Fuentes para PDF -->
-
 @endsection

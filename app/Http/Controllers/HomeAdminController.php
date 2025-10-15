@@ -7,6 +7,7 @@ use App\Models\Oficina;
 use App\Models\Personal;
 use App\Models\Soporte;
 use App\Models\Ticket;
+use App\Models\ticket_notificacion;
 use App\Models\Usuario;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -611,6 +612,53 @@ class HomeAdminController extends Controller
                 'message' => 'Error, hubo un problema comunicate con el Administrador.'
             ], 404);
         }
+    } 
+
+    public function getTicketNotificacionGlobal()
+    {
+        $totalNotificaciones = ticket_notificacion::count();
+        $totalAbiertas = ticket_notificacion::where('abierta', true)->count();
+        $tasaGlobal = $totalNotificaciones > 0 ? ($totalAbiertas / $totalNotificaciones) * 100 : 0;
+
+        return response()->json([
+            'code' => 200,
+            'data' => [
+                'tasaGlobal' => round($tasaGlobal,2),
+                'totalNotificaciones' => $totalNotificaciones
+            ]
+        ]);
+    }
+
+    public function getTicketNotificacionPorTicket()
+    {
+        $estadisticasPorTicket = ticket_notificacion::select(
+                'id_ticket',
+                DB::raw('COUNT(*) as total'),
+                DB::raw('SUM(abierta) as abiertas')
+            )
+            ->groupBy('id_ticket')
+            ->get();
+
+        return response()->json([
+            'code' => 200,
+            'data' => $estadisticasPorTicket
+        ]);
+    }
+
+    public function getTicketNotificacionPorUsuario()
+    {
+        $estadisticasPorUsuario = ticket_notificacion::select(
+                'id_usuario',
+                DB::raw('COUNT(*) as total'),
+                DB::raw('SUM(abierta) as abiertas')
+            )
+            ->groupBy('id_usuario')
+            ->get();
+
+        return response()->json([
+            'code' => 200,
+            'data' => $estadisticasPorUsuario
+        ]);
     }
 
 }

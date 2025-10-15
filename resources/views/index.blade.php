@@ -40,6 +40,8 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
     <style>
         .dni-input {
             padding-right: 2.5rem; 
@@ -188,7 +190,7 @@
                 <div class="row gy-4 mt-1">
 
                     <div class="col-lg-6">
-                        <form id="guardarTicket" class="php-form" data-aos="fade-up" data-aos-delay="400" style="border-radius: 15px">
+                        <form id="guardarTicket" class="php-form" style="border-radius: 15px" enctype="multipart/form-data">
                             @csrf
                             <div class="row gy-4">
 
@@ -236,6 +238,16 @@
                                 <!-- Descripción -->
                                 <div class="col-md-12">
                                     <textarea class="form-control" id="descripcion" name="descripcion" rows="4" placeholder="Descripción"></textarea>
+                                </div>
+
+                                <!-- Archivo o img -->
+                                <div class="col-md-12" id="fileContainer" style="display:none;">
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="archivo" name="archivo">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-paperclip"></i>
+                                        </span>
+                                    </div>
                                 </div>
 
                                 <div class="col-md-12 text-center">
@@ -461,7 +473,43 @@
                 buscarPorDni(); // Llamar a la función de búsqueda
             });
 
+            $('#select_incidencia').on('change', function(){
+                var selected = $(this).val();
+
+                if(selected === 'spt0001' || selected === 'spt0004' || selected === 'spt0007'){
+                    $('#fileContainer').slideDown();
+                } else {
+                    $('#fileContainer').slideUp();
+                    $('#archivo').val('');
+                }
+            });
+
+            $('#select_incidencia').on('change', function() {
+                var selectedValue = $(this).val();
+                if (['spt0001', 'spt0004', 'spt0007'].includes(selectedValue)) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Información Importante',
+                        html: `
+                            <p style="font-size:16px; line-height:1.5;">
+                                Para la <b>creación de usuarios</b>, el trámite debe realizarse mediante <b>documento</b>, 
+                                siguiendo el <b>conducto regular</b> establecido.
+                            </p>
+                        `,
+                        confirmButtonText: 'Entendido',
+                        confirmButtonColor: '#3085d6',
+                        showClass: {
+                            popup: 'animate__animated animate__fadeInDown'
+                        },
+                        hideClass: {
+                            popup: 'animate__animated animate__fadeOutUp'
+                        }
+                    });
+                }
+            });
+
             $('#guardarTicket').validate({
+            ignore: ":hidden:not(#archivo)",
                 rules: {
                     dni: {
                         required: true,
@@ -536,6 +584,39 @@
                      $(element).removeClass('is-invalid').addClass('is-valid');
                 },
                 submitHandler: function(form) {
+                    var archivo = $('#archivo')[0].files[0];
+                    var selectedValue = $('#select_incidencia').val();
+
+                    if ((selectedValue === 'spt0001' || selectedValue === 'spt0004' || selectedValue === 'spt0007') && archivo) {
+                        var validExtensions = ['jpg','jpeg','png','pdf'];
+                        var fileExtension = archivo.name.split('.').pop().toLowerCase();
+
+                        if ($.inArray(fileExtension, validExtensions) === -1) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Archivo inválido',
+                                text: 'El archivo debe ser JPG, PNG o PDF.',
+                                timer: 3000,
+                                showConfirmButton: false,
+                                timerProgressBar: true
+                            });
+                            return false;
+                        }
+
+                        var maxSize = 3 * 1024 * 1024;
+                        if (archivo.size > maxSize) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Archivo demasiado grande',
+                                text: 'El archivo no puede superar los 3 MB.',
+                                timer: 3000,
+                                showConfirmButton: false,
+                                timerProgressBar: true
+                            });
+                            return false; 
+                        }
+                    }
+
                     registrar_tickets();
                 }
             });
@@ -704,16 +785,13 @@
                 canselButtonText: "Cancelar",
                 showLoaderOnConfirm: true,
                 preConfirm: () => {
-                    let token = $('meta[name="csrf-token"]').attr('content');
+                    //let token = $('meta[name="csrf-token"]').attr('content');
                     let formElement = document.getElementById("guardarTicket");
                     let formData = new FormData(formElement);
                     return fetch('{{ route('registrar.tickets') }}', {
                         method: "POST",
                         body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': token
-                        }
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
                     }).then(response => {
                         if (!response.ok) {
                             return response.text().then(text => {

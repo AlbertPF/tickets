@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
-class Usuario extends Model
+class Usuario extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected $table = 'usuarios';
     protected $primaryKey = 'id_usuario';
@@ -28,10 +30,24 @@ class Usuario extends Model
         'created_at',
         'updated_at'
     ];
+    
+    public function getAuthIdentifierName()
+    {
+        return 'id_usuario';
+    }
 
+    protected $hidden = [
+        'password',
+    ];
+    
     public function tickets()
     {
         return $this->hasMany(Ticket::class, 'id_usuario', 'id_usuario');
+    }
+
+    public function routeNotificationForTelegram()
+    {
+        return $this->telegram_user_id;
     }
 
     // Boot method para generar el ID personalizado

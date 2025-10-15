@@ -65,7 +65,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-6 col-lg-6">
+                                <div class="col-xl-4 col-lg-4">
                                     <div class="mb-3 form-group">
                                         <label class="form-label">Tipo Usuario:</label>
                                         <select id="tipo" name="tipo" class="form-control" data-toggle="select2" title="Tipo Usuario">
@@ -76,11 +76,19 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-xl-6 col-lg-6">
+                                <div class="col-xl-4 col-lg-4">
                                     <div class="mb-3 form-group">
                                         <label class="form-label">Teléfono</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Introduce número telefónico">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4">
+                                    <div class="mb-3 form-group">
+                                        <label class="form-label">ID Telegram</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="id_telegram" name="id_telegram" placeholder="Introduce ID de Telebram">
                                         </div>
                                     </div>
                                 </div>
@@ -111,7 +119,7 @@
         });
 
         $('.agregar_usuario').click(function() {
-            console.log('agregar usuario');
+            //console.log('agregar usuario');
             $("#title_modal").html('Agregar Usuario');
             $("#title_Contraseña").html('Contraseña');
             // Cambia la clase del div con id="modal-header"
@@ -119,6 +127,7 @@
             $("#btnGuardar").removeClass('btn-info').addClass('btn-success').html('Guardar');
             // Limpia los campos del formulario
             $('#guardarUsuario')[0].reset();
+            $('#tipo').val('').trigger('change');
 
             $("#tipo_formulario").val(1);
             $("#id_usuario_editar").val("");
@@ -167,6 +176,11 @@
                     minlength: 9,
                     maxlength: 9,
                     digits: true
+                },
+                id_telegram: {
+                    minlength: 10,
+                    maxlength: 10,
+                    digits: true
                 }
             },
             messages: {
@@ -201,9 +215,14 @@
                 },
                 telefono: {
                     required: "El número telefónico es obligatorio.",
-                    minlength: "El número telefónico debe tener 8 caracteres.",
-                    maxlength: "El número telefónico debe tener 8 caracteres.",
+                    minlength: "El número telefónico debe tener 9 caracteres.",
+                    maxlength: "El número telefónico debe tener 9 caracteres.",
                     digits: "El número telefónico solo debe contener números."
+                },
+                id_telegram: {
+                    minlength: "El ID de telegram debe tener 10 caracteres.",
+                    maxlength: "El ID de telegram debe tener 10 caracteres.",
+                    digits: "El ID de telegram es solo debe contener números."
                 }
             },
             errorElement: 'span',
@@ -360,8 +379,10 @@
                     $("#apellidoMaterno").val(usuario.apellidoMaterno);
                     $("#usuario").val(usuario.usuario);
                     $("#password").val('');
-                    $("#tipo").val(usuario.tipo);
+                    // $("#tipo").val(usuario.tipo);
                     $("#telefono").val(usuario.telefono);
+                    $("#id_telegram").val(usuario.telegram_user_id);
+                    $("#tipo").val(usuario.tipo).trigger('change');
                     $("#modal-nuevo-usuario").modal('show');
 
                 }

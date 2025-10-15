@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,8 +17,10 @@ class AuthAdministrador
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!Session::has('usuario'))
+        if(!Auth::check())
         {
+            Session::put('url.intended', $request->fullUrl());
+            
             return redirect('login');
         }
         $response = $next($request);

@@ -68,13 +68,55 @@
         <!-- Right Sidebar -->
         @include('layout.sections.sidebarRight')
         <!-- /End-bar -->
-
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <script>
             $.ajaxSetup({
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 }
             });
+
+            setInterval(function () {
+                fetch("{{ url('/refresh-csrf') }}")
+                    .then(response => {
+                        if (!response.ok) throw new Error('Error al actualizar CSRF');
+                        return response.json();
+                    })
+                    .then(data => {
+                        document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.token);
+                    })
+                    .catch(error => {
+                        console.warn("⚠️ No se pudo refrescar el token CSRF (posible desconexión o sesión expirada):", error.message);
+                    });
+            }, 25 * 60 * 1000);
+
+            let logoutTimer;
+            function resetTimer() {
+                clearTimeout(logoutTimer);
+                logoutTimer = setTimeout(function () {
+                    fetch("{{ route('logout') }}", {
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                            "Content-Type": "application/json"
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Fallo al cerrar sesión');
+                        window.location.replace("{{ route('login') }}");
+                    })
+                    .catch(error => {
+                        console.warn("⚠️ Error al cerrar sesión automáticamente:", error.message);
+                        window.location.reload();
+                    });
+                }, 30 * 60 * 1000); // 30 minutos
+            }
+
+            window.onload = resetTimer;
+            document.onmousemove = resetTimer;
+            document.onkeypress = resetTimer;
+            document.onclick = resetTimer;
+            document.onscroll = resetTimer;
 
         </script>
 
@@ -84,6 +126,7 @@
         <script src="{{url('assets/js/vendor/jquery-validation/jquery.validate.min.js')}}"></script>
         
         @yield('js-styles-home')
+        
     </body>
 
 </html>

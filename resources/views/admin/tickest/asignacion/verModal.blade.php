@@ -209,7 +209,14 @@
                                         ---
                                     </p>
 
-                                    <button class="btn btn-outline-primary generar-pdf" onclick="generar_pdf()">
+                                    <div class="col-12" id="archivoContainer2" style="display: none;">
+                                        <p class="mt-2 mb-1 text-muted fw-bold font-12 text-uppercase">Archivo Adjuntado:</p>
+                                        <div class="embed-responsive" style="height: 400px;">
+                                            <iframe id="archivoViewer2" src="" frameborder="0" style="width: 100%; height: 100%;"></iframe>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-outline-primary generar-pdf" onclick="generar_pdf()" style="margin-top: 30px;">
                                         <i class="mdi mdi-file-download"></i> Generar PDF
                                     </button>
 
@@ -323,6 +330,23 @@
         $('.hora_finalizacion').html(formatTime(data.tickets.fecha_fin));
         $('.descripcionUsuarioInf').html(data.tickets.descripcion);
         $('.generar-pdf').data('id', data.tickets.id_Asigticket );
+
+        if (data.tickets.ticket.archivo) {
+            $('#archivoContainer2').show();
+            let ext = data.tickets.ticket.archivo.split('.').pop().toLowerCase();
+            let url = `/tickets/storage/app/public/${data.tickets.ticket.archivo}`; 
+
+            if (['jpg','jpeg','png'].includes(ext)) {
+                $('#archivoViewer2').replaceWith(`<img id="archivoViewer2" src="${url}" style="width:100%; max-height:400px;" />`);
+            } else if (ext === 'pdf') {
+                $('#archivoViewer2').replaceWith(`<iframe id="archivoViewer2" src="${url}" frameborder="0" style="width:100%; height:400px;"></iframe>`);
+            } else {
+                $('#archivoContainer2').hide(); // Si no es soportado
+            }
+
+        } else {
+            $('#archivoContainer2').hide();
+        }
     }
 
     function generar_pdf() {

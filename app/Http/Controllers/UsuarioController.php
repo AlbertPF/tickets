@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -86,7 +87,8 @@ class UsuarioController extends Controller
                     'usuario' => $r->usuario,
                     'password' => Hash::make($r->password),
                     'tipo' => $r->tipo,
-                    'telefono' => $r->telefono
+                    'telefono' => $r->telefono,
+                    'telegram_user_id' => $r->id_telegram
                 ]);
 
                 if ($usuario) {
@@ -116,7 +118,8 @@ class UsuarioController extends Controller
                         'apellidoMaterno' => $r->apellidoMaterno,
                         'usuario' => $r->usuario,
                         'tipo' => $r->tipo,
-                        'telefono' => $r->telefono
+                        'telefono' => $r->telefono,
+                        'telegram_user_id' => $r->id_telegram
                     ];
 
                     // Actualizar la contraseña solo si se proporciona una nueva
@@ -287,9 +290,15 @@ class UsuarioController extends Controller
                 ], 400);
             }
 
-            // Obtener el usuario de la sesión
-            $usuario = Session::get('usuario');
-            $usuario = Usuario::find($usuario->id_usuario);
+            $usuario = Usuario::find(Auth::id());
+
+            if (!$usuario) {
+                return response()->json([
+                    'code' => 401,
+                    'msg' => 'error',
+                    'message' => 'Usuario no autenticado.',
+                ], 401);
+            }
 
             // Actualizar la contraseña
             $usuario->password = Hash::make($r->password);

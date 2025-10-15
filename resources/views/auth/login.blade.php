@@ -222,13 +222,24 @@
                 error: function(data) {
                     $spinnerContainer.hide(); // Ocultar el spinner
                     $button.prop('disabled', false);
-                    let errorJson = JSON.parse(data.responseText);
+                    try {
+                        let errorJson = JSON.parse(xhr.responseText);
 
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: errorJson.message,
-                    });
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: errorJson.message ?? 'Error inesperado',
+                        });
+                    } catch (e) {
+                        // Si la respuesta no es JSON (ej: HTML de login)
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Sesión expirada',
+                            text: 'Tu sesión fue cerrada por inactividad. Recarga la página para volver a iniciar sesión.',
+                        }).then(() => {
+                            window.location.href = "{{ route('login') }}";
+                        });
+                    }
                 }
             });
         });

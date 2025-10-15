@@ -166,7 +166,7 @@
             $.ajax(
             { 
                 url: "{{ route('verPerfil.usuario') }}",
-                data: {id_usuario:"{{Session::get('usuario')->id_usuario}}"},
+                data: {id_usuario:"{{Auth::user()->id_usuario}}"},
                 method: 'POST',
                 headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
                 beforeSend: function() {

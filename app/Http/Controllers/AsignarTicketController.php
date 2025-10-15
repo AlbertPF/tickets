@@ -15,13 +15,26 @@ use Illuminate\Support\Facades\Validator;
 
 class AsignarTicketController extends Controller
 {
-    public function actListar()
+    public function actListar(Request $r)
     {
-        $usuarioActual = Session::has('usuario') == true ? Session::get('usuario')->id_usuario : null;
+        $usuarioActual = Auth::check() ? Auth::user()->id_usuario : null;
+
+        if (!Auth::check()) {
+            return response()->json([
+                'code' => 401,
+                'msg' => 'error',
+                'message' => 'Usuario no autenticado',
+            ], 401);
+        }
+
+        $mes = $r->input('mes', now()->format('m'));
+        $anio = $r->input('anio', now()->format('Y'));
 
         if ($usuarioActual) {
             $ticketsAsig = AsignacionTicket::with(['ticket.soporte', 'ticket.personal', 'usuario'])
                 ->where('id_usuario', $usuarioActual)
+                ->whereMonth('fecha_asig', $mes)  
+                ->whereYear('fecha_asig', $anio)   
                 ->get();
 
             // Renderizar la vista con los tickets asignados
@@ -90,7 +103,7 @@ class AsignarTicketController extends Controller
                     'fecha_fin' => null,
                     'descripcion' => null,
                     'id_ticket' => $r->id_ticket,
-                    'id_usuario' => Session::has('usuario') == true ? Session::get('usuario')->id_usuario : null,
+                    'id_usuario' => Auth::check() ? Auth::user()->id_usuario : null,
                 ]);
 
                 /*$ticket = Ticket::find($r->id_ticket);
@@ -220,6 +233,7 @@ class AsignarTicketController extends Controller
 
             $ticketsAsig->ticket->estado_nombre = $ticketsAsig->ticket->getEstadoNombre();
             $ticketsAsig->ticket->estado_clase = $ticketsAsig->ticket->getEstadoClase();
+            $ticketsAsig->ticket->archivo = $ticketsAsig->ticket->archivo ? $ticketsAsig->ticket->archivo : null;
 
             if ($ticketsAsig && $ticketsAsig->ticket->oficinaPersonal->personal) {
                 return response()->json([
@@ -260,7 +274,7 @@ class AsignarTicketController extends Controller
                     $ticket->save();
                 }
 
-                $usuarioActual = Session::has('usuario') ? Session::get('usuario')->id_usuario : null;
+                $usuarioActual = Auth::check() ? Auth::user()->id_usuario : null;
 
                 $asignacionTicket = AsignacionTicket::where('id_usuario', $usuarioActual)
                     ->where('id_ticket', $r->id_ticket)
@@ -345,7 +359,7 @@ class AsignarTicketController extends Controller
 
                 DB::beginTransaction();
 
-                $usuarioActual = Session::has('usuario') ? Session::get('usuario')->id_usuario : null;
+                $usuarioActual = Auth::check() ? Auth::user()->id_usuario : null;
 
                 $ticketAsignacion = AsignacionTicket::where('id_usuario', $usuarioActual)
                     ->where('id_ticket', $r->id_ticket)
@@ -425,7 +439,7 @@ class AsignarTicketController extends Controller
 
                 DB::beginTransaction();
 
-                $usuarioActual = Session::has('usuario') ? Session::get('usuario')->id_usuario : null;
+                $usuarioActual = Auth::check() ? Auth::user()->id_usuario : null;
                 $actual = Carbon::now('America/Lima');
                 $fechafinalizacion = Carbon::now('America/Lima');
                 /*$ticketCancel = AsignacionTicket::where('id_usuario', $usuarioActual)
@@ -520,7 +534,7 @@ class AsignarTicketController extends Controller
 
                 DB::beginTransaction();
 
-                $usuarioActual = Session::has('usuario') ? Session::get('usuario')->id_usuario : null;
+                $usuarioActual = Auth::check() ? Auth::user()->id_usuario : null;
 
                 $ticketAsignacion = AsignacionTicket::where('id_usuario', $usuarioActual)
                     ->where('id_ticket', $r->id_ticket)

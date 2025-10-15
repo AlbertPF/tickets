@@ -162,6 +162,12 @@
                                         ---
                                     </p>
 
+                                    <div class="col-12" id="archivoContainer" style="display: none;">
+                                        <p class="mt-2 mb-1 text-muted fw-bold font-12 text-uppercase">Archivo Adjuntado:</p>
+                                        <div class="embed-responsive" style="height: 400px;">
+                                            <iframe id="archivoViewer" src="" frameborder="0" style="width: 100%; height: 100%;"></iframe>
+                                        </div>
+                                    </div>
 
                                 </div> <!-- end card-body-->
                             </div> <!-- end card-->
@@ -259,5 +265,22 @@
                 </span>
             </h5>
         `);
+
+        if (data.tickets.archivo) {
+            $('#archivoContainer').show();
+            let ext = data.tickets.archivo.split('.').pop().toLowerCase();
+            let url = `/tickets/storage/app/public/${data.tickets.archivo}`; 
+
+            if (['jpg','jpeg','png'].includes(ext)) {
+                $('#archivoViewer').replaceWith(`<img id="archivoViewer" src="${url}" style="width:100%; max-height:400px;" />`);
+            } else if (ext === 'pdf') {
+                $('#archivoViewer').replaceWith(`<iframe id="archivoViewer" src="${url}" frameborder="0" style="width:100%; height:400px;"></iframe>`);
+            } else {
+                $('#archivoContainer').hide(); // Si no es soportado
+            }
+
+        } else {
+            $('#archivoContainer').hide();
+        }
     }
 </script>

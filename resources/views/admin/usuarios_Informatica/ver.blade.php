@@ -52,7 +52,7 @@
                                             </li>
                                             <li class="list-inline-item">
                                                 <h5 class="mb-1 text-white">{{ $usuario->telefono }}</h5>
-                                                <p class="mb-0 font-13 text-white-50">Número Telefónico</p>
+                                                <p class="mb-0 font-13 text-white-50">Teléfono</p>
                                             </li>
                                         </ul>
                                     </div>
@@ -98,8 +98,8 @@
 
                         {{-- <p class="text-muted"><strong>DNI :</strong><span class="ms-2">{{ $usuario->dni }}</span></p> --}}
 
-                        <p class="text-muted"><strong>Número Telefónico :</strong> <span class="ms-2">{{ $usuario->telefono }}</span>
-                        </p>
+                        <p class="text-muted"><strong>Teléfono :</strong> <span class="ms-2">{{ $usuario->telefono }}</span></p>
+                        <p class="text-muted"><strong>ID Telegram :</strong> <span class="ms-2">{{ $usuario->telegram_user_id }}</span></p>
 
                         <p class="text-muted"><strong>Usuario :</strong> <span
                                 class="ms-2">{{ $usuario->usuario }}</span></p>

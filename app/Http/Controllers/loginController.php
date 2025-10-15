@@ -12,7 +12,7 @@ class loginController extends Controller
 {
     public function actionLogin()
     {
-        if (Session::has('usuario'))
+        if (Auth::check())
             return redirect('homeAdmin');
         else
             return view('auth.login');
@@ -22,9 +22,8 @@ class loginController extends Controller
     {
         if ($request->ajax()) {
             $usuario = Usuario::where('usuario', $request->usuario)->first();
-            //dd($usuario);
-            // validacion de usuario para ver siexiste
-            if ($usuario == null) {  //return response()->json(['estado' => false, 'message' => 'El usuario no se encuentra registrado.']);
+            
+            if ($usuario == null) { 
                 return response()->json([
                     'code' => 404,
                     'msg' => 'error',
@@ -32,26 +31,31 @@ class loginController extends Controller
                 ], 404);
             }
 
-            // validacion de usuario para ver si la contraseña es la correcta
-            if (!Hash::check($request->password, $usuario->password)) {   //return response()->json(['estado' => false, 'message' => 'La contraseña es incorrecta.']);
+            
+            if (!Hash::check($request->password, $usuario->password)) {  
                 return response()->json([
                     'code' => 404,
                     'msg' => 'error',
                     'message' => 'La contraseña es incorrecta..'
                 ], 404);
             }
-            // guardado en sesion el usuario logueado
-            session(['usuario' => $usuario]);
+
+            //session(['usuario' => $usuario]);
+            Auth::login($usuario);
             //session(['id_usuario' => $usuario->id_suario]);
 
-            // Definir la ruta de redirección según el tipo de usuario
-            $redirectUrl = ($usuario->tipo === 'Personal') ? route('index.actividades') : url('homeAdmin');
+            $intendedUrl = Session::pull('url.intended');
+
+            // Si no hay url.intended, usar la redirección por tipo de usuario
+            if (!$intendedUrl) {
+                $intendedUrl = ($usuario->tipo === 'Personal') ? route('index.actividades') : url('homeAdmin');
+            }
             
             return response()->json([
                 'code' => 200,
                 'msg' => 'success',
                 'message' => 'Inicio de sesión exitoso!',
-                'redirect' => $redirectUrl,
+                'redirect' => $intendedUrl,
                 //'usuario' => $usuario
             ], 200);
         } else {

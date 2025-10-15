@@ -45,12 +45,12 @@ Route::post('home/consultar-tickets', [HomeController::class, 'consultarTickets'
 
 Route::get('login', [loginController::class, 'actionLogin'])->name('login');
 Route::post('login/sigin', [LoginController::class, 'sigin']);
-Route::get('login/logout', [loginController::class, 'logout'])->name('logout');
+Route::post('login/logout', [loginController::class, 'logout'])->name('logout');
 
 
 
 // Rutas protegidas por autenticación
-Route::middleware([AuthAdministrador::class])->group(function () {
+Route::middleware(['web', AuthAdministrador::class])->group(function () {
 
     Route::get('homeAdmin',[HomeAdminController::class, 'index']);
     Route::get('homeAdmin/CantidadDatos', [HomeAdminController::class, 'actCatDatos'])->name('cantidadDatos');
@@ -123,6 +123,9 @@ Route::middleware([AuthAdministrador::class])->group(function () {
     Route::get('tickets', [TicketsController::class, 'index'])->name('index.tickets');
     Route::post('tickets/listar', [TicketsController::class, 'actListar'])->name('listar.tickets');
     Route::get('tickets/ver', [TicketsController::class, 'actVer'])->name('ver.tickets');
+    Route::get('tickets/{id_tickets}', [TicketsController::class, 'actMostrar'])->name('tickets.mostrar');
+    Route::post('tickets/{id_tickets}/asignar', [TicketsController::class, 'actAsignar'])->name('tickets.asignar');
+    Route::post('tickets/{id_tickets}/cancelar', [TicketsController::class, 'actCancelar'])->name('tickets.cancelar');
     
 
     Route::post('ticketsAsig/listar', [AsignarTicketController::class, 'actListar'])->name('listar.ticketsAsig');
@@ -171,5 +174,7 @@ Route::middleware([AuthAdministrador::class])->group(function () {
     Route::post('resumen/filtrar', [ResumenGeneralController::class, 'actFiltrar'])->name('filtrar.resumen');
 });
 
-
+Route::get('/refresh-csrf', function () {
+    return response()->json(['token' => csrf_token()]);
+});
 

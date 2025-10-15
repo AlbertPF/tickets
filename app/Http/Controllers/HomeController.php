@@ -7,10 +7,14 @@ use App\Models\OficinaPersonal;
 use App\Models\Personal;
 use App\Models\Soporte;
 use App\Models\Ticket;
+use App\Models\ticket_notificacion;
+use App\Models\Usuario;
+use App\Notifications\CrearTicketNotificacion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
 
 class HomeController extends Controller
 {
@@ -166,6 +170,7 @@ class HomeController extends Controller
                 'id_soporte' => 'required',
                 'id_OfiPer' => 'required',
                 'descripcion' => 'required',
+                'archivo' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:3072'
             ];
 
             // Mensajes personalizados para las validaciones
@@ -173,6 +178,9 @@ class HomeController extends Controller
                 'id_OfiPer.required' => 'La Asiganción del Personal es obligatorio.',
                 'id_soporte.required' => 'La incidencia es obligatorio.',
                 'descripcion.required' => 'La descripción de la incidencia es obligatorio, para un mayor entendimiento.',
+                'archivo.file'  => 'El archivo adjunto no es válido.',
+                'archivo.mimes' => 'El archivo debe ser de tipo: JPG, JPEG, PNG o PDF.',
+                'archivo.max'   => 'El archivo no debe superar los 3 MB.',
             ];
 
             // Validación de los datos
@@ -229,16 +237,48 @@ class HomeController extends Controller
             DB::beginTransaction(); // Iniciar una transacción
 
             try {
-                
-                Ticket::create([
+
+                $rutaArchivo = null;
+                if ($r->hasFile('archivo')) {
+                    $rutaArchivo = $r->file('archivo')->store('tickets', 'public');
+                }
+
+                $ticket = Ticket::create([
                     'estado' => 1,
                     'fecha_env' => now(),
                     'descripcion' => $r->descripcion,
+                    'archivo' => $rutaArchivo,
                     'id_soporte' => $r->id_soporte,
                     'id_OfiPer' => $r->id_OfiPer
                 ]);
 
-                DB::commit(); // Confirmar la transacción
+                DB::commit();
+
+                // ----------------------------
+                // NOTIFICAR a los encargados
+                // ----------------------------
+                // Si tus usuarios tienen role 'soporte':
+                /*$usuariosAtencion = Usuario::where('role', 'soporte')
+                    ->whereNotNull('telegram_user_id')
+                    ->get();*/
+
+                $usuariosAtencion = Usuario::whereIn('tipo', ['Administrador', 'Agente Informático'])
+                    ->whereNotNull('telegram_user_id')
+                    ->get();
+
+                // Enviar notificación a todos los usuarios
+                //Notification::send($usuariosAtencion, new CrearTicket($ticket, auth()->user() ?? null));
+
+                foreach ($usuariosAtencion as $usuario) {
+                    $usuario->notify(new CrearTicketNotificacion($ticket));
+
+                    ticket_notificacion::create([
+                        'id_ticket' => $ticket->id_ticket,
+                        'id_usuario' => $usuario->id_usuario,
+                        'enviada_en' => now(),
+                        'abierta' => false
+                    ]);
+                }
 
                 return response()->json([
                     'code' => 200,

@@ -3,7 +3,7 @@
 
     <!-- Obtener la URL de redirección según el tipo de usuario -->
     @php
-    $redirectUrl = session('usuario') && session('usuario')->tipo === 'Personal' 
+    $redirectUrl = Auth::check() && Auth::user()->tipo === 'Personal' 
         ? route('index.actividades') 
         : url('homeAdmin');
     @endphp
@@ -33,7 +33,7 @@
         <!--- Sidemenu -->
         <ul class="side-nav">
 
-            @if(Session::has('usuario') && Session::get('usuario')->tipo === 'Administrador' || Session::get('usuario')->tipo === 'Agente Informático')
+            @if(Auth::check() && (Auth::user()->tipo === 'Administrador' || Auth::user()->tipo === 'Agente Informático'))
                 <li class="side-nav-title side-nav-item">Navegación</li>
 
                 <li class="side-nav-item">
@@ -53,7 +53,7 @@
                 </li>
             @endif
 
-            @if(Session::has('usuario') && Session::get('usuario')->tipo === 'Administrador')
+            @if(Auth::check() && (Auth::user()->tipo === 'Administrador'))
 
                 <li class="side-nav-item">
                     <a href="{{ route('index.ticketsAsig') }}" class="side-nav-link">
@@ -110,7 +110,7 @@
                 </li>
             @endif
 
-            @if(Session::has('usuario') && Session::get('usuario')->tipo === 'Administrador' || Session::get('usuario')->tipo === 'Agente Informático')
+            @if(Auth::check() && (Auth::user()->tipo === 'Administrador' || Auth::user()->tipo === 'Agente Informático'))
                 <li class="side-nav-item">
                     <a href="{{ route('incidencia.index') }}" class="side-nav-link">
                         <i class="mdi mdi-cpu-64-bit"></i>
@@ -120,7 +120,7 @@
             @endif
             <li class="side-nav-title side-nav-item">Actividades</li>
 
-            @if(Session::has('usuario') && Session::get('usuario')->tipo === 'Administrador')
+            @if(Auth::check() && (Auth::user()->tipo === 'Administrador'))
                 <li class="side-nav-item">
                     <a href="{{ route('index.listActividades') }}" class="side-nav-link">
                         <i class="uil-box"></i>
@@ -143,7 +143,7 @@
                 </a>
             </li>
 
-            @if(Session::has('usuario') && Session::get('usuario')->tipo === 'Administrador')
+            @if(Auth::check() && (Auth::user()->tipo === 'Administrador'))
                 <li class="side-nav-item">
                     <a href="{{ route('resumen.index') }}" class="side-nav-link">
                         <i class="mdi mdi-archive-eye"></i>

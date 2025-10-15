@@ -49,7 +49,7 @@
                                     data-id-ticket="{{ $row->id_ticket }}"> 
                                     <i class="mdi mdi-close-network" title="Cancelar"></i>
                                 </a>
-                                @if(Session::has('usuario') && Session::get('usuario')->tipo === 'Administrador')
+                                @if(Auth::check() && Auth::user()->tipo === 'Administrador')
                                     <a href="javascript: void(0);" class="action-icon text-info rounded ModalAsignar_tickets"
                                         data-id-ticket="{{ $row->id_ticket }}"> 
                                         <i class="mdi mdi-account-details" title="Asignar Perosnal"></i>
@@ -58,7 +58,7 @@
                             @else
                                 {{-- Obtener la asignación del usuario en sesión --}}
                                 @php
-                                    $asignacion = $row->asignaciones->where('id_usuario', Session::get('usuario')->id_usuario)->first();
+                                    $asignacion = $row->asignaciones->where('id_usuario', Auth::user()->id_usuario)->first();
                                 @endphp
 
                                 {{-- Verificar si existe la asignación y si el estado no es 4 (No resuelto) --}}
@@ -85,7 +85,7 @@
                             </a>
                         @else
                             -- Mostrar botones de finalizar y no logrado solo para el usuario que asignó el ticket
-                            @if ($row->asignaciones->where('id_usuario', Session::has('usuario')==true?Session::get('usuario')->id_usuario:null)->count() > 0)
+                            @if ($row->asignaciones->where('id_usuario', Auth::check()?Auth::user()->id_usuario:null)->count() > 0)
                                 <a href="javascript: void(0);" class="action-icon text-danger rounded finalizar_ticket"
                                     data-id-ticket="{{ $row->id_ticket }}"> 
                                     <i class="mdi mdi-close-network" title="Finalizar"></i>

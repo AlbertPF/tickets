@@ -7,6 +7,7 @@ use App\Models\Bitacora;
 use App\Models\Oficina;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -21,7 +22,7 @@ class BitacoraController extends Controller
     public function actListar(Request $r)
     {
 
-        $usuarioActual = Session::has('usuario') == true ? Session::get('usuario')->id_usuario : null;
+        $usuarioActual = Auth::check() ? Auth::user()->id_usuario : null;
 
         if ($usuarioActual) {
             //$miBitacoras = Bitacora::all();
@@ -90,7 +91,7 @@ class BitacoraController extends Controller
                         'descripcion' => $r->descripcion,
                         'id_oficina' => $r->id_oficina,
                         'estado' => '1',
-                        'id_usuario' => Session::has('usuario') == true ? Session::get('usuario')->id_usuario : null,
+                        'id_usuario' => Auth::check() ? Auth::user()->id_usuario : null,
                     ]);
 
 

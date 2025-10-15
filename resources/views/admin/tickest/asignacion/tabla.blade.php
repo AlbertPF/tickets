@@ -48,7 +48,7 @@
                         @else
                             {{-- Obtener la asignación del usuario en sesión --}}
                             @php
-                                $asignacionUsuario = $row->where('id_usuario', Session::get('usuario')->id_usuario)->first();
+                                $asignacionUsuario = $row->where('id_usuario', Auth::user()->id_usuario)->first();
                             @endphp
 
                             {{-- Verificar si la asignación del usuario en sesión tiene estado distinto de 4 --}}

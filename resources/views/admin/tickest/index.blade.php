@@ -33,7 +33,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-10 col-lg-10">
+                        <div class="col-xl-8 col-lg-8">
                             <h4 class="header-title">Lista de Tickets</h4>
                             <p class="text-muted font-14">
                                 El personal del Gobierno Regional de Apurímac puede registrar tickets para reportar incidencias o
@@ -42,13 +42,33 @@
                                 continuidad de los servicios públicos ofrecidos a la comunidad.
                             </p>
                         </div>
-                        {{-- <div class="col-xl-3 col-lg-2">
+                        <div class="col-xl-2 col-lg-2">
                             <div class="d-grid">
-                                <button type="button" class="btn btn-success agregar_personal" data-bs-toggle="modal"
-                                    data-bs-target="#modal-nuevo-personal"><i class="mdi mdi-account-multiple-plus me-2"></i>
-                                    Nuevo Personal</button>
+                                <label class="form-label" for="tsmes">Mes :</label>
+                                <select id="tsmes" class="form-control select2" data-toggle="select2">
+                                    <option value="" selected disabled>selecione mes</option>
+                                    <option value="01">Enero</option>
+                                    <option value="02">Febrero</option>
+                                    <option value="03">Marzo</option>
+                                    <option value="04">Abril</option>
+                                    <option value="05">Mayo</option>
+                                    <option value="06">Junio</option>
+                                    <option value="07">Julio</option>
+                                    <option value="08">Agosto</option>
+                                    <option value="09">Septiembre</option>
+                                    <option value="10">Octubre</option>
+                                    <option value="11">Noviembre</option>
+                                    <option value="12">Diciembre</option>
+                                </select>
                             </div>
-                        </div> --}}
+                        </div>
+                        <div class="col-xl-2 col-lg-2">
+                            <div class="d-grid">
+                                <label class="form-label" for="tsanio">Año :</label>
+                                <select id="tsanio" class="form-control select2" data-toggle="select2">
+                                </select>
+                            </div>
+                        </div>
                     </div>
 
                     <ul class="nav nav-tabs nav-bordered mb-3">
@@ -115,9 +135,23 @@
     <script>
         $(document).ready(function() {
 
+            cargarAnios('tsanio');
+
+            let currentDatest = new Date();
+            let currentYearst = currentDatest.getFullYear();
+            let currentMonthst = String(currentDatest.getMonth() + 1).padStart(2, '0'); // Mes en formato 01-12
+
+            $('#tsanio').val(currentYearst).trigger('change');
+            $('#tsmes').val(currentMonthst).trigger('change');
+
             mostrar_tabla();
 
             setInterval(mostrar_tabla, 5 * 60 * 1000); 
+
+            $('#tsmes, #tsanio').on('change', function () {
+                mostrar_tabla();
+                mostrar_tablaAsig();
+            });
 
             $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
                 var target = $(e.target).attr("href");
@@ -126,7 +160,6 @@
                 }
             });
 
-            //registrar_ticketsAsig();
         });
 
         /*----------- funciones--------------*/
@@ -134,12 +167,17 @@
         function mostrar_tabla() {
             //console.log('listar tickets');
 
+            let mes = $('#tsmes').val();
+            let anio = $('#tsanio').val();
+
             $.ajax({
                 type: 'POST',
                 url: '{{ route('listar.tickets') }}',
                 dataType: 'json',
                 data: {
-                    _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}',
+                    mes: mes,
+                    anio: anio
                 },
                 beforeSend: function() {
 
@@ -232,12 +270,17 @@
         function mostrar_tablaAsig() {
             //console.log('listar tickets');
 
+            let mes = $('#tsmes').val();
+            let anio = $('#tsanio').val();
+
             $.ajax({
                 type: 'POST',
                 url: '{{ route('listar.ticketsAsig') }}',
                 dataType: 'json',
                 data: {
-                    _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}',
+                    mes: mes,
+                    anio: anio
                 },
                 beforeSend: function() {
 
@@ -477,6 +520,24 @@
                     }
                 });
             });
+        }
+
+        function cargarAnios(selectId) {
+            let select = document.getElementById(selectId);
+            if (!select) return;
+
+            let yearActual = new Date().getFullYear();
+            let yearInicio = 2023;
+            let yearMax = yearActual + 1;
+
+            select.innerHTML = '<option value="" selected disabled>Seleccione año</option>';
+
+            for (let year = yearInicio; year <= yearMax; year++) {
+                let option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                select.appendChild(option);
+            }
         }
 
     </script>

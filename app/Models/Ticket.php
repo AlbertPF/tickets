@@ -19,6 +19,7 @@ class Ticket extends Model
         'estado',
         'fecha_env',
         'descripcion',
+        'archivo',
         'id_soporte',
         'id_OfiPer'
     ];

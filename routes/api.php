@@ -3,6 +3,7 @@
 use App\Http\Controllers\TelegramController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ChatbotController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/telegram/webhook', [TelegramController::class, 'webhook']);
+//Route::post('/chatbot/message', [ChatbotController::class, 'handleMessage'])->middleware('auth'); // Opcional: Requiere login
+//Route::post('/chatbot/message', [ChatbotController::class, 'handleMessage']);
+Route::middleware('api')->group(function () {
+    Route::post('/chatbot/message', [ChatbotController::class, 'handleMessage']);
+});
+
+Route::post('/chatbot/start', [ChatbotController::class, 'startInteraction']);
+Route::post('/chatbot/end-interaction', [ChatbotController::class, 'endInteraction']);

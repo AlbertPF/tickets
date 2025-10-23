@@ -9,6 +9,7 @@ use App\Models\Usuario;
 use App\Models\Ticket;
 use App\Models\ticket_notificacion;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class TelegramController extends Controller
@@ -54,9 +55,10 @@ class TelegramController extends Controller
             }
 
             if (strpos($command, '/comenzar') === 0) {
-                $this->sendMessage($chatId,
-                    "<b>Bienvenido al sistema de tickets</b>\n\n".
-                    "Podrás consultar y asignarte tickets directamente desde Telegram.",
+                $this->sendMessage(
+                    $chatId,
+                    "<b>Bienvenido al sistema de tickets</b>\n\n" .
+                        "Podrás consultar y asignarte tickets directamente desde Telegram.",
                     'HTML'
                 );
                 $this->sendMessage($chatId, $this->helpText(), 'HTML');
@@ -96,14 +98,15 @@ class TelegramController extends Controller
         $usuario = Usuario::where('telegram_user_id', $chatId)->first();
 
         if (! $usuario) {
-            $this->sendMessage($chatId,
+            $this->sendMessage(
+                $chatId,
                 "*No estás registrado*\n\nPor favor contacta con el administrador para enlazar tu cuenta de Telegram con el sistema.",
                 'Markdown'
             );
             return response()->json(['ok' => true]);
         }
 
-        $tickets = Ticket::with(['soporte','oficinaPersonal.oficina','oficinaPersonal.personal'])
+        $tickets = Ticket::with(['soporte', 'oficinaPersonal.oficina', 'oficinaPersonal.personal'])
             ->whereIn('estado', [1, 4])
             ->orderBy('fecha_env', 'asc')
             ->limit($limit)
@@ -125,7 +128,7 @@ class TelegramController extends Controller
             $desc = e($desc);
             $oficina = e(optional($t->oficinaPersonal->oficina)->nombre ?? 'N/A');
             $nombrePersonal = e(optional($t->oficinaPersonal->personal)->nombre ?? '') . ' ' .
-                              e(optional($t->oficinaPersonal->personal)->apellidoPaterno ?? '');
+                e(optional($t->oficinaPersonal->personal)->apellidoPaterno ?? '');
             $fecha = $t->fecha_env;
 
             $text .= "<b>{$id}</b> — {$soporte}\n";
@@ -155,7 +158,8 @@ class TelegramController extends Controller
     {
         $usuario = Usuario::where('telegram_user_id', $chatId)->first();
         if (!$usuario) {
-            $this->sendMessage($chatId,
+            $this->sendMessage(
+                $chatId,
                 "*No estás registrado*\n\nPor favor contacta con el administrador para enlazar tu cuenta de Telegram con el sistema.",
                 'Markdown'
             );
@@ -178,14 +182,15 @@ class TelegramController extends Controller
                 default => 'desconocido'
             };
 
-            $this->sendMessage($chatId,
+            $this->sendMessage(
+                $chatId,
                 "⚠️ El ticket <code>{$idTicket}</code> ya no está disponible (ticket en estado actual: {$estado}).",
                 'HTML'
             );
 
             $notificacion = ticket_notificacion::where('id_ticket', $ticket->id_ticket)
-            ->where('id_usuario', $usuario->id_usuario)
-            ->first();
+                ->where('id_usuario', $usuario->id_usuario)
+                ->first();
 
             if ($notificacion && !$notificacion->abierta) {
                 $notificacion->abierta = true;
@@ -197,19 +202,20 @@ class TelegramController extends Controller
         }
 
         $primerTicketPendiente = Ticket::where('estado', 1)
-                                   ->orderBy('fecha_env', 'asc')
-                                   ->first();
-        
+            ->orderBy('fecha_env', 'asc')
+            ->first();
+
         if ($primerTicketPendiente->id_ticket !== $ticket->id_ticket) {
-            $this->sendMessage($chatId,
+            $this->sendMessage(
+                $chatId,
                 "⚠️ No puedes asignarte este ticket aún.\n" .
-                "Primero debes asignarte el ticket pendiente más antiguo: <code>{$primerTicketPendiente->id_ticket}</code>.",
+                    "Primero debes asignarte el ticket pendiente más antiguo: <code>{$primerTicketPendiente->id_ticket}</code>.",
                 'HTML'
             );
 
             $notificacion = ticket_notificacion::where('id_ticket', $ticket->id_ticket)
-            ->where('id_usuario', $usuario->id_usuario)
-            ->first();
+                ->where('id_usuario', $usuario->id_usuario)
+                ->first();
 
             if ($notificacion && !$notificacion->abierta) {
                 $notificacion->abierta = true;
@@ -218,7 +224,7 @@ class TelegramController extends Controller
             }
 
             return response()->json(['ok' => true]);
-        }                         
+        }
 
         $ticket->estado = 2;
         $ticket->save();
@@ -242,7 +248,8 @@ class TelegramController extends Controller
             $notificacion->save();
         }
 
-        $this->sendMessage($chatId,
+        $this->sendMessage(
+            $chatId,
             "✅ Te has asignado correctamente el ticket <code>{$idTicket}</code>.",
             'HTML'
         );
@@ -253,7 +260,7 @@ class TelegramController extends Controller
 
     protected function sendMessage(int $chatId, string $text, string $parseMode = 'HTML')
     {
-        
+
         $token = config('services.telegram-bot-api.token') ?? env('TELEGRAM_BOT_TOKEN');
 
         try {
@@ -274,7 +281,7 @@ class TelegramController extends Controller
 
             Log::info('Telegram response: '.$response->body());*/
         } catch (\Throwable $e) {
-            Log::error('Telegram sendMessage error: '.$e->getMessage());
+            Log::error('Telegram sendMessage error: ' . $e->getMessage());
         }
     }
 
@@ -286,6 +293,96 @@ class TelegramController extends Controller
             "/pendientes <code>n</code> — Lista hasta n tickets.",
             "/asignar <code>id</code> — Asignarte un ticket (requiere permisos).",
             "/ayuda — Mostrar esta ayuda"
+        ]);
+    }
+
+    public function getMetrics(Request $request)
+    {
+        $period = $request->get('period', 'total');
+        $query = DB::table('ticket_notificacion');
+
+        // Filtros de fecha
+        if ($period === 'week') {
+            $query->where('enviada_en', '>=', now()->subDays(7));
+        } elseif ($period === 'month') {
+            $query->where('enviada_en', '>=', now()->subMonth());
+        } elseif ($period === 'year') {
+            $query->where('enviada_en', '>=', now()->subYear());
+        }
+
+        // Total enviadas y abiertas
+        $total = $query->count();
+        $abiertas = (clone $query)->where('abierta', 1)->count();
+
+        // Métricas principales
+        $tasa_apertura = $total ? round(($abiertas / $total) * 100, 2) : 0;
+        $no_abiertas = round(100 - $tasa_apertura, 2);
+
+        $promedio_apertura = DB::table('ticket_notificacion')
+            ->whereNotNull('abierta_en')
+            ->selectRaw('AVG(TIMESTAMPDIFF(MINUTE, enviada_en, abierta_en)) as promedio')
+            ->value('promedio');
+        
+        $promedio_apertura = round($promedio_apertura ?? 0, 2);
+
+        $usuarios_inactivos = DB::selectOne("
+            SELECT 
+                (SUM(CASE WHEN total_abiertas = 0 THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS porcentaje
+            FROM (
+                SELECT id_usuario, SUM(abierta) AS total_abiertas
+                FROM ticket_notificacion
+                GROUP BY id_usuario
+            ) t
+        ")->porcentaje ?? 0;
+
+        // Tasa de apertura en el tiempo
+        $apertura_tiempo = DB::select("
+            SELECT DATE(enviada_en) as fecha,
+                (SUM(abierta)/COUNT(*))*100 AS tasa
+            FROM ticket_notificacion
+            WHERE enviada_en IS NOT NULL
+            GROUP BY DATE(enviada_en)
+            ORDER BY fecha ASC
+        ");
+
+        // Usuarios más activos
+        $usuarios_activos = DB::select("
+            SELECT u.nombre, COUNT(*) AS total
+            FROM ticket_notificacion n
+            INNER JOIN usuarios u ON n.id_usuario = u.id_usuario
+            WHERE n.abierta = 1
+            GROUP BY u.nombre
+            ORDER BY total DESC
+            LIMIT 10
+        ");
+
+        // Tasa de apertura por tipo de ticket
+        $tasa_por_tipo = DB::select("
+            SELECT s.nombre AS soporte,
+                (SUM(n.abierta)/COUNT(*))*100 AS tasa
+            FROM ticket_notificacion n
+            INNER JOIN tickets t ON n.id_ticket = t.id_ticket
+            INNER JOIN soportes s ON t.id_soporte = s.id_soporte
+            GROUP BY s.nombre
+        ");
+
+        // Distribución por hora del día
+        $distribucion_horas = DB::select("
+            SELECT HOUR(enviada_en) AS hora, COUNT(*) AS total
+            FROM ticket_notificacion
+            GROUP BY HOUR(enviada_en)
+            ORDER BY hora
+        ");
+
+        return response()->json([
+            'tasa_apertura' => round($tasa_apertura, 2),
+            'no_abiertas' => round($no_abiertas, 2),
+            'promedio_apertura' => round($promedio_apertura ?? 0, 2),
+            'usuarios_inactivos' => round($usuarios_inactivos, 2),
+            'apertura_tiempo' => $apertura_tiempo,
+            'usuarios_activos' => $usuarios_activos,
+            'tasa_por_tipo' => $tasa_por_tipo,
+            'distribucion_horas' => $distribucion_horas,
         ]);
     }
 }

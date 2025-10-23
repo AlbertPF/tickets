@@ -16,6 +16,7 @@ use App\Http\Controllers\SoporteController;
 use App\Http\Controllers\TicketsController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\TelegramController;
 use App\Http\Middleware\AuthAdministrador;
 use Illuminate\Support\Facades\Route;
 
@@ -174,6 +175,7 @@ Route::middleware(['web', AuthAdministrador::class])->group(function () {
     Route::post('resumen/filtrar', [ResumenGeneralController::class, 'actFiltrar'])->name('filtrar.resumen');
 
     Route::get('chatbot/metrics', [ChatbotController::class, 'getMetrics'])->name('chatbot.metrics');
+    Route::get('notificaciones/metrics', [TelegramController::class, 'getMetrics']);
 });
 
 Route::get('/refresh-csrf', function () {

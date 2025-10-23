@@ -219,7 +219,7 @@
                         msjRee(data);
                     }
                 },
-                error: function(data) {
+                error: function(xhr, status, error) {
                     $spinnerContainer.hide(); // Ocultar el spinner
                     $button.prop('disabled', false);
                     try {

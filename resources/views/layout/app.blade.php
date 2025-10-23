@@ -125,6 +125,80 @@
 
         <script src="{{url('assets/js/vendor/jquery-validation/jquery.validate.min.js')}}"></script>
         
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                // 1. Restaurar configuración desde localStorage
+                const savedSettings = JSON.parse(localStorage.getItem("userSettings")) || {};
+
+                if (savedSettings.colorScheme) {
+                    document.body.setAttribute("data-layout-color", savedSettings.colorScheme);
+                    document.querySelector(`#${savedSettings.colorScheme}-mode-check`)?.setAttribute("checked", true);
+                }
+
+                if (savedSettings.sidebarTheme) {
+                    document.body.setAttribute("data-leftbar-theme", savedSettings.sidebarTheme);
+                    document.querySelector(`#${savedSettings.sidebarTheme}-check`)?.setAttribute("checked", true);
+                }
+
+                if (savedSettings.layoutWidth) {
+                    document.body.setAttribute("data-layout-mode", savedSettings.layoutWidth);
+                    document.querySelector(`#${savedSettings.layoutWidth}-check`)?.setAttribute("checked", true);
+                }
+
+                if (savedSettings.sidebarCompact) {
+                    document.body.setAttribute("data-leftbar-compact-mode", savedSettings.sidebarCompact);
+                    document.querySelector(`#${savedSettings.sidebarCompact}-check`)?.setAttribute("checked", true);
+                }
+
+                // 2. Guardar cambios cuando el usuario modifica una opción
+                function saveSetting(key, value) {
+                    savedSettings[key] = value;
+                    localStorage.setItem("userSettings", JSON.stringify(savedSettings));
+                }
+
+                // 3. Detectar cambios y aplicar estilos en tiempo real
+                // Esquema de color
+                document.querySelectorAll('input[name="color-scheme-mode"]').forEach(input => {
+                    input.addEventListener("change", function () {
+                        document.body.setAttribute("data-layout-color", this.value);
+                        saveSetting("colorScheme", this.value);
+                    });
+                });
+
+                // Ancho
+                document.querySelectorAll('input[name="width"]').forEach(input => {
+                    input.addEventListener("change", function () {
+                        document.body.setAttribute("data-layout-mode", this.value);
+                        saveSetting("layoutWidth", this.value);
+                    });
+                });
+
+                // Barra lateral izquierda (tema)
+                document.querySelectorAll('input[name="theme"]').forEach(input => {
+                    input.addEventListener("change", function () {
+                        document.body.setAttribute("data-leftbar-theme", this.value);
+                        saveSetting("sidebarTheme", this.value);
+                    });
+                });
+
+                // Compactación de barra lateral
+                document.querySelectorAll('input[name="compact"]').forEach(input => {
+                    input.addEventListener("change", function () {
+                        document.body.setAttribute("data-leftbar-compact-mode", this.value);
+                        saveSetting("sidebarCompact", this.value);
+                    });
+                });
+
+                // 4. Botón para restablecer
+                document.getElementById("resetBtn").addEventListener("click", function () {
+                    localStorage.removeItem("userSettings");
+                    window.location.reload();
+                });
+
+            });
+        </script>
+
         @yield('js-styles-home')
         
     </body>

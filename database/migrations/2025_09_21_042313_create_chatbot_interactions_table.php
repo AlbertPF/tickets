@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('chatbot_interactions', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('started_at'); // Fecha y hora de apertura            
+            $table->timestamp('started_at'); // Fecha y hora de apertura     
+            $table->timestamp('ended_at')->nullable(); // Fecha y hora de apertura           
             $table->integer('message_count')->default(0); // Cantidad de mensajes enviados
             $table->integer('successful_responses')->default(0); // Respuestas exitosas
             $table->integer('failed_responses')->default(0); // Respuestas fallidas

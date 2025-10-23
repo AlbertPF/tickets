@@ -328,6 +328,9 @@
     {{-- metricas-interaccion --}}    
     @include('admin.dashboard.metricas')
 
+    {{-- metricas-notificaciones --}}    
+    @include('admin.dashboard.metricasNotificaciones')
+
     <div class="row">
         <div class="col-12">
             <div class="card">

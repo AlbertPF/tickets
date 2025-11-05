@@ -10,12 +10,22 @@ use App\Models\ChatbotInteraction;
 class ChatbotController extends Controller
 {
     // Modelos ordenados por prioridad/estabilidad
-    private $models = [
+    /*private $models = [
         'primary' => 'meta-llama/llama-3.2-3b-instruct:free',
         'fallback1' => 'google/gemma-2-9b-it:free',
         'fallback2' => 'meta-llama/llama-4-maverick:free',
         'fallback3' => 'tngtech/deepseek-r1t2-chimera:free',
         'fallback4' => 'alibaba/tongyi-deepresearch-30b-a3b:free'
+    ];*/
+
+    private $models = [
+        'primary' => 'meta-llama/llama-3.3-8b-instruct:free',  // Mantén si es estable para ti
+        'fallback1' => 'google/gemini-2.0-flash-exp:free',  // Alto contexto, multimodal
+        'fallback2' => 'deepseek/deepseek-r1-0528:free',   // Máximo contexto, razonamiento top
+        'fallback3' => 'mistralai/mistral-small-3.1:free',  // Estable y multilingüe
+        'fallback4' => 'microsoft/phi-3.5-mini:free',  // Eficiente para instrucciones largas
+        'fallback5' => 'minimax/minimax-m2:free',  // Para coding si necesitas
+        'fallback6' => 'google/gemma-3-27b-it:free'
     ];
 
 

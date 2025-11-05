@@ -324,12 +324,13 @@
 
     </div>
     <!-- end row-->
+    @if(Auth::check() && (Auth::user()->tipo === 'Administrador'))
+        {{-- metricas-interaccion --}}    
+        @include('admin.dashboard.metricas')
 
-    {{-- metricas-interaccion --}}    
-    @include('admin.dashboard.metricas')
-
-    {{-- metricas-notificaciones --}}    
-    @include('admin.dashboard.metricasNotificaciones')
+        {{-- metricas-notificaciones --}}    
+        @include('admin.dashboard.metricasNotificaciones')
+    @endif
 
     <div class="row">
         <div class="col-12">

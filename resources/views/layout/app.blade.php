@@ -79,16 +79,31 @@
             setInterval(function () {
                 fetch("{{ url('/refresh-csrf') }}")
                     .then(response => {
-                        if (!response.ok) throw new Error('Error al actualizar CSRF');
+                        if (response.status === 401 || response.redirected) {
+                            throw new Error('Sesión expirada');
+                        }
                         return response.json();
                     })
                     .then(data => {
-                        document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.token);
+                        if (data.token) {
+                            document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.token);
+                            $.ajaxSetup({
+                                headers: { 'X-CSRF-TOKEN': data.token }
+                            });
+                        }
                     })
                     .catch(error => {
-                        console.warn("⚠️ No se pudo refrescar el token CSRF (posible desconexión o sesión expirada):", error.message);
+                       console.warn("Sesión expirada o desconexión:", error.message);
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Sesión expirada',
+                            text: 'Tu sesión ha caducado. Por favor, inicia sesión nuevamente.',
+                            confirmButtonText: 'Aceptar'
+                        }).then(() => {
+                            window.location.replace("{{ route('login') }}");
+                        });
                     });
-            }, 25 * 60 * 1000);
+            }, 20 * 60 * 1000);
 
             let logoutTimer;
             function resetTimer() {
@@ -103,11 +118,25 @@
                     })
                     .then(response => {
                         if (!response.ok) throw new Error('Fallo al cerrar sesión');
-                        window.location.replace("{{ route('login') }}");
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Sesión finalizada',
+                            text: 'Tu sesión ha sido cerrada por seguridad.',
+                            //showConfirmButton: false,
+                            //timerProgressBar: true,
+                            //timer: 5000 
+                        }).then(() => {
+                            window.location.replace("{{ route('login') }}");
+                        });
                     })
                     .catch(error => {
-                        console.warn("⚠️ Error al cerrar sesión automáticamente:", error.message);
-                        window.location.reload();
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Sesión finalizada',
+                            text: 'Tu sesión ha sido cerrada o expirada.',
+                        }).then(() => {
+                            window.location.replace("{{ route('login') }}");
+                        });
                     });
                 }, 30 * 60 * 1000); // 30 minutos
             }

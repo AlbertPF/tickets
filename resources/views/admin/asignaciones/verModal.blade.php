@@ -352,8 +352,8 @@
         $('.oficina').html(data.tickets.ticket.oficina_personal.oficina.nombre); 
         $('.incidencia').html(data.tickets.ticket.soporte.nombre);
         $('.descripcion').html(data.tickets.ticket.descripcion);
-        $('.fecha_env').html(formatDate(data.tickets.fecha_asig)); 
-        $('.hora_env').html(formatTime(data.tickets.fecha_asig)); 
+        $('.fecha_env').html(formatDate(data.tickets.ticket.fecha_env)); 
+        $('.hora_env').html(formatTime(data.tickets.ticket.fecha_env)); 
         $('.telefono').html(data.tickets.ticket.oficina_personal.personal.telefono);
         $('.estado').html(`
             <h5 style="margin: 0px 0 !important;">

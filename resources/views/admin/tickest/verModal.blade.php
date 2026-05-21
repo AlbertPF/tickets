@@ -269,7 +269,7 @@
         if (data.tickets.archivo) {
             $('#archivoContainer').show();
             let ext = data.tickets.archivo.split('.').pop().toLowerCase();
-            let url = `/tickets/storage/app/public/${data.tickets.archivo}`; 
+            let url = `/gr-tickets/storage/app/public/${data.tickets.archivo}`; 
 
             if (['jpg','jpeg','png'].includes(ext)) {
                 $('#archivoViewer').replaceWith(`<img id="archivoViewer" src="${url}" style="width:100%; max-height:400px;" />`);

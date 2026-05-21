@@ -1,0 +1,20 @@
+RewriteEngine On
+
+# Redirigir raíz hacia /public (usando ruta URL completa)
+RewriteCond %{REQUEST_URI} ^/gr-tickets/?$
+RewriteRule ^$ /gr-tickets/public/ [R=302,L]
+
+# O mejor aún, para capturar cualquier acceso directo a gr-mesa-partes
+RewriteCond %{REQUEST_URI} ^/gr-tickets$
+RewriteRule ^ /gr-tickets/public/ [R=302,L]
+
+# Bloquear archivos sensibles
+<FilesMatch "^(\.env|composer\.json|composer\.lock|package\.json|artisan|webpack\.mix\.js)$">
+    Require all denied
+</FilesMatch>
+
+# Evitar listado de carpetas
+Options -Indexes
+
+# Bloquear archivos ocultos
+RedirectMatch 403 ^/\..*$

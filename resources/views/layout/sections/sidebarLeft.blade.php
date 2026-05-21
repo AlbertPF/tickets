@@ -75,7 +75,9 @@
                         <span> Personal </span>
                     </a>
                 </li> --}}
+            @endif
 
+            @if(Auth::check() && (Auth::user()->tipo === 'Administrador' || Auth::user()->tipo === 'Agente Informático'))
                 <li class="side-nav-item">
                     <a data-bs-toggle="collapse" href="#sidebarIcons" aria-expanded="false" aria-controls="sidebarIcons" class="side-nav-link">
                         <i class="mdi mdi-account-group"></i>
@@ -93,6 +95,9 @@
                         </ul>
                     </div>
                 </li>
+            @endif
+
+            @if(Auth::check() && (Auth::user()->tipo === 'Administrador'))
 
                 <li class="side-nav-item">
                     <a href="{{ route('index.usuario') }}" class="side-nav-link">

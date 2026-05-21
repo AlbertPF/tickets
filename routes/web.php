@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', HomeController::class);
+//Route::match(['get', 'head'], '/', HomeController::class);
 Route::post('home/listOficinas', [HomeController::class, 'actListaOficinas'])->name('HomeSelect.listaOficinas');
 Route::post('home/listarIncidencia', [HomeController::class, 'actListaIncidencias'])->name('incSelect.listarIncidencia');
 Route::get('home/buscarPerosnal', [HomeController::class, 'actBuscarPersonal'])->name('buscar.personal');

@@ -16,6 +16,17 @@ class TelegramController extends Controller
 {
     public function webhook(Request $request)
     {
+        Log::info('Webhook recibido', $request->all());
+        // === BYPASS LOCAL TUNNEL SECURITY PAGE ===
+        if ($request->query('bypass-tunnel-reminder')) {
+            // ignorar parámetro de localtunnel
+        }
+
+        // Si no hay contenido (puede pasar), responder rápido
+        if (!$request->getContent()) {
+            return response('No content', 200);
+        }
+
         $update = $request->all();
 
         if (isset($update['callback_query'])) {

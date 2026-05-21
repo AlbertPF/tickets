@@ -173,7 +173,7 @@ class TicketsController extends Controller
                     'fecha_fin' => null,
                     'descripcion' => null,
                     'id_ticket' => $r->id_tickets,
-                    'id_usuario' => Session::get('usuario')->id_usuario ?? null,
+                    'id_usuario' => Auth::check() ? Auth::user()->id_usuario : null,
                 ]);
 
                 $ticket->estado = 2;
@@ -221,7 +221,7 @@ class TicketsController extends Controller
 
             try {
                 DB::beginTransaction();
-                $usuarioActual = Session::get('usuario')->id_usuario ?? null;
+                $usuarioActual = Auth::check() ? Auth::user()->id_usuario : null;
                 $actual = Carbon::now('America/Lima');
 
                 AsignacionTicket::create([

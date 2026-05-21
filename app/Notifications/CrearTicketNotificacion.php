@@ -32,7 +32,7 @@ class CrearTicketNotificacion extends Notification
     public function toTelegram(object $notifiable)
     {
         //$url = route('tickets.mostrar', );
-        $url = 'http://127.0.0.1/tickets/public/tickets/' . $this->ticket->id_ticket;
+        $url = 'https://app5.regionapurimac.gob.pe/gr-tickets/public/tickets/' . $this->ticket->id_ticket;
 
         $botUsername = 'GoreApurimacTicketsBot';
         $urlAsignar = "https://t.me/{$botUsername}?start=asignar_{$this->ticket->id_ticket}";

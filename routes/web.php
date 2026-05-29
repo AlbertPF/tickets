@@ -177,9 +177,9 @@ Route::middleware(['web', AuthAdministrador::class])->group(function () {
 
     Route::get('chatbot/metrics', [ChatbotController::class, 'getMetrics'])->name('chatbot.metrics');
     Route::get('notificaciones/metrics', [TelegramController::class, 'getMetrics']);
-});
 
-Route::get('/refresh-csrf', function () {
-    return response()->json(['token' => csrf_token()]);
+    Route::get('/refresh-csrf', function () {
+        return response()->json(['token' => csrf_token()]);
+    });
 });
 

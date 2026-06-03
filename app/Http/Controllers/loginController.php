@@ -47,8 +47,13 @@ class loginController extends Controller
             $intendedUrl = Session::pull('url.intended');
 
             // Si no hay url.intended, usar la redirección por tipo de usuario
-            if (!$intendedUrl) {
-                $intendedUrl = ($usuario->tipo === 'Personal') ? route('index.actividades') : url('homeAdmin');
+            if (
+                !$intendedUrl ||
+                str_contains($intendedUrl, 'refresh-csrf')
+            ) {
+                $intendedUrl = ($usuario->tipo === 'Personal')
+                    ? route('index.actividades')
+                    : url('homeAdmin');
             }
             
             return response()->json([

@@ -47,7 +47,9 @@ class ticket_notificacion extends Model
     protected function generateCustomId()
     {
         // Obtener el último ID generado
-        $lastTicketNot = self::orderBy('id_notificacion', 'desc')->first();
+        $lastTicketNot = self::orderByRaw(
+            "CAST(SUBSTRING(id_notificacion, 4) AS UNSIGNED) DESC"
+        )->first();
 
         if ($lastTicketNot) {
             // Extraer el número del ID y sumarle 1

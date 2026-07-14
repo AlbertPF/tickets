@@ -20,7 +20,7 @@ class HomeController extends Controller
 {
     public function __invoke()
     {
-       return view('index');
+        return view('index');
     }
 
     public function actListaOficinas(Request $r)
@@ -116,23 +116,23 @@ class HomeController extends Controller
             $personal = Personal::where('dni', $dni)->first();
 
             if ($personal) {
-                
+
                 $anioActual = date('Y');
-                
+
                 // Buscar la oficina asignada al personal en el año actual con estado activo
                 $oficinaPersonal = OficinaPersonal::where('id_personal', $personal->id_personal)
                     ->where('anio', $anioActual)
-                    ->where('estado', 1) 
-                    ->with('oficina') 
+                    ->where('estado', 1)
+                    ->with('oficina')
                     ->first();
 
-                    if(!$oficinaPersonal){
-                        return response()->json([
-                            'code' => 403,
-                            'msg' => 'error',
-                            'message' => 'El personal no está habilitado para registrar incidencias en el Gobierno Regional de Apurímac este año.'
-                        ], 403);
-                    }
+                if (!$oficinaPersonal) {
+                    return response()->json([
+                        'code' => 403,
+                        'msg' => 'error',
+                        'message' => 'El personal no está habilitado para registrar incidencias en el Gobierno Regional de Apurímac este año.'
+                    ], 403);
+                }
 
                 return response()->json([
                     'code' => 200,
@@ -159,7 +159,7 @@ class HomeController extends Controller
             ], 404);
         }
     }
-    
+
 
     public function actRegistrar(Request $r)
     {
@@ -221,10 +221,10 @@ class HomeController extends Controller
                 ], 403);
             }
 
-             // Validar que no exista un ticket registrado en los últimos 10 minutos
+            // Validar que no exista un ticket registrado en los últimos 10 minutos
             $ultimoTicket = Ticket::where('id_OfiPer', $r->id_OfiPer)
-            ->where('created_at', '>=', now()->subMinutes(5))
-            ->first();
+                ->where('created_at', '>=', now()->subMinutes(5))
+                ->first();
 
             if ($ultimoTicket) {
                 return response()->json([
@@ -327,36 +327,85 @@ class HomeController extends Controller
     public function consultarTickets(Request $r)
     {
         if ($r->ajax()) {
-            $fechaActual = now();
 
-            $personal = DB::table('personals')->where('dni', $r->dni)->first();
+            $buscar = trim($r->buscar);
 
-            if ($personal) {
-                $tickets = Ticket::with(['oficinaPersonal.personal', 'oficinaPersonal.oficina', 'soporte', 'asignaciones.usuario'])
-                    ->whereHas('oficinaPersonal.personal', function ($query) use ($r) {
-                        $query->where('dni', $r->dni);
-                    })
-                    ->get();
+            $tickets = collect();
 
-                if ($tickets->isEmpty()) {
-                    $html = '<tr><td colspan="8">No se encontraron tickets registrados para este DNI.</td></tr>';
-                } else {
-                    $html = view('tableIndex', compact('tickets'))->render();
+            if (preg_match('/^\d{8}$/', $buscar)) {
+
+                $personal = DB::table('personals')
+                    ->where('dni', $buscar)
+                    ->first();
+
+                if (!$personal) {
+
+                    return response()->json([
+                        'code' => 404,
+                        'html' => '<tr><td colspan="8">No existe un personal con ese DNI.</td></tr>',
+                        'message' => 'No existe un personal con ese DNI.'
+                    ], 404);
                 }
 
-                return response()->json([
-                    'code' => 200,
-                    'html' => $html,
-                    'msg' => 'success',
-                ], 200);
+                $tickets = Ticket::with([
+                    'oficinaPersonal.personal',
+                    'oficinaPersonal.oficina',
+                    'soporte',
+                    'asignaciones.usuario'
+                ])
+                    ->whereHas('oficinaPersonal.personal', function ($q) use ($buscar) {
+
+                        $q->where('dni', $buscar);
+                    })
+                    ->orderByDesc('id_ticket')
+                    ->get();
+
+            } elseif (preg_match('/^tik\d{4,}$/i', $buscar)) {
+
+                $tickets = Ticket::with([
+                    'oficinaPersonal.personal',
+                    'oficinaPersonal.oficina',
+                    'soporte',
+                    'asignaciones.usuario'
+                ])
+                    ->whereRaw('LOWER(id_ticket)=?', [
+                        strtolower($buscar)
+                    ])
+                    ->get();
             } else {
+
                 return response()->json([
+
+                    'code' => 422,
+
+                    'html' => '<tr><td colspan="8">Ingrese un DNI o Código de Ticket válido.</td></tr>',
+
+                    'message' => 'Ingrese un DNI de 8 dígitos o un código de ticket válido.'
+
+                ], 422);
+            }
+
+            if ($tickets->isEmpty()) {
+
+                return response()->json([
+
                     'code' => 404,
-                    'html' => '<tr><td colspan="8">No se encontró información del personal solicitado.</td></tr>',
-                    'msg' => 'error',
-                    'message' => 'No se encontró información del personal solicitado.',
+
+                    'html' => '<tr><td colspan="8">No se encontraron tickets.</td></tr>',
+
+                    'message' => 'No se encontraron tickets.'
+
                 ], 404);
             }
+
+            $html = view('tableIndex', compact('tickets'))->render();
+
+            return response()->json([
+                'code' => 200,
+                'html' => $html,
+                'msg' => 'success'
+            ]);
+
         } else {
             return response()->json([
                 'code' => 404,
@@ -365,6 +414,4 @@ class HomeController extends Controller
             ], 404);
         }
     }
-
-
 }

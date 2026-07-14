@@ -322,8 +322,8 @@
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-9">
-                                            <input type="text" name="dni_cons" id="dni_cons"
-                                                class="form-control" placeholder="Ingresa su DNI">
+                                            <input type="text" name="buscar_cons" id="buscar_cons"
+                                                class="form-control" placeholder="Ingrese DNI o Código de Ticket">
                                         </div>
                                         <div class="col-md-3">
                                             <button type="submit" class="cta-btn w-100"
@@ -338,7 +338,7 @@
                                     <table class="table table-striped" id="tablaIndex">
                                         <thead>
                                             <tr>
-                                                <th>N°</th>
+                                                <th>Cod.</th>
                                                 <th>Personal</th>
                                                 <th>Oficina</th>
                                                 <th>Incidencia</th>
@@ -658,19 +658,19 @@
 
             $('#ConsultarTicket').validate({
                 rules: {
-                    dni_cons: {
+                    buscar_cons: {
                         required: true,
-                        minlength: 8,
+                        minlength: 7,
                         maxlength: 8,
-                        digits: true
+                        //digits: true
                     },
                 },
                 messages: {
-                    dni_cons: {
+                    buscar_cons: {
                         required: "El DNI es obligatorio.",
-                        minlength: "El DNI debe tener 8 caracteres.",
+                        minlength: "El DNI debe tener 7 caracteres.",
                         maxlength: "El DNI debe tener 8 caracteres.",
-                        digits: "El DNI solo debe contener números."
+                        //digits: "El DNI solo debe contener números."
                     },
                 },
                 errorElement: 'span',
@@ -964,7 +964,8 @@
         }*/
 
         function Consulta_Tickets() {
-            var dni = $('input[name="dni_cons"]').val();
+            
+            var buscar = $('#buscar_cons').val();
 
             $.ajax({
                 type: 'POST',
@@ -972,7 +973,7 @@
                 dataType: 'json',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    dni: dni
+                    buscar: buscar
                 },
                 beforeSend: function() {
                     var spinner =
@@ -1001,11 +1002,11 @@
                     // Reinicializar la tabla después de actualizar los datos
                     //InicializacionTabla();
                     // Reinicializar DataTable solo si hay registros
-                    if (data.html.includes("No se encontraron tickets registrados para este DNI.")) {
+                    if (data.html.includes("No se encontraron tickets registrados")) {
                         Swal.fire({
                             icon: "info",
                             title: "Información",
-                            text: "No se encontraron tickets registrados para este DNI.",
+                            text: "No se encontraron tickets registrados",
                             timer: 2000,
                             showConfirmButton: false,
                             timerProgressBar: true

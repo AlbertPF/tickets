@@ -43,7 +43,8 @@
 
 @forelse($tickets as $ticket)
     <tr>
-        <td>{{ $loop->iteration }}</td>
+        {{-- <td>{{ $loop->iteration }}</td> --}}
+        <td>{{ $ticket->id_ticket }}</td>
         <td>{{ $ticket->oficinaPersonal->personal->nombre }} {{ $ticket->oficinaPersonal->personal->apellidoPaterno }} {{ $ticket->oficinaPersonal->personal->apellidoMaterno }}
         </td>
         <td>{{ $ticket->oficinaPersonal->oficina->nombre }}</td>

@@ -35,4 +35,17 @@ return [
         'token' => env('TELEGRAM_BOT_TOKEN'),
     ],
 
+    'openrouter' => [
+        'key' => env('OPENROUTER_API_KEY'),
+        'endpoint' => env('OPENROUTER_ENDPOINT', 'https://openrouter.ai/api/v1/chat/completions'),
+        'max_tokens' => (int) env('OPENROUTER_MAX_TOKENS', 2048),
+        'models' => [
+            env('OPENROUTER_PRIMARY_MODEL', 'nvidia/nemotron-3-super-120b-a12b:free'),
+            'qwen/qwen3-next-80b-a3b-instruct:free',
+            'google/gemma-4-31b-it:free',
+            'meta-llama/llama-3.3-70b-instruct:free',
+            'openrouter/free',
+        ],
+    ],
+
 ];

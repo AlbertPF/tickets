@@ -283,7 +283,8 @@ class HomeController extends Controller
                 return response()->json([
                     'code' => 200,
                     'msg' => 'success',
-                    'message' => 'Tickets registrado exitosamente!'
+                    'message' => 'Tickets registrado exitosamente!',
+                    'id_ticket' => $ticket->id_ticket
                 ], 200);
             } catch (\Exception $e) {
                 DB::rollBack(); // Revertir la transacción en caso de excepción

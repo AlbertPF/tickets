@@ -41,7 +41,7 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <!-- Styles -->
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
 
@@ -206,7 +206,8 @@
                 <div class="row gy-4 mt-1">
 
                     <div class="col-lg-6">
-                        <form id="guardarTicket" class="php-form" style="border-radius: 15px" enctype="multipart/form-data">
+                        <form id="guardarTicket" class="php-form" style="border-radius: 15px"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="row gy-4">
 
@@ -502,10 +503,10 @@
                 buscarPorDni(); // Llamar a la función de búsqueda
             });
 
-            $('#select_incidencia').on('change', function(){
+            $('#select_incidencia').on('change', function() {
                 var selected = $(this).val();
 
-                if(selected === 'spt0001' || selected === 'spt0004' || selected === 'spt0007'){
+                if (selected === 'spt0001' || selected === 'spt0004' || selected === 'spt0007') {
                     $('#fileContainer').slideDown();
                 } else {
                     $('#fileContainer').slideUp();
@@ -538,7 +539,7 @@
             });
 
             $('#guardarTicket').validate({
-            ignore: ":hidden:not(#archivo)",
+                ignore: ":hidden:not(#archivo)",
                 rules: {
                     dni: {
                         required: true,
@@ -616,8 +617,9 @@
                     var archivo = $('#archivo')[0].files[0];
                     var selectedValue = $('#select_incidencia').val();
 
-                    if ((selectedValue === 'spt0001' || selectedValue === 'spt0004' || selectedValue === 'spt0007') && archivo) {
-                        var validExtensions = ['jpg','jpeg','png','pdf'];
+                    if ((selectedValue === 'spt0001' || selectedValue === 'spt0004' || selectedValue ===
+                            'spt0007') && archivo) {
+                        var validExtensions = ['jpg', 'jpeg', 'png', 'pdf'];
                         var fileExtension = archivo.name.split('.').pop().toLowerCase();
 
                         if ($.inArray(fileExtension, validExtensions) === -1) {
@@ -642,7 +644,7 @@
                                 showConfirmButton: false,
                                 timerProgressBar: true
                             });
-                            return false; 
+                            return false;
                         }
                     }
 
@@ -807,83 +809,294 @@
             });
         }
 
-        function registrar_tickets() {
-            //console.log('registrar incidencia');
-            Swal.fire({
-                title: "¿Esta seguro?",
+        async function registrar_tickets() {
+            const formElement = document.getElementById("guardarTicket");
+
+            if (!formElement) {
+                console.error('No se encontró el formulario con ID "guardarTicket".');
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "No se encontró el formulario de registro."
+                });
+
+                return;
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | 1. Confirmar y registrar el ticket
+            |--------------------------------------------------------------------------
+            */
+            const resultadoRegistro = await Swal.fire({
+                title: "¿Está seguro?",
                 icon: "warning",
-                text: "Verifique los datos antes de enviar",
+                text: "Verifique los datos antes de enviar.",
                 showCancelButton: true,
-                confirmButtonText: "Si, estoy seguro",
-                canselButtonText: "Cancelar",
+                confirmButtonText: "Sí, estoy seguro",
+                cancelButtonText: "Cancelar",
                 showLoaderOnConfirm: true,
-                preConfirm: () => {
-                    //let token = $('meta[name="csrf-token"]').attr('content');
-                    let formElement = document.getElementById("guardarTicket");
-                    let formData = new FormData(formElement);
-                    return fetch('{{ route('registrar.tickets') }}', {
-                        method: "POST",
-                        body: formData,
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                    }).then(response => {
-                        if (!response.ok) {
-                            return response.text().then(text => {
-                                throw new Error(text)
-                            })
+                allowOutsideClick: () => !Swal.isLoading(),
+
+                preConfirm: async () => {
+                    try {
+                        const formData = new FormData(formElement);
+
+                        const response = await fetch(
+                            "{{ route('registrar.tickets') }}", {
+                                method: "POST",
+                                body: formData,
+                                headers: {
+                                    "X-Requested-With": "XMLHttpRequest",
+                                    "Accept": "application/json"
+                                }
+                            }
+                        );
+
+                        const contentType =
+                            response.headers.get("content-type") || "";
+
+                        let data;
+
+                        if (contentType.includes("application/json")) {
+                            data = await response.json();
                         } else {
-                            return response.json()
+                            data = {
+                                message: await response.text()
+                            };
                         }
-                    }).catch(response => {
-                        let texto = JSON.parse(response.toString().substring(7));
-                        let mensaje = texto.message;
-                        /*Swal.showValidationMessage(
-                            `Error: ${mensaje}`
-                        )*/
 
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: mensaje,
-                            timer: 3000,
-                            showConfirmButton: false,
-                            timerProgressBar: true
-                        });
+                        if (!response.ok) {
+                            throw new Error(
+                                data.message ||
+                                `Error HTTP ${response.status}`
+                            );
+                        }
+
+                        if (!data.id_ticket) {
+                            throw new Error(
+                                "El servidor registró la solicitud, pero no devolvió el ID del ticket."
+                            );
+                        }
+
+                        return data;
+
+                    } catch (error) {
+                        console.error("Error al registrar el ticket:", error);
+
+                        Swal.showValidationMessage(
+                            error.message ||
+                            "No se pudo registrar el ticket."
+                        );
+
                         return false;
-
-                    });
-                },
-                allowOutsideClick: () => !Swal.isLoading()
-            }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title: "Atención!",
-                        icon: "success",
-                        text: result.value.message,
-                        confirmButtonText: 'ok',
-                        timer: 2000,
-                        timerProgressBar: true,
-                        didOpen: () => {
-                            Swal.showLoading();
-                            //const timer = Swal.getPopup().querySelector("b");
-                            timerInterval = setInterval(() => {
-                                //timer.textContent = `${Swal.getTimerLeft()}`;
-                            }, 100);
-                        },
-                        willClose: () => {
-                            clearInterval(timerInterval);
-                        }
-                    }).then((confirmar) => {
-                        if (confirmar.isConfirmed || confirmar.dismiss === Swal.DismissReason.timer) {
-                            $('#guardarTicket')[0].reset();
-                            listar_incidencia();
-
-                        }
-                    });
-                } else if (result.isDenied) {
-                    Swal.fire("Error en el registro", "", "info");
+                    }
                 }
             });
+
+            /*
+            |--------------------------------------------------------------------------
+            | 2. Verificar que el ticket haya sido registrado
+            |--------------------------------------------------------------------------
+            */
+            if (
+                !resultadoRegistro.isConfirmed ||
+                !resultadoRegistro.value
+            ) {
+                return;
+            }
+
+            const respuesta = resultadoRegistro.value;
+            const idTicket = String(respuesta.id_ticket);
+
+            /*
+            |--------------------------------------------------------------------------
+            | 3. Mostrar el ID y copiarlo antes de cerrar
+            |--------------------------------------------------------------------------
+            */
+            const resultadoCopia = await Swal.fire({
+                title: "Ticket registrado",
+                icon: "success",
+
+                html: `
+            <p style="margin-bottom: 12px;">
+                ${respuesta.message || "Ticket registrado exitosamente."}
+            </p>
+
+            <p style="margin-bottom: 8px;">
+                Su código de seguimiento es:
+            </p>
+
+            <input
+                type="text"
+                id="ticket-id-registrado"
+                value="${idTicket}"
+                readonly
+                aria-label="ID del ticket registrado"
+                style="
+                    width: 100%;
+                    box-sizing: border-box;
+                    padding: 12px;
+                    font-size: 28px;
+                    font-weight: bold;
+                    text-align: center;
+                    border: 1px solid #d9d9d9;
+                    border-radius: 8px;
+                    background-color: #f5f5f5;
+                    cursor: text;
+                "
+            >
+
+            <small
+                id="mensaje-copia-ticket"
+                style="
+                    display: block;
+                    margin-top: 12px;
+                "
+            >
+                Presione “Copiar y cerrar” para guardar el código.
+            </small>
+        `,
+
+                confirmButtonText: "Copiar y cerrar",
+                showCancelButton: false,
+                showCloseButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                returnFocus: false,
+
+                didOpen: () => {
+                    const campoTicket =
+                        document.getElementById("ticket-id-registrado");
+
+                    if (campoTicket) {
+                        campoTicket.addEventListener("click", () => {
+                            campoTicket.select();
+                        });
+                    }
+                },
+
+                preConfirm: async () => {
+                    const campoTicket =
+                        document.getElementById("ticket-id-registrado");
+
+                    if (!campoTicket) {
+                        Swal.showValidationMessage(
+                            "No se encontró el código del ticket."
+                        );
+
+                        return false;
+                    }
+
+                    const textoACopiar = campoTicket.value;
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Método principal: Clipboard API
+                    |--------------------------------------------------------------------------
+                    */
+                    if (
+                        window.isSecureContext &&
+                        navigator.clipboard &&
+                        typeof navigator.clipboard.writeText === "function"
+                    ) {
+                        try {
+                            await navigator.clipboard.writeText(textoACopiar);
+
+                            return {
+                                copiado: true,
+                                metodo: "clipboard"
+                            };
+
+                        } catch (errorClipboard) {
+                            console.warn(
+                                "Falló navigator.clipboard.writeText:",
+                                errorClipboard
+                            );
+                        }
+                    }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Método alternativo: document.execCommand
+                    |--------------------------------------------------------------------------
+                    */
+                    try {
+                        campoTicket.focus();
+                        campoTicket.select();
+
+                        campoTicket.setSelectionRange(
+                            0,
+                            campoTicket.value.length
+                        );
+
+                        const copiado =
+                            document.execCommand("copy");
+
+                        if (copiado) {
+                            return {
+                                copiado: true,
+                                metodo: "execCommand"
+                            };
+                        }
+
+                        throw new Error(
+                            "document.execCommand devolvió false."
+                        );
+
+                    } catch (errorAlternativo) {
+                        console.error(
+                            "No se pudo copiar el ID del ticket:",
+                            errorAlternativo
+                        );
+
+                        /*
+                         * Se vuelve a seleccionar para permitir Ctrl + C.
+                         */
+                        campoTicket.focus();
+                        campoTicket.select();
+
+                        campoTicket.setSelectionRange(
+                            0,
+                            campoTicket.value.length
+                        );
+
+                        Swal.showValidationMessage(
+                            "El navegador bloqueó la copia automática. " +
+                            "El código quedó seleccionado. Presione Ctrl + C " +
+                            "y luego vuelva a pulsar “Copiar y cerrar”."
+                        );
+
+                        return false;
+                    }
+                }
+            });
+
+            /*
+            |--------------------------------------------------------------------------
+            | 4. Limpiar el formulario después de copiar y cerrar
+            |--------------------------------------------------------------------------
+            */
+            if (
+                resultadoCopia.isConfirmed &&
+                resultadoCopia.value?.copiado
+            ) {
+                formElement.reset();
+
+                if (typeof listar_incidencia === "function") {
+                    listar_incidencia();
+                }
+
+                Swal.fire({
+                    icon: "success",
+                    title: "Código copiado",
+                    text: `El ID del ticket ${idTicket} fue copiado al portapapeles.`,
+                    timer: 1600,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+            }
         }
 
         function InicializacionTabla() {
@@ -964,7 +1177,7 @@
         }*/
 
         function Consulta_Tickets() {
-            
+
             var buscar = $('#buscar_cons').val();
 
             $.ajax({

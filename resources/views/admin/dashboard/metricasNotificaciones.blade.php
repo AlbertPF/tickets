@@ -46,23 +46,6 @@
     </div>
 </div>
 
-<!-- Filtro por período -->
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title">Filtros</h4>
-                <select id="period-filter" class="form-select" onchange="loadMetrics()">
-                    <option value="total">Total</option>
-                    <option value="week">Últimos 7 días</option>
-                    <option value="month">Último mes</option>
-                    <option value="year">Último año</option>
-                </select>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Gráficos -->
 <div class="row">
     <div class="col-xl-6">
@@ -107,9 +90,22 @@
 {{-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> --}}
 <script src="{{ url('assets/js/vendor/apexcharts.min.js') }}"></script>
 <script>
-    async function loadMetrics() {
-        const period = document.getElementById('period-filter').value;
-        const res = await fetch(`notificaciones/metrics?period=${period}`);
+    const notificationMetricCharts = [];
+
+    function renderNotificationMetricChart(selector, options) {
+        const chart = new ApexCharts(document.querySelector(selector), options);
+        notificationMetricCharts.push(chart);
+        chart.render();
+    }
+
+    window.loadNotificationMetrics = async function() {
+        const query = new URLSearchParams(window.getDashboardDateRange()).toString();
+        const res = await fetch(`{{ url('notificaciones/metrics') }}?${query}`);
+
+        if (!res.ok) {
+            throw new Error(`No se pudieron cargar las métricas de notificaciones (${res.status}).`);
+        }
+
         const data = await res.json();
 
         // 🔹 Formateador de números
@@ -122,11 +118,12 @@
         document.getElementById('usuarios-inactivos').textContent = format(data.usuarios_inactivos) + '%';
 
         // 🔸 Limpia contenedores antes de renderizar (evita duplicar gráficos)
+        notificationMetricCharts.splice(0).forEach(chart => chart.destroy());
         document.querySelectorAll("#grafico-apertura-tiempo, #grafico-usuarios-activos, #grafico-tipo-ticket, #grafico-horas")
             .forEach(el => el.innerHTML = "");
 
         // 🎯 1. Gráfico de línea: Tasa de apertura en el tiempo
-        new ApexCharts(document.querySelector("#grafico-apertura-tiempo"), {
+        renderNotificationMetricChart("#grafico-apertura-tiempo", {
             chart: {
                 type: 'line',
                 height: 320,
@@ -151,10 +148,10 @@
             tooltip: {
                 y: { formatter: val => format(val) + '%' }
             }
-        }).render();
+        });
 
         // 🎯 2. Gráfico de barras: Usuarios más activos
-        new ApexCharts(document.querySelector("#grafico-usuarios-activos"), {
+        renderNotificationMetricChart("#grafico-usuarios-activos", {
             chart: { type: 'bar', height: 320, toolbar: { show: false } },
             plotOptions: {
                 bar: {
@@ -176,10 +173,10 @@
             tooltip: {
                 y: { formatter: val => format(val) + " aperturas" }
             }
-        }).render();
+        });
 
         // 🎯 3. Gráfico de barras: Tasa de apertura por tipo de ticket
-        new ApexCharts(document.querySelector("#grafico-tipo-ticket"), {
+        renderNotificationMetricChart("#grafico-tipo-ticket", {
             chart: { type: 'bar', height: 320, toolbar: { show: false } },
             plotOptions: {
                 bar: {
@@ -200,18 +197,15 @@
             },
             yaxis: { labels: { formatter: val => val + '%' } },
             tooltip: { y: { formatter: val => format(val) + '%' } }
-        }).render();
+        });
 
         // 🎯 4. Heatmap: Distribución de notificaciones por hora
-        new ApexCharts(document.querySelector("#grafico-horas"), {
+        renderNotificationMetricChart("#grafico-horas", {
             chart: { type: 'heatmap', height: 300 },
             series: [{
                 name: 'Aperturas',
                 data: data.distribucion_horas.map(x => ({ x: x.hora, y: x.total }))
             }]
-        }).render();
-    }
-
-    document.addEventListener("DOMContentLoaded", loadMetrics);
+        });
+    };
 </script>
-

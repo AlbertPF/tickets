@@ -55,23 +55,6 @@
 </div>
 
 <div class="row">
-    <!-- Filtro por período -->
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title">Filtros</h4>
-                <select id="period-filter" class="form-select">
-                    <option value="total">Total</option>
-                    <option value="day">Últimos 7 días</option>
-                    <option value="week">Últimas 4 semanas</option>
-                    <option value="month">Últimos 12 meses</option>
-                </select>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
     <!-- Gráfico de líneas: Interacciones y mensajes por período -->
     <div class="col-xl-6">
         <div class="card">
@@ -107,12 +90,20 @@
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    (() => {
         let chart1, chart2, chart3;
 
-        function loadMetrics(period = 'total') {
-            fetch(`chatbot/metrics?period=${period}`)
-                .then(response => response.json())
+        window.loadChatbotMetrics = function() {
+            const query = new URLSearchParams(window.getDashboardDateRange()).toString();
+
+            fetch(`{{ route('chatbot.metrics') }}?${query}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`No se pudieron cargar las métricas (${response.status}).`);
+                    }
+
+                    return response.json();
+                })
                 .then(data => {
                     // Actualizar cards
                     document.getElementById('total-interacciones').textContent = data.totalInteracciones;
@@ -270,15 +261,6 @@
 
                 })
                 .catch(error => console.error('Error cargando métricas:', error));
-        }
-
-        // Cargar métricas iniciales
-        loadMetrics();
-
-        // Event listener para filtro
-        document.getElementById('period-filter').addEventListener('change', function() {
-            const period = this.value;
-            loadMetrics(period);
-        });
-    });
+        };
+    })();
 </script>

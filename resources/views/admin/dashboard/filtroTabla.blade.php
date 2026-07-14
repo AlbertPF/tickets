@@ -35,6 +35,9 @@
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
+            data: typeof window.getDashboardDateRange === 'function'
+                ? window.getDashboardDateRange()
+                : {},
             beforeSend: function() {
 
                 var spinner =

@@ -9,6 +9,24 @@
     <link href="{{ url('assets/css/vendor/fixedColumns.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
     {{-- <link href="{{ asset('assets/css/stylePortal.css') }}"  rel="stylesheet"> --}}
     <link href="{{ url('assets/css/style.css') }}" rel="stylesheet">
+    <style>
+        .dashboard-range-card {
+            border: 0;
+            box-shadow: 0 8px 24px rgba(49, 58, 70, .08);
+        }
+
+        .dashboard-range-summary {
+            min-height: 38px;
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            padding: .5rem .85rem;
+            border-radius: 999px;
+            background: rgba(57, 175, 209, .12);
+            color: #247b96;
+            font-weight: 600;
+        }
+    </style>
 @endsection
 
 @section('contenido')
@@ -27,6 +45,49 @@
         </div>
     </div>
     <!-- end page title -->
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card dashboard-range-card">
+                <div class="card-body">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label" for="fecha_inicio">Desde</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="mdi mdi-calendar-start"></i></span>
+                                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <label class="form-label" for="fecha_fin">Hasta</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="mdi mdi-calendar-end"></i></span>
+                                <input type="date" class="form-control" id="fecha_fin" name="fecha_fin">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 d-grid gap-2 d-md-flex">
+                            <button type="button" class="btn btn-info flex-grow-1" id="aplicar-rango-dashboard">
+                                <i class="mdi mdi-filter-check me-1"></i>Aplicar rango
+                            </button>
+                            <button type="button" class="btn btn-light" id="rango-mes-actual"
+                                title="Restablecer al mes actual">
+                                <i class="mdi mdi-calendar-today"></i>
+                            </button>
+                        </div>
+                        <div class="col-lg-3 col-md-6 text-lg-end">
+                            <span class="dashboard-range-summary" id="dashboard-range-summary" aria-live="polite">
+                                <i class="mdi mdi-calendar-range"></i>
+                                <span>Mes actual</span>
+                            </span>
+                        </div>
+                    </div>
+                    <small class="text-muted d-block mt-2">
+                        El rango se aplica a tarjetas, gráficos, métricas y asignaciones.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-md-6 col-xl-3">
@@ -184,36 +245,7 @@
         <div class="col-xl-6">
             <div class="card">
                 <div class="card-body">
-                    {{-- <h4 class="header-title">Cantidad de Tickets por Soporte</h4> --}}
-                    <div class="row">
-                        <div class="col-xl-3 col-lg-3">
-                            <div class="mb-3 form-group">
-                                <label class="form-label" for="tsmes">Mes :</label>
-                                <select id="tsmes" class="form-control select2" data-toggle="select2">
-                                    <option value="" selected disabled>selecione mes</option>
-                                    <option value="01">Enero</option>
-                                    <option value="02">Febrero</option>
-                                    <option value="03">Marzo</option>
-                                    <option value="04">Abril</option>
-                                    <option value="05">Mayo</option>
-                                    <option value="06">Junio</option>
-                                    <option value="07">Julio</option>
-                                    <option value="08">Agosto</option>
-                                    <option value="09">Septiembre</option>
-                                    <option value="10">Octubre</option>
-                                    <option value="11">Noviembre</option>
-                                    <option value="12">Diciembre</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-3">
-                            <div class="mb-3 form-group">
-                                <label class="form-label" for="tsanio">Año :</label>
-                                <select id="tsanio" class="form-control select2" data-toggle="select2">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                    <h4 class="header-title">Tickets por tipo de soporte</h4>
 
                     <div dir="ltr">
                         <div id="cantTicketPorSoporte" class="apex-charts"></div>
@@ -228,38 +260,7 @@
         <div class="col-xl-6">
             <div class="card">
                 <div class="card-body">
-                    {{-- <h4 class="header-title">Cantidad de Tickets Atendidos con éxito por Usuarios de Informática</h4> --}}
-                    <div class="row">
-                        <div class="col-xl-3 col-lg-3">
-                            <div class="mb-3 form-group">
-                                <label class="form-label" for="mes">Mes :</label>
-                                <select id="mes" class="form-control select2" data-toggle="select2">
-                                    <option value="" selected disabled>selecione mes</option>
-                                    <option value="01">Enero</option>
-                                    <option value="02">Febrero</option>
-                                    <option value="03">Marzo</option>
-                                    <option value="04">Abril</option>
-                                    <option value="05">Mayo</option>
-                                    <option value="06">Junio</option>
-                                    <option value="07">Julio</option>
-                                    <option value="08">Agosto</option>
-                                    <option value="09">Septiembre</option>
-                                    <option value="10">Octubre</option>
-                                    <option value="11">Noviembre</option>
-                                    <option value="12">Diciembre</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-lg-3">
-                            <div class="mb-3 form-group">
-                                <label class="form-label" for="anio">Año :</label>
-                                <select id="anio" class="form-control select2" data-toggle="select2">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-
+                    <h4 class="header-title">Tickets resueltos por usuario</h4>
                     <div dir="ltr">
                         <div id="cantTikectResultadosPorUsuario" class="apex-charts"></div>
                     </div>
@@ -370,22 +371,8 @@
 
                     <br>
 
-                    <label class="form-label text-info">Filtro por Rango de Fechas <strong
-                            class="buscador-text"></strong></label>
-                    {{-- <p class="mb-1 fw-bold text-muted">Buscador avanzado de solo ........</p> --}}
-
                     <div class="row">
-                        <div class="col-lg-3">
-                            <input type="text" class="form-control date" id="fecha_inicio" name="fecha_inicio"
-                                placeholder="Fecha Inicio">
-                            {{-- <input type="text" class="form-control date" id="birthdatepicker" data-toggle="date-picker" data-single-date-picker="true"> --}}
-                        </div> <!-- end col -->
-                        <div class="col-lg-3">
-                            <input type="text" class="form-control date" id="fecha_fin" name="fecha_fin"
-                                placeholder="Fecha Fin">
-                            {{-- <input type="text" class="form-control date" id="birthdatepicker" data-toggle="date-picker" data-single-date-picker="true"> --}}
-                        </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div class="app-search dropdown d-none d-lg-block">
                                 <div class="input-group">
                                     <input type="text" id="buscar" name="buscar" class="form-control"
@@ -425,79 +412,119 @@
 
 @section('js-styles-home')
     <script>
-        $(document).ready(function() {
+        const dashboardCharts = {};
 
+        function formatDashboardDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+
+            return `${year}-${month}-${day}`;
+        }
+
+        function setCurrentMonthRange() {
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+
+            $('#fecha_inicio').val(formatDashboardDate(firstDay));
+            $('#fecha_fin').val(formatDashboardDate(today));
+        }
+
+        window.getDashboardDateRange = function() {
+            return {
+                fecha_inicio: $('#fecha_inicio').val(),
+                fecha_fin: $('#fecha_fin').val()
+            };
+        };
+
+        function validateDashboardRange() {
+            const range = window.getDashboardDateRange();
+
+            if (!range.fecha_inicio || !range.fecha_fin) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Rango incompleto',
+                    text: 'Seleccione una fecha de inicio y una fecha de fin.'
+                });
+
+                return false;
+            }
+
+            if (range.fecha_fin < range.fecha_inicio) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Rango inválido',
+                    text: 'La fecha de fin no puede ser anterior a la fecha de inicio.'
+                });
+
+                return false;
+            }
+
+            return true;
+        }
+
+        function updateDashboardRangeSummary() {
+            const range = window.getDashboardDateRange();
+            const formatter = new Intl.DateTimeFormat('es-PE', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+            const start = formatter.format(new Date(`${range.fecha_inicio}T00:00:00`));
+            const end = formatter.format(new Date(`${range.fecha_fin}T00:00:00`));
+
+            $('#dashboard-range-summary span').text(`${start} - ${end}`);
+        }
+
+        window.renderDashboardChart = function(key, selector, options) {
+            if (dashboardCharts[key]) {
+                dashboardCharts[key].destroy();
+            }
+
+            const container = document.querySelector(selector);
+            container.innerHTML = '';
+            dashboardCharts[key] = new ApexCharts(container, options);
+            dashboardCharts[key].render();
+        };
+
+        window.refreshDashboard = function() {
+            if (!validateDashboardRange()) {
+                return;
+            }
+
+            updateDashboardRangeSummary();
             CantidadDatos();
-            //cantidadTicketPorSoporte();
-            let currentDatest = new Date();
-            let currentYearst = currentDatest.getFullYear();
-            let currentMonthst = String(currentDatest.getMonth() + 1).padStart(2, '0'); // Mes en formato 01-12
-
-            $('#tsmes').val(currentMonthst);
-            $('#tsanio').val(currentYearst);
-
-            // Cargar gráfico con el mes y año actual
-            cantidadTicketPorSoporte(currentMonthst, currentYearst);
-
-            $('#tsmes, #tsanio').change(function() {
-                let selectedMonthst = $('#tsmes').val();
-                let selectedYearst = $('#tsanio').val();
-                cantidadTicketPorSoporte(selectedMonthst, selectedYearst);
-            });
-
-            //cantTikectResultadosPorUsuario();
-            let currentDate = new Date();
-            let currentYear = currentDate.getFullYear();
-            let currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0'); // Mes en formato 01-12
-
-            $('#mes').val(currentMonth);
-            $('#anio').val(currentYear);
-
-            // Cargar gráfico con el mes y año actual
-            cantTikectResultadosPorUsuario(currentMonth, currentYear);
-
-            // Evento para cambiar los filtros
-            $('#mes, #anio').change(function() {
-                let selectedMonth = $('#mes').val();
-                let selectedYear = $('#anio').val();
-                cantTikectResultadosPorUsuario(selectedMonth, selectedYear);
-            });
-
-            cargarAnios('tsanio');
-            cargarAnios('anio');
-
+            cantidadTicketPorSoporte();
+            cantTikectResultadosPorUsuario();
             mostrarTicketsPorDia();
-
             mostrarGraficoTopOficinas();
             mostrarGraficoTopProblemas();
+            aplicarFiltros();
 
-            mostrar_tabla();
-            $('.date').datepicker({
-                format: 'yyyy-mm-dd', // Formato de fecha
-                autoclose: true, // Cierra automáticamente el datepicker al seleccionar la fecha
-                //todayHighlight: true, // Resalta el día de hoy
-                orientation: "bottom auto", // Coloca el calendario en la parte inferior automáticamente
-                clearBtn: true // Botón para limpiar la fecha
-            });
+            if (typeof window.loadChatbotMetrics === 'function') {
+                window.loadChatbotMetrics();
+            }
 
-            $('#fecha_inicio').datepicker({
-                singleDatePicker: true,
-                locale: {
-                    format: 'YYYY/MM/DD'
-                }
-            });
+            if (typeof window.loadNotificationMetrics === 'function') {
+                window.loadNotificationMetrics();
+            }
+        };
 
-            $('#fecha_fin').datepicker({
-                singleDatePicker: true,
-                locale: {
-                    format: 'YYYY/MM/DD'
-                }
-            });
+        $(document).ready(function() {
+            setCurrentMonthRange();
 
             listar_personal();
             listar_usuario();
             listar_incidencia();
             listar_oficina();
+
+            window.refreshDashboard();
+
+            $('#aplicar-rango-dashboard').on('click', window.refreshDashboard);
+            $('#rango-mes-actual').on('click', function() {
+                setCurrentMonthRange();
+                window.refreshDashboard();
+            });
 
 
             $('#buscar-btn').click(function() {
@@ -506,9 +533,9 @@
                 $.ajax({
                     url: '{{ route('dashBuscar.pCalve') }}', // La ruta del controlador para manejar la búsqueda
                     type: 'GET',
-                    data: {
+                    data: Object.assign({
                         buscar: query
-                    }, // Pasar el valor del campo de búsqueda
+                    }, window.getDashboardDateRange()),
                     beforeSend: function() {
                         var spinner =
                             `<div class="spinner-border text-info ms-auto cargando" role="status" aria-hidden="true"></div>`;
@@ -544,8 +571,7 @@
                 });
             });
 
-            $('#selectPersonal, #selectUsuario, #selectIncidencia, #selectOficina, #fecha_inicio, #fecha_fin').on(
-                'change', aplicarFiltros);
+            $('#selectPersonal, #selectUsuario, #selectIncidencia, #selectOficina').on('change', aplicarFiltros);
 
         });
 
@@ -554,6 +580,7 @@
                 url: "{{ route('cantidadDatos') }}",
                 method: 'GET',
                 dataType: 'JSON',
+                data: window.getDashboardDateRange(),
                 success: function(data) {
                     $('.atendidos').text(data.ticketsAtendidos);
                     $('.registrados').text(data.ticketsRegistrados);
@@ -576,24 +603,6 @@
                     });
                 }
             });
-        }
-
-        function cargarAnios(selectId) {
-            let select = document.getElementById(selectId);
-            let yearActual = new Date().getFullYear(); // Obtener año actual
-            let yearInicio = 2023; // Año de inicio
-            let yearMax = yearActual + 1; // Año actual + 1
-
-            // Vaciar el select antes de llenarlo
-            select.innerHTML = '<option value="" selected disabled>Seleccione año</option>';
-
-            // Generar las opciones dinámicamente
-            for (let year = yearInicio; year <= yearMax; year++) {
-                let option = document.createElement('option');
-                option.value = year;
-                option.textContent = year;
-                select.appendChild(option);
-            }
         }
 
         /*====================Tickets  por soporte sin filtro de fecha=====================*/
@@ -703,15 +712,11 @@
         }*/
         var chart = null;
 
-        function cantidadTicketPorSoporte(tsmes, tsanio) {
-            //console.log("Mes:", tsmes, "Año:", tsanio);
+        function cantidadTicketPorSoporte() {
             $.ajax({
                 url: '{{ route('cantTicketSoporte') }}',
                 method: 'GET',
-                data: {
-                    tsmes: tsmes,
-                    tsanio: tsanio
-                }, // Enviar datos en la petición
+                data: window.getDashboardDateRange(),
                 success: function(data) {
                     var soporteNames = [];
                     var ticketCounts = [];
@@ -795,9 +800,7 @@
                         }
                     };
 
-                    $("#cantTicketPorSoporte").html(""); // Resetear gráfico
-                    var chart = new ApexCharts(document.querySelector("#cantTicketPorSoporte"), options);
-                    chart.render();
+                    window.renderDashboardChart('tickets-soporte', '#cantTicketPorSoporte', options);
                 },
                 error: function(data) {
                     let errorJson = JSON.parse(data.responseText);
@@ -921,14 +924,11 @@
             });
         }*/
 
-        function cantTikectResultadosPorUsuario(mes, anio) {
+        function cantTikectResultadosPorUsuario() {
             $.ajax({
                 url: '{{ route('cantticketsResueltosUsu') }}',
                 method: 'GET',
-                data: {
-                    mes: mes,
-                    anio: anio
-                }, // Enviar los filtros al backend
+                data: window.getDashboardDateRange(),
                 success: function(data) {
                     var nombres = [];
                     var ticketsResueltos = [];
@@ -1006,10 +1006,11 @@
                         }
                     };
 
-                    $("#cantTikectResultadosPorUsuario").html(""); // Limpiar el contenedor antes de renderizar
-                    var chart = new ApexCharts(document.querySelector("#cantTikectResultadosPorUsuario"),
-                        options);
-                    chart.render();
+                    window.renderDashboardChart(
+                        'tickets-usuario',
+                        '#cantTikectResultadosPorUsuario',
+                        options
+                    );
                 },
                 error: function(data) {
                     let errorJson = JSON.parse(data.responseText);
@@ -1030,6 +1031,7 @@
             $.ajax({
                 url: '{{ route('ticketsCreadosPorDiaDelMesActual') }}', // Asegúrate de tener la ruta correcta
                 method: 'GET',
+                data: window.getDashboardDateRange(),
                 success: function(data) {
                     if (data.code === 200) {
                         const fechas = data.data.map(ticket => ticket.fecha);
@@ -1045,7 +1047,7 @@
                                 }
                             },
                             title: {
-                                text: 'Número de Tickets Creados por Día',
+                                text: 'Tickets creados por día en el período',
                                 align: 'left'
                             },
                             dataLabels: {
@@ -1061,7 +1063,7 @@
                             xaxis: {
                                 categories: fechas, // Días del mes
                                 title: {
-                                    text: 'Días del Mes'
+                                    text: 'Fecha'
                                 }
                             },
                             yaxis: {
@@ -1079,8 +1081,7 @@
                             }
                         };
 
-                        var chart = new ApexCharts(document.querySelector("#ticketsPorDia"), options);
-                        chart.render();
+                        window.renderDashboardChart('tickets-dia', '#ticketsPorDia', options);
                     }
                 },
                 error: function(data) {
@@ -1099,6 +1100,7 @@
             $.ajax({
                 url: '{{ route('top5OficinasConMasSolicitudes') }}',
                 method: 'GET',
+                data: window.getDashboardDateRange(),
                 success: function(data) {
                     if (data.code === 200) {
                         const nombresOficinas = data.data.map(oficina => oficina.nombre);
@@ -1141,8 +1143,7 @@
                             }]
                         };
 
-                        var chart = new ApexCharts(document.querySelector("#graficoTopOficinas"), options);
-                        chart.render();
+                        window.renderDashboardChart('top-oficinas', '#graficoTopOficinas', options);
                     }
                 },
                 error: function(data) {
@@ -1162,6 +1163,7 @@
             $.ajax({
                 url: '{{ route('top5ProblemasMasComunes') }}',
                 method: 'GET',
+                data: window.getDashboardDateRange(),
                 success: function(data) {
                     if (data.code === 200) {
                         const nombresProblemas = data.data.map(soporte => soporte.nombre);
@@ -1204,8 +1206,7 @@
                             }]
                         };
 
-                        var chart = new ApexCharts(document.querySelector("#graficoTopProblemas"), options);
-                        chart.render();
+                        window.renderDashboardChart('top-problemas', '#graficoTopProblemas', options);
                     }
                 },
                 error: function(data) {

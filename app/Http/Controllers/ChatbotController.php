@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChatbotInteraction;
+use App\Support\DashboardDateRange;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -297,28 +298,11 @@ class ChatbotController extends Controller
 
     public function getMetrics(Request $request)
     {
-        $period = $request->get('period', 'total'); // 'day', 'week', 'month', 'total'
-
-        // Query base
-        $query = ChatbotInteraction::select('*');
-
-        switch ($period) {
-            case 'day':
-                $query->where('started_at', '>=', now()->subDays(7));
-                break;
-            case 'week':
-                $query->where('started_at', '>=', now()->subWeeks(4));
-                break;
-            case 'month':
-                $query->where('started_at', '>=', now()->subMonths(12));
-                break;
-            case 'total':
-            default:
-                // Todas las interacciones
-                break;
-        }
-
-        $interactions = $query->get();
+        $range = DashboardDateRange::fromRequest($request);
+        $interactions = $range
+            ->apply(ChatbotInteraction::query(), 'started_at')
+            ->orderBy('started_at')
+            ->get();
 
         // Métricas totales
         $totalInteracciones = $interactions->count();
@@ -327,24 +311,12 @@ class ChatbotController extends Controller
         $totalFallidas = $interactions->sum('failed_responses');
         $tasaExito = $totalMensajes > 0 ? round(($totalExitosas / $totalMensajes) * 100, 2) : 0;
 
-        // Modelos más usados (top 5)
-        // $modelosUsados = ChatbotInteraction::selectRaw('model_used, COUNT(*) as count')
-        //     ->whereNotNull('model_used')
-        //     ->groupBy('model_used')
-        //     ->orderByDesc('count')
-        //     ->limit(5)
-        //     ->get();
-
-        // Modelos más usados (top 5 con conteo > 0)
-        $modelosUsados = ChatbotInteraction::selectRaw('model_used, COUNT(*) as count')
+        $modelosUsados = $interactions
             ->whereNotNull('model_used')
-            ->groupBy('model_used')
-            ->havingRaw('COUNT(*) > 0') // Solo con conteo > 0
-            ->orderByDesc('count')
-            ->limit(5)
-            ->get()
-            ->pluck('count', 'model_used')
-            ->toArray();
+            ->countBy('model_used')
+            ->sortDesc()
+            ->take(5)
+            ->all();
 
         // Datos para gráficos
         $labels = [];
@@ -353,27 +325,26 @@ class ChatbotController extends Controller
         $dataExitosas = [];
         $dataFallidas = [];
 
-        if ($period !== 'total') {
-            // Agrupar por día/semana/mes
-            $groupBy = $period === 'day' ? 'day' : ($period === 'week' ? 'week' : 'month');
-            $grouped = $interactions->groupBy(function ($item) use ($groupBy) {
-                return $item->started_at->format($groupBy === 'day' ? 'Y-m-d' : ($groupBy === 'week' ? 'Y-W' : 'Y-m'));
-            });
+        $granularity = match (true) {
+            $range->inclusiveDays() <= 45 => 'day',
+            $range->inclusiveDays() <= 370 => 'week',
+            default => 'month',
+        };
 
-            foreach ($grouped as $label => $group) {
-                $labels[] = $label;
-                $dataInteracciones[] = $group->count();
-                $dataMensajes[] = $group->sum('message_count');
-                $dataExitosas[] = $group->sum('successful_responses');
-                $dataFallidas[] = $group->sum('failed_responses');
-            }
-        } else {
-            // Para total, un solo punto
-            $labels[] = 'Total';
-            $dataInteracciones[] = $totalInteracciones;
-            $dataMensajes[] = $totalMensajes;
-            $dataExitosas[] = $totalExitosas;
-            $dataFallidas[] = $totalFallidas;
+        $grouped = $interactions->groupBy(function ($interaction) use ($granularity) {
+            return match ($granularity) {
+                'day' => $interaction->started_at->toDateString(),
+                'week' => $interaction->started_at->copy()->startOfWeek()->toDateString(),
+                default => $interaction->started_at->format('Y-m'),
+            };
+        });
+
+        foreach ($grouped as $label => $group) {
+            $labels[] = $label;
+            $dataInteracciones[] = $group->count();
+            $dataMensajes[] = $group->sum('message_count');
+            $dataExitosas[] = $group->sum('successful_responses');
+            $dataFallidas[] = $group->sum('failed_responses');
         }
 
         return response()->json([
@@ -387,7 +358,8 @@ class ChatbotController extends Controller
             'dataMensajes' => $dataMensajes,
             'dataExitosas' => $dataExitosas,
             'dataFallidas' => $dataFallidas,
-            'period' => $period,
+            'period' => 'range',
+            'granularity' => $granularity,
         ]);
     }
 }

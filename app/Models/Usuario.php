@@ -28,7 +28,8 @@ class Usuario extends Authenticatable
         'telefono',
         'remember_token',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'telegram_user_id',
     ];
     
     public function getAuthIdentifierName()

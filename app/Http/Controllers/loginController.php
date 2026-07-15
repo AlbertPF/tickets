@@ -12,10 +12,13 @@ class loginController extends Controller
 {
     public function actionLogin()
     {
-        if (Auth::check())
-            return redirect('homeAdmin');
-        else
-            return view('auth.login');
+        if (Auth::check()) {
+            return Auth::user()->tipo === 'Agente Informático'
+                ? redirect()->route('index.tickets')
+                : redirect('homeAdmin');
+        }
+
+        return view('auth.login');
     }
 
     public function sigin(Request $request)
@@ -46,8 +49,9 @@ class loginController extends Controller
 
             $intendedUrl = Session::pull('url.intended');
 
-            // Si no hay url.intended, usar la redirección por tipo de usuario
-            if (
+            if ($usuario->tipo === 'Agente Informático') {
+                $intendedUrl = route('index.tickets');
+            } elseif (
                 !$intendedUrl ||
                 str_contains($intendedUrl, 'refresh-csrf')
             ) {

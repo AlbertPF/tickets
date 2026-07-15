@@ -33,7 +33,7 @@
         <!--- Sidemenu -->
         <ul class="side-nav">
 
-            @if(Auth::check() && (Auth::user()->tipo === 'Administrador' || Auth::user()->tipo === 'Agente Informático'))
+            @if(Auth::check() && (Auth::user()->tipo === 'Administrador'))
                 <li class="side-nav-title side-nav-item">Navegación</li>
 
                 <li class="side-nav-item">
@@ -42,7 +42,10 @@
                         <span> Panel </span>
                     </a>
                 </li>
+            @endif
 
+            @if(Auth::check() && (Auth::user()->tipo === 'Administrador' || Auth::user()->tipo === 'Agente Informático'))
+                
                 <li class="side-nav-title side-nav-item">Aplicaciones</li>
 
                 <li class="side-nav-item">

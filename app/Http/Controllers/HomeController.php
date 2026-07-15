@@ -13,6 +13,7 @@ use App\Notifications\CrearTicketNotificacion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
 
@@ -270,14 +271,39 @@ class HomeController extends Controller
                 //Notification::send($usuariosAtencion, new CrearTicket($ticket, auth()->user() ?? null));
 
                 foreach ($usuariosAtencion as $usuario) {
-                    $usuario->notify(new CrearTicketNotificacion($ticket));
+                    try {
+                        $usuario->notify(new CrearTicketNotificacion($ticket));
+                    } catch (\Throwable $e) {
+                        Log::warning('No se pudo enviar la notificación de ticket por Telegram.', [
+                            'id_ticket' => $ticket->id_ticket,
+                            'id_usuario' => $usuario->id_usuario,
+                            'telegram_user_id' => $usuario->telegram_user_id,
+                            'nombre_usuario' => trim(implode(' ', array_filter([
+                                $usuario->nombre,
+                                $usuario->apellidoPaterno,
+                                $usuario->apellidoMaterno,
+                            ]))),
+                            'error' => $e->getMessage(),
+                        ]);
 
-                    ticket_notificacion::create([
-                        'id_ticket' => $ticket->id_ticket,
-                        'id_usuario' => $usuario->id_usuario,
-                        'enviada_en' => now(),
-                        'abierta' => false
-                    ]);
+                        continue;
+                    }
+
+                    try {
+                        ticket_notificacion::create([
+                            'id_ticket' => $ticket->id_ticket,
+                            'id_usuario' => $usuario->id_usuario,
+                            'enviada_en' => now(),
+                            'abierta' => false
+                        ]);
+                    } catch (\Throwable $e) {
+                        Log::error('Telegram confirmó el envío, pero no se pudo registrar la notificación.', [
+                            'id_ticket' => $ticket->id_ticket,
+                            'id_usuario' => $usuario->id_usuario,
+                            'telegram_user_id' => $usuario->telegram_user_id,
+                            'error' => $e->getMessage(),
+                        ]);
+                    }
                 }
 
                 return response()->json([

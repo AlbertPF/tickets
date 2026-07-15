@@ -20,10 +20,10 @@ class TelegramController extends Controller
         Log::info('Webhook recibido', $request->all());
         // === BYPASS LOCAL TUNNEL SECURITY PAGE ===
         if ($request->query('bypass-tunnel-reminder')) {
-            // ignorar par?metro de localtunnel
+            // Ignorar parámetro de localTunnel.
         }
 
-        // Si no hay contenido (puede pasar), responder r?pido
+        // Si no hay contenido (puede pasar), responder rápido.
         if (!$request->getContent()) {
             return response('No content', 200);
         }
@@ -38,11 +38,11 @@ class TelegramController extends Controller
                 $idTicket = substr($data, strlen('asignar_'));
                 $this->handleAsignar($chatId, $idTicket);
 
-                // Responder al callback para quitar el ?reloj?
+                // Responder al callback para quitar el reloj de espera.
                 $token = config('services.telegram-bot-api.token') ?? env('TELEGRAM_BOT_TOKEN');
                 Http::post("https://api.telegram.org/bot{$token}/answerCallbackQuery", [
                     'callback_query_id' => $update['callback_query']['id'],
-                    'text' => "? Ticket {$idTicket} asignado correctamente",
+                    'text' => "✅ Ticket {$idTicket} asignado correctamente",
                     'show_alert' => false
                 ]);
 
@@ -70,7 +70,7 @@ class TelegramController extends Controller
                 $this->sendMessage(
                     $chatId,
                     "<b>Bienvenido al sistema de tickets</b>\n\n" .
-                        "Podr?s consultar y asignarte tickets directamente desde Telegram.",
+                        "Podrás consultar y asignarte tickets directamente desde Telegram.",
                     'HTML'
                 );
                 $this->sendMessage($chatId, $this->helpText(), 'HTML');
@@ -98,7 +98,7 @@ class TelegramController extends Controller
                 return $this->handleAsignar($chatId, $idTicket);
             }
 
-            $this->sendMessage($chatId, "Comando no reconocido. Env?a /pendientes para ver la lista de tickets pendientes o /ayuda para ayuda.", 'HTML');
+            $this->sendMessage($chatId, "Comando no reconocido. Envía /pendientes para ver la lista de tickets pendientes o /ayuda para obtener ayuda.", 'HTML');
             return response()->json(['ok' => true]);
         }
 
@@ -112,7 +112,7 @@ class TelegramController extends Controller
         if (! $usuario) {
             $this->sendMessage(
                 $chatId,
-                "*No est?s registrado*\n\nPor favor contacta con el administrador para enlazar tu cuenta de Telegram con el sistema.",
+                "*No estás registrado*\n\nPor favor, contacta con el administrador para enlazar tu cuenta de Telegram con el sistema.",
                 'Markdown'
             );
             return response()->json(['ok' => true]);
@@ -130,7 +130,7 @@ class TelegramController extends Controller
         }
 
         $chunks = [];
-        $text = "<b>?? Tickets pendientes (m?x {$limit})</b>\n\n";
+        $text = "<b>📋 Tickets pendientes (máx. {$limit})</b>\n\n";
 
         foreach ($tickets as $t) {
             $id = e($t->id_ticket);
@@ -143,13 +143,13 @@ class TelegramController extends Controller
                 e(optional($t->oficinaPersonal->personal)->apellidoPaterno ?? '');
             $fecha = $t->fecha_env;
 
-            $text .= "<b>{$id}</b> ? {$soporte}\n";
+            $text .= "<b>{$id}</b> 🛠️ {$soporte}\n";
             $text .= "<i>{$desc}</i>\n";
-            $text .= "? {$nombrePersonal}\n";
-            $text .= "? {$oficina}\n";
-            $text .= "? {$fecha}\n";
-            $text .= "?? Para asignarte este ticket: <code>/asignar {$id}</code>\n";
-            $text .= "?\n";
+            $text .= "👤 {$nombrePersonal}\n";
+            $text .= "🏢 {$oficina}\n";
+            $text .= "🕒 {$fecha}\n";
+            $text .= "👉 Para asignarte este ticket: <code>/asignar {$id}</code>\n";
+            $text .= "────────────\n";
 
             if (mb_strlen($text) > 3500) {
                 $chunks[] = $text;
@@ -172,7 +172,7 @@ class TelegramController extends Controller
         if (!$usuario) {
             $this->sendMessage(
                 $chatId,
-                "*No est?s registrado*\n\nPor favor contacta con el administrador para enlazar tu cuenta de Telegram con el sistema.",
+                "*No estás registrado*\n\nPor favor, contacta con el administrador para enlazar tu cuenta de Telegram con el sistema.",
                 'Markdown'
             );
             return response()->json(['ok' => true]);
@@ -181,7 +181,7 @@ class TelegramController extends Controller
         $ticket = Ticket::where('id_ticket', $idTicket)->first();
 
         if (!$ticket) {
-            $this->sendMessage($chatId, "?? Ticket <code>{$idTicket}</code> no encontrado.", 'HTML');
+            $this->sendMessage($chatId, "❌ Ticket <code>{$idTicket}</code> no encontrado.", 'HTML');
             return response()->json(['ok' => true]);
         }
 
@@ -196,7 +196,7 @@ class TelegramController extends Controller
 
             $this->sendMessage(
                 $chatId,
-                "?? El ticket <code>{$idTicket}</code> ya no est? disponible (ticket en estado actual: {$estado}).",
+                "⚠️ El ticket <code>{$idTicket}</code> ya no está disponible (estado actual: {$estado}).",
                 'HTML'
             );
 
@@ -220,8 +220,8 @@ class TelegramController extends Controller
         if ($primerTicketPendiente->id_ticket !== $ticket->id_ticket) {
             $this->sendMessage(
                 $chatId,
-                "?? No puedes asignarte este ticket a?n.\n" .
-                    "Primero debes asignarte el ticket pendiente m?s antiguo: <code>{$primerTicketPendiente->id_ticket}</code>.",
+                "⚠️ No puedes asignarte este ticket aún.\n" .
+                    "Primero debes asignarte el ticket pendiente más antiguo: <code>{$primerTicketPendiente->id_ticket}</code>.",
                 'HTML'
             );
 
@@ -262,7 +262,7 @@ class TelegramController extends Controller
 
         $this->sendMessage(
             $chatId,
-            "? Te has asignado correctamente el ticket <code>{$idTicket}</code>.",
+            "✅ Te has asignado correctamente el ticket <code>{$idTicket}</code>.",
             'HTML'
         );
 
@@ -281,7 +281,7 @@ class TelegramController extends Controller
                 'text' => $text,
                 'parse_mode' => $parseMode,
                 'disable_web_page_preview' => true,
-            ]);
+            ])->throw();
             /*$response = Http::withoutVerifying() // opcional si est?s en ngrok free
                 //->throw('false') // <--- evita excepci?n
                 ->post("https://api.telegram.org/bot{$token}/sendMessage", [
@@ -300,11 +300,11 @@ class TelegramController extends Controller
     protected function helpText()
     {
         return implode("\n", [
-            "<b>Comandos disponibles</b>",
-            "/pendientes ? Lista tickets pendientes (por defecto 10).",
-            "/pendientes <code>n</code> ? Lista hasta n tickets.",
-            "/asignar <code>id</code> ? Asignarte un ticket (requiere permisos).",
-            "/ayuda ? Mostrar esta ayuda"
+            "<b>🤖 Comandos disponibles</b>",
+            "/pendientes — Lista los tickets pendientes (por defecto, 10).",
+            "/pendientes <code>n</code> — Lista hasta <code>n</code> tickets.",
+            "/asignar <code>id</code> — Te asigna un ticket (requiere permisos).",
+            "/ayuda — Muestra esta ayuda."
         ]);
     }
 

@@ -8,7 +8,7 @@
 
 <!-- Métricas principales -->
 <div class="row">
-    <div class="col-xl-3">
+    <div class="col-md-6 col-xl-3">
         <div class="card text-center">
             <div class="card-body">
                 <h4 class="header-title">Tasa de Apertura</h4>
@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3">
+    <div class="col-md-6 col-xl-3">
         <div class="card text-center">
             <div class="card-body">
                 <h4 class="header-title">No Abiertas</h4>
@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3">
+    <div class="col-md-6 col-xl-3">
         <div class="card text-center">
             <div class="card-body">
                 <h4 class="header-title">Tiempo Promedio</h4>
@@ -35,7 +35,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3">
+    <div class="col-md-6 col-xl-3">
         <div class="card text-center">
             <div class="card-body">
                 <h4 class="header-title">Usuarios Inactivos</h4>

@@ -350,6 +350,7 @@ class ChatbotController extends Controller
         return response()->json([
             'totalInteracciones' => $totalInteracciones,
             'totalMensajes' => $totalMensajes,
+            'totalExitosas' => $totalExitosas,
             'tasaExito' => $tasaExito,
             'totalFallidas' => $totalFallidas,
             'modelosUsados' => $modelosUsados,

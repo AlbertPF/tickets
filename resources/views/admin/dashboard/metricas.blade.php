@@ -8,7 +8,7 @@
 
 <div class="row">
     <!-- Cards para métricas totales -->
-    <div class="col-xl-3">
+    <div class="col-md-6 col-xl-3">
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title">Total Interacciones</h4>
@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3">
+    <div class="col-md-6 col-xl-3">
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title">Total Mensajes Enviados</h4>
@@ -30,24 +30,24 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3">
+    <div class="col-md-6 col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title">Total de Respuestas Exitosas</h4>
+                <div class="text-center">
+                    <h2 id="total-exitosas" class="text-warning">0</h2>
+                    <p class="text-muted">Respuestas exitosas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
         <div class="card">
             <div class="card-body">
                 <h4 class="header-title">Tasa de Éxito</h4>
                 <div class="text-center">
                     <h2 id="tasa-exito" class="text-info">0%</h2>
                     <p class="text-muted">Respuestas exitosas / total</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="header-title">Total Errores</h4>
-                <div class="text-center">
-                    <h2 id="total-errores" class="text-danger">0</h2>
-                    <p class="text-muted">Respuestas fallidas</p>
                 </div>
             </div>
         </div>
@@ -108,8 +108,8 @@
                     // Actualizar cards
                     document.getElementById('total-interacciones').textContent = data.totalInteracciones;
                     document.getElementById('total-mensajes').textContent = data.totalMensajes;
+                    document.getElementById('total-exitosas').textContent = data.totalExitosas;
                     document.getElementById('tasa-exito').textContent = data.tasaExito + '%';
-                    document.getElementById('total-errores').textContent = data.totalFallidas;
 
                     // Gráfico 1: Líneas (interacciones y mensajes)
                     const options1 = {

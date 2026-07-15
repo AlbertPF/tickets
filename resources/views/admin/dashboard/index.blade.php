@@ -26,6 +26,7 @@
             color: #247b96;
             font-weight: 600;
         }
+
     </style>
 @endsection
 
@@ -241,6 +242,44 @@
     <!-- end row-->
 
     <div class="row">
+        <div class="col-12">
+            <div class="card widget-inline">
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <div class="col-sm-6">
+                            <div class="card shadow-none m-0">
+                                <div class="card-body text-center">
+                                    <h3>
+                                        <i class="mdi mdi-progress-clock text-primary"></i><span
+                                            id="tiempo-promedio-resolucion">--:--</span> min
+                                    </h3>
+                                    <p class="text-muted font-15 mb-0">
+                                        Tiempo promedio de Atención de una incidencia
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="card shadow-none m-0 border-start">
+                                <div class="card-body text-center">
+                                    <h3>
+                                        <i class="mdi mdi-progress-clock text-primary"></i><span
+                                            id="tiempo-promedio-asignacion">--:--</span> min
+                                    </h3>
+                                    <p class="text-muted font-15 mb-0">
+                                        Tiempo promedio de Asignación de un ticket
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
 
         <div class="col-xl-6">
             <div class="card">
@@ -422,6 +461,18 @@
             return `${year}-${month}-${day}`;
         }
 
+        function formatDashboardDuration(seconds) {
+            if (seconds === null || seconds === undefined || Number.isNaN(Number(seconds))) {
+                return '--:--';
+            }
+
+            const totalMinutes = Math.max(0, Math.floor(Number(seconds) / 60));
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+        }
+
         function setCurrentMonthRange() {
             const today = new Date();
             const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -591,6 +642,12 @@
                     $('#cantOficinas').text(data.oficinas);
                     $('#cantPersonal').text(data.personal);
                     $('#cantUsuarios').text(data.usuarios);
+                    $('#tiempo-promedio-resolucion').text(
+                        formatDashboardDuration(data.tiempoPromedioResolucionSegundos)
+                    );
+                    $('#tiempo-promedio-asignacion').text(
+                        formatDashboardDuration(data.tiempoPromedioAsignacionSegundos)
+                    );
                 },
                 error: function(data) {
                     let errorJson = JSON.parse(data.responseText);

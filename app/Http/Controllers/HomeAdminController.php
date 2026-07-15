@@ -33,8 +33,8 @@ class HomeAdminController extends Controller
             $ticketQuery = $range->apply(Ticket::query(), 'fecha_env');
 
             $tickets = (clone $ticketQuery)->count();
-            $oficinas = $range->apply(Oficina::query(), 'created_at')->count();
-            $personal = $range->apply(Personal::query(), 'created_at')->count();
+            $oficinas = Oficina::count();
+            $personal = Personal::count();
             $usuarios = $range->apply(Usuario::query(), 'created_at')->count();
 
             $ticketsAtendidos = (clone $ticketQuery)->where('estado', 3)->count();
@@ -42,6 +42,35 @@ class HomeAdminController extends Controller
             $ticketsProceso = (clone $ticketQuery)->where('estado', 2)->count();
             $ticketsNoAtendidos = (clone $ticketQuery)->where('estado', 4)->count();
             $ticketsCancelados = (clone $ticketQuery)->where('estado', 5)->count();
+
+            $tiempoResolucion = DB::table('tickets as t')
+                ->join('asignacion_ticket as a', 't.id_ticket', '=', 'a.id_ticket')
+                ->where('a.estado', 3)
+                ->where('t.estado', 3)
+                ->whereBetween('a.fecha_fin', [$range->start, $range->end])
+                ->whereNotNull('t.fecha_env')
+                ->whereNotNull('a.fecha_fin')
+                ->whereColumn('a.fecha_fin', '>=', 't.fecha_env')
+                ->selectRaw('AVG(TIMESTAMPDIFF(SECOND, t.fecha_env, a.fecha_fin)) AS promedio_segundos')
+                ->selectRaw('COUNT(*) AS total_tickets')
+                ->first();
+
+            $primerasAsignaciones = DB::table('asignacion_ticket')
+                ->select('id_ticket')
+                ->selectRaw('MIN(fecha_asig) AS fecha_asig')
+                ->whereNotNull('fecha_asig')
+                ->groupBy('id_ticket');
+
+            $tiempoAsignacion = DB::table('tickets as t')
+                ->joinSub($primerasAsignaciones, 'a', function ($join) {
+                    $join->on('t.id_ticket', '=', 'a.id_ticket');
+                })
+                ->whereBetween('a.fecha_asig', [$range->start, $range->end])
+                ->whereNotNull('t.fecha_env')
+                ->whereColumn('a.fecha_asig', '>=', 't.fecha_env')
+                ->selectRaw('AVG(TIMESTAMPDIFF(SECOND, t.fecha_env, a.fecha_asig)) AS promedio_segundos')
+                ->selectRaw('COUNT(*) AS total_tickets')
+                ->first();
 
             return response()->json([
                 'code' => 200,
@@ -55,6 +84,14 @@ class HomeAdminController extends Controller
                 'ticketsProceso' => $ticketsProceso,
                 'ticketsNoAtendidos' => $ticketsNoAtendidos,
                 'ticketsCancelados' => $ticketsCancelados,
+                'tiempoPromedioResolucionSegundos' => $tiempoResolucion->promedio_segundos !== null
+                    ? (int) round($tiempoResolucion->promedio_segundos)
+                    : null,
+                'ticketsPromedioResolucion' => (int) $tiempoResolucion->total_tickets,
+                'tiempoPromedioAsignacionSegundos' => $tiempoAsignacion->promedio_segundos !== null
+                    ? (int) round($tiempoAsignacion->promedio_segundos)
+                    : null,
+                'ticketsPromedioAsignacion' => (int) $tiempoAsignacion->total_tickets,
             ], 200);
 
         } else {

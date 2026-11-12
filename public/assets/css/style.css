@@ -129,6 +129,95 @@ table.tablaTickets td:nth-child(8) {
     width: 10% !important; 
 }
 
+/* ============== Tabla Personal ================*/
+
+
+table.tablaPersonal th,
+table.tablaPersonal td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaPersonal th:nth-child(1),
+table.tablaPersonal td:nth-child(1) {
+    width: 10% !important; 
+    text-align: justify !important;
+}
+
+table.tablaPersonal th:nth-child(2),
+table.tablaPersonal td:nth-child(2) {
+    width: 20% !important; 
+    text-align: justify !important;
+}
+
+table.tablaPersonal th:nth-child(3),
+table.tablaPersonal td:nth-child(3) {
+    width: 20% !important; 
+}
+
+table.tablaPersonal th:nth-child(4),
+table.tablaPersonal td:nth-child(4) {
+    width: 15% !important; 
+    text-align: justify !important;
+}
+
+table.tablaPersonal th:nth-child(5),
+table.tablaPersonal td:nth-child(5) {
+    width: 10% !important; 
+}
+
+table.tablaPersonal th:nth-child(6),
+table.tablaPersonal td:nth-child(6) {
+    width: 15% !important; 
+}
+
+table.tablaPersonal th:nth-child(7),
+table.tablaPersonal td:nth-child(7) {
+    width: 10% !important; 
+}
+
+
+/* ============== Tabla Oficina Personal ================*/
+
+
+table.tablaOfiPersonal th,
+table.tablaOfiPersonal td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaOfiPersonal th:nth-child(1),
+table.tablaOfiPersonal td:nth-child(1) {
+    width: 25% !important; 
+    text-align: justify !important;
+}
+
+table.tablaOfiPersonal th:nth-child(2),
+table.tablaOfiPersonal td:nth-child(2) {
+    width: 35% !important; 
+    text-align: justify !important;
+}
+
+table.tablaOfiPersonal th:nth-child(3),
+table.tablaOfiPersonal td:nth-child(3) {
+    width: 10% !important; 
+}
+
+table.tablaOfiPersonal th:nth-child(4),
+table.tablaOfiPersonal td:nth-child(4) {
+    width: 10% !important; 
+    text-align: justify !important;
+}
+
+table.tablaOfiPersonal th:nth-child(5),
+table.tablaOfiPersonal td:nth-child(5) {
+    width: 20% !important; 
+}
+
 
 /* ============== Tabla tablaTicketsAsig  ================*/
 
@@ -181,6 +270,60 @@ table.tablaTicketsAsig td:nth-child(7) {
 
 table.tablaTicketsAsig th:nth-child(8),
 table.tablaTicketsAsig td:nth-child(8) {
+    width: 10% !important; 
+}
+
+/* ============== Tabla Usuarios ================*/
+
+
+table.tablaUsuario th,
+table.tablaUsuario td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaUsuario th:nth-child(1),
+table.tablaUsuario td:nth-child(1) {
+    width: 10% !important; 
+    text-align: justify !important;
+}
+
+table.tablaUsuario th:nth-child(2),
+table.tablaUsuario td:nth-child(2) {
+    width: 10% !important; 
+    text-align: justify !important;
+}
+
+table.tablaUsuario th:nth-child(3),
+table.tablaUsuario td:nth-child(3) {
+    width: 20% !important; 
+}
+
+table.tablaUsuario th:nth-child(4),
+table.tablaUsuario td:nth-child(4) {
+    width: 10% !important; 
+    text-align: justify !important;
+}
+
+table.tablaUsuario th:nth-child(5),
+table.tablaUsuario td:nth-child(5) {
+    width: 20% !important; 
+}
+
+table.tablaUsuario th:nth-child(6),
+table.tablaUsuario td:nth-child(6) {
+    width: 10% !important; 
+}
+
+table.tablaUsuario th:nth-child(7),
+table.tablaUsuario td:nth-child(7) {
+    width: 10% !important; 
+}
+
+table.tablaUsuario th:nth-child(8),
+table.tablaUsuario td:nth-child(8) {
     width: 10% !important; 
 }
 

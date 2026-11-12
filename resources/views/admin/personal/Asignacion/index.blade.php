@@ -7,6 +7,7 @@
     <link href="{{ url('assets/css/vendor/select.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url('assets/css/vendor/fixedHeader.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url('assets/css/vendor/fixedColumns.bootstrap5.css') }}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="assets/css/style.css">
 @endsection
 
 @section('contenido')
@@ -132,7 +133,7 @@
         /*----------- funciones--------------*/
 
         function mostrar_tabla() {
-            
+
             let anio = $('#tsanio').val();
 
             $.ajax({

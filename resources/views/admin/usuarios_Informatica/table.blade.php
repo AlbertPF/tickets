@@ -16,8 +16,8 @@
         @foreach ($usuarios as $usuario)
             <tr>
                 <td>{{ $usuario->dni }}</td>
-                <td style="font-size: 12px">{{ $usuario->nombre }}</td>
-                <td style="font-size: 12px">{{ $usuario->apellidoPaterno }} {{ $usuario->apellidoMaterno }}</td>
+                <td>{{ $usuario->nombre }}</td>
+                <td>{{ $usuario->apellidoPaterno }} {{ $usuario->apellidoMaterno }}</td>
                 <td>{{ $usuario->usuario }}</td>
                 <td>{{ $usuario->tipo }}</td>
                 <td>{{ $usuario->telefono }}</td>

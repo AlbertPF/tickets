@@ -1,4 +1,4 @@
-<table id="alternative-page-datatable" class="table table-striped nowrap w-100 tablaUsuario">
+<table id="alternative-page-datatable" class="table table-striped nowrap w-100 tablaPersonal">
     <thead>
         <tr>
             <th>DNI</th>

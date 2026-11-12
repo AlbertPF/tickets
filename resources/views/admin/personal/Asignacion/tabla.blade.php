@@ -1,4 +1,4 @@
-<table id="alternative-page-datatable" class="table table-striped nowrap w-100" STYLE="font-size: 12px; !important;">
+<table id="alternative-page-datatable" class="table table-striped nowrap w-100 tablaOfiPersonal">
     <thead>
         <tr>
             <th>Personal</th>

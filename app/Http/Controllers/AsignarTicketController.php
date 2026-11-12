@@ -591,11 +591,30 @@ class AsignarTicketController extends Controller
         return view('admin.asignaciones.index');
     }
 
-    public function actListarGeneral()
+    public function actListarGeneral(Request $r)
     {
+        $r->validate([
+            'fecha_inicio' => 'required|date_format:Y-m-d',
+            'fecha_fin' => 'required|date_format:Y-m-d|after_or_equal:fecha_inicio',
+            'id_usuario' => 'nullable|string|max:20'
+        ]);
 
-        $ticketsAsigGeneral = AsignacionTicket::with(['ticket.soporte', 'ticket.personal', 'usuario'])
-            ->get();
+        $idUsuario = $r->input('id_usuario');
+        $fechaInicio = $r->input('fecha_inicio');
+        $fechaFin = $r->input('fecha_fin');
+
+        $ticketsAsigGeneral = AsignacionTicket::with([
+            'ticket.soporte',
+            'ticket.personal',
+            'usuario'
+        ])
+        ->whereDate('fecha_asig', '>=', $fechaInicio)
+        ->whereDate('fecha_asig', '<=', $fechaFin)
+        ->when($idUsuario !== null && $idUsuario !== '', function ($query) use ($idUsuario) {
+            $query->where('id_usuario', $idUsuario);
+        })
+        ->orderBy('fecha_asig', 'desc')
+        ->get();
 
         // Renderizar la vista con los tickets asignados
         $html = view('admin.asignaciones.tabla', compact('ticketsAsigGeneral'))->render();

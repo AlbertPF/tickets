@@ -56,6 +56,13 @@ class ResumenGeneralController extends Controller
     public function actFiltrar(Request $r)
     {
         if ($r->ajax()) {
+
+            $r->validate([
+                'fecha_inicio' => 'required|date_format:Y-m-d',
+                'fecha_fin' => 'required|date_format:Y-m-d|after_or_equal:fecha_inicio',
+                'id_usuario' => 'nullable|string|max:20'
+            ]);
+
             $idUsuario = $r->input('id_usuario');
             $fechaInicio = $r->input('fecha_inicio');
             $fechaFin = $r->input('fecha_fin');
@@ -69,22 +76,15 @@ class ResumenGeneralController extends Controller
                             b.estado AS Estado, 
                             b.fecha_aten AS Fecha_aten")
                 ->leftJoin('actividades AS a', 'b.id_actividad', '=', 'a.id_actividad')
-                ->leftJoin('usuarios AS u', 'b.id_usuario', '=', 'u.id_usuario');
+                ->leftJoin('usuarios AS u', 'b.id_usuario', '=', 'u.id_usuario')
+                ->whereDate('b.fecha_reg', '>=', $fechaInicio)
+                ->whereDate('b.fecha_reg', '<=', $fechaFin);
+                
 
-            if (!empty($idUsuario)) {
+            if ($idUsuario !== null && $idUsuario !== '') {
                 $query1->where('b.id_usuario', $idUsuario);
             }
-            if (!empty($fechaInicio) && !empty($fechaFin)) {
-                $query1->whereBetween(DB::raw('DATE(b.fecha_reg)'), [
-                    date('Y-m-d', strtotime($fechaInicio)),
-                    date('Y-m-d', strtotime($fechaFin))
-                ]);
-            } elseif (!empty($fechaInicio)) {
-                $query1->whereDate('b.fecha_reg', '>=', date('Y-m-d', strtotime($fechaInicio)));
-            } elseif (!empty($fechaFin)) {
-                $query1->whereDate('b.fecha_reg', '<=', date('Y-m-d', strtotime($fechaFin)));
-            }
-
+            
             // Segunda consulta
             $query2 = DB::table('asignacion_ticket AS at')
                 ->selectRaw("CONCAT(u.nombre, ' ', u.apellidoPaterno, ' ', u.apellidoMaterno) AS Usuario,
@@ -95,24 +95,16 @@ class ResumenGeneralController extends Controller
                             at.fecha_fin AS Fecha_aten")
                 ->leftJoin('tickets AS t', 'at.id_ticket', '=', 't.id_ticket')
                 ->leftJoin('soportes AS s', 't.id_soporte', '=', 's.id_soporte')
-                ->leftJoin('usuarios AS u', 'at.id_usuario', '=', 'u.id_usuario');
+                ->leftJoin('usuarios AS u', 'at.id_usuario', '=', 'u.id_usuario')
+                ->whereDate('at.fecha_asig', '>=', $fechaInicio)
+                ->whereDate('at.fecha_asig', '<=', $fechaFin);
 
-            if (!empty($idUsuario)) {
+            if ($idUsuario !== null && $idUsuario !== '') {
                 $query2->where('at.id_usuario', $idUsuario);
-            }
-            if (!empty($fechaInicio) && !empty($fechaFin)) {
-                $query2->whereBetween(DB::raw('DATE(at.fecha_asig)'), [
-                    date('Y-m-d', strtotime($fechaInicio)),
-                    date('Y-m-d', strtotime($fechaFin))
-                ]);
-            } elseif (!empty($fechaInicio)) {
-                $query2->whereDate('at.fecha_asig', '>=', date('Y-m-d', strtotime($fechaInicio)));
-            } elseif (!empty($fechaFin)) {
-                $query2->whereDate('at.fecha_asig', '<=', date('Y-m-d', strtotime($fechaFin)));
             }
 
             // Unir las dos consultas
-            $actGeneral = $query1->unionAll($query2)->get();
+            $actGeneral = $query1->unionAll($query2)->orderBy('Fecha_reg', 'desc')->get();
 
             // Renderizar la vista con los datos obtenidos
             $html = view('admin.Resumen.tabla', compact('actGeneral'))->render();

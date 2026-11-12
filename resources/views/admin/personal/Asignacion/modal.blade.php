@@ -20,7 +20,7 @@
                 <input type="hidden" name="tipo_formulario" id="tipo_formulario" value="">
                 <input type="hidden" name="id_asignacion_editar" id="id_asignacion_editar" value="">
                 <div class="modal-body">
-                    <div class="tab-content">
+                   <div class="tab-content">
                         <div class="tab-pane show active" id="custom-styles-preview">
                             <div class="row">
 
@@ -79,7 +79,7 @@
     $(document).ready(function() {
 
         $('.asignar_personal').click(function() {
-            console.log('Asignar personal');
+            //console.log('Asignar personal');
             $("#title_modal").html('Asiganar Personal');
             // Cambia la clase del div con id="modal-header"
             $("#modal-header").removeClass('bg-info').addClass('bg-success');

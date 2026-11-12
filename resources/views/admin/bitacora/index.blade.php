@@ -51,6 +51,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row mb-2">
+                        <label class="form-label">Filtro por Fecha :</label>
+                        <div class="col-xl-3 col-lg-3">
+                            <input type="text" class="form-control date" id="fecha_inicio" name="fecha_inicio" placeholder="Fecha Inicio">
+                        </div> <!-- end col -->
+                        <div class="col-xl-3 col-lg-3">
+                            <input type="text" class="form-control date" id="fecha_fin" name="fecha_fin" placeholder="Fecha Fin">
+                        </div>
+                    </div>
 
                     <ul class="nav nav-tabs nav-bordered mb-3">
                         <li class="nav-item">
@@ -100,16 +109,106 @@
 
     <script>
         $(document).ready(function() {
+            let hoy = moment();
+            let primerDia = moment().startOf('month');
+
+            $('#fecha_inicio').daterangepicker({
+                singleDatePicker: true,
+                autoUpdateInput: false,
+                startDate: primerDia,
+                endDate: primerDia,
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    applyLabel: 'Aplicar',
+                    cancelLabel: 'Cancelar',
+                    daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    monthNames: [
+                        'Enero', 'Febrero', 'Marzo', 'Abril',
+                        'Mayo', 'Junio', 'Julio', 'Agosto',
+                        'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                    ],
+                    firstDay: 1
+                }
+            });
+
+            $('#fecha_fin').daterangepicker({
+                singleDatePicker: true,
+                autoUpdateInput: false,
+                startDate: hoy,
+                endDate: hoy,
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    applyLabel: 'Aplicar',
+                    cancelLabel: 'Cancelar',
+                    daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    monthNames: [
+                        'Enero', 'Febrero', 'Marzo', 'Abril',
+                        'Mayo', 'Junio', 'Julio', 'Agosto',
+                        'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                    ],
+                    firstDay: 1
+                }
+            });
+
+            $('#fecha_inicio').val(primerDia.format('DD/MM/YYYY'));
+            $('#fecha_fin').val(hoy.format('DD/MM/YYYY'));
+
             mostrar_tabla();
+
+            $('#fecha_inicio, #fecha_fin').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                mostrar_tabla();
+            });
+
         });
+
+        function formatearFecha(date) {
+            let y = date.getFullYear();
+            let m = String(date.getMonth() + 1).padStart(2, '0');
+            let d = String(date.getDate()).padStart(2, '0');
+            return `${d}/${m}/${y}`;
+        }
 
         function mostrar_tabla() {
             //console.log('mostrar tabla');
+            let fechaInicioVisual = $('#fecha_inicio').val();
+            let fechaFinVisual = $('#fecha_fin').val();
+            
+            let partesInicio = fechaInicioVisual.split('/');
+            let partesFin = fechaFinVisual.split('/');
+
+            if (partesInicio.length !== 3 || partesFin.length !== 3) {
+                return;
+            }
+
+            let fechaInicio = `${partesInicio[2]}-${partesInicio[1]}-${partesInicio[0]}`;
+            let fechaFin = `${partesFin[2]}-${partesFin[1]}-${partesFin[0]}`;
+
+            /*console.log('Fecha inicio enviada:', fechaInicio);
+            console.log('Fecha fin enviada:', fechaFin);
+            console.log('Token CSRF:', '{{ csrf_token() }}');*/
+
+            if (fechaInicio > fechaFin) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Fechas incorrectas',
+                    text: 'La fecha de inicio no puede ser mayor que la fecha de fin.'
+                });
+                return;
+            }
+
             $.ajax({
                 type: 'POST',
                 url: '{{ route('listar.actividad') }}',
                 dataType: 'json',
-                data: {_token: '{{ csrf_token() }}'},
+                headers: {
+                    'Accept': 'application/json'
+                },
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    fecha_inicio: fechaInicio,
+                    fecha_fin: fechaFin
+                },
                 beforeSend: function() {
 
                     var spinner =
@@ -117,16 +216,38 @@
                     $("#contenedorRegistros").html(spinner);
 
                 },
-                error: function(data) {
+                error: function(xhr, status, error) {
 
-                    let errorJson = JSON.parse(data.responseText);
+                   /* console.error('Error AJAX:', error);
+                    console.error('Estado:', xhr.status);
+                    console.error('Respuesta:', xhr.responseText);*/
+
+                    let mensaje = 'Ocurrió un error al cargar las actividades.';
+
+                    // Si Laravel devuelve JSON
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        mensaje = xhr.responseJSON.message;
+                    }
+                    // Si devuelve HTML
+                    else if (xhr.status === 419) {
+                        mensaje = 'La sesión ha expirado. Actualice la página e inicie sesión nuevamente.';
+                    }
+                    else if (xhr.status === 401) {
+                        mensaje = 'No está autenticado. Inicie sesión nuevamente.';
+                    }
+                    else if (xhr.status === 404) {
+                        mensaje = 'No se encontró la ruta solicitada.';
+                    }
+                    else if (xhr.status === 500) {
+                        mensaje = 'Error interno del servidor. Revise los registros de Laravel.';
+                    }
 
                     Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: errorJson.message,
-                        footer: '<a href="">Vuelva a intentarlo</a>'
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: mensaje
                     });
+
                 },
                 success: function(data) {
                     //console.log(data.html);

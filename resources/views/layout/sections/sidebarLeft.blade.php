@@ -3,11 +3,13 @@
 
     <!-- Obtener la URL de redirección según el tipo de usuario -->
     @php
-    $redirectUrl = Auth::check() && Auth::user()->tipo === 'Personal' 
-        ? route('index.actividades') 
-        : url('homeAdmin');
+        $redirectUrl = match (Auth::user()?->tipo) {
+            'Personal' => route('index.actividades'),
+            'Agente Informático' => route('index.tickets'),
+            'Administrador' => url('homeAdmin'),
+            default => url('/')
+        };
     @endphp
-    
     <!-- LOGO -->
     <a href="{{ $redirectUrl }}" class="logo text-center logo-light">
         <span class="logo-lg">

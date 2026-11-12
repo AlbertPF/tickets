@@ -106,33 +106,29 @@ class ListaBitacoraController extends Controller
 
     public function actFiltrar(Request $r) {
         if ($r->ajax()) {
+
+            $r->validate([
+                'fecha_inicio' => 'required|date_format:Y-m-d',
+                'fecha_fin' => 'required|date_format:Y-m-d|after_or_equal:fecha_inicio',
+                'id_usuario' => 'nullable|string|max:20'
+            ]);
+
             $idUsuario = $r->input('id_usuario');
             $fechaInicio = $r->input('fecha_inicio');
             $fechaFin = $r->input('fecha_fin');
     
-            // Construimos la consulta base con relaciones necesarias
-            $bitacoraQuery = Bitacora::with(['oficina', 'usuario'])->orderBy('fecha_reg', 'desc');
+            $bitacoraQuery = Bitacora::with(['oficina', 'usuario'])
+                ->whereDate('fecha_reg', '>=', $fechaInicio)
+                ->whereDate('fecha_reg', '<=', $fechaFin)
+                ->orderBy('fecha_reg', 'desc');
     
-            // Aplicamos los filtros
-            if ($idUsuario) {
+            // filtro
+            if ($idUsuario !== null && $idUsuario !== '') {
                 $bitacoraQuery->where('id_usuario', $idUsuario);
             }
-    
-            if ($fechaInicio && $fechaFin) {
-                $bitacoraQuery->whereBetween(DB::raw('DATE(fecha_reg)'), [
-                    date('Y-m-d', strtotime($fechaInicio)),
-                    date('Y-m-d', strtotime($fechaFin))
-                ]);
-            } elseif ($fechaInicio) {
-                $bitacoraQuery->where(DB::raw('DATE(fecha_reg)'), '>=', date('Y-m-d', strtotime($fechaInicio)));
-            } elseif ($fechaFin) {
-                $bitacoraQuery->where(DB::raw('DATE(fecha_reg)'), '<=', date('Y-m-d', strtotime($fechaFin)));
-            }
-    
-            // Obtenemos los resultados de la consulta
+
             $listBitacoras = $bitacoraQuery->get();
-    
-            // Renderizamos la vista con los resultados
+
             $html = view('admin.bitacora.lista.tabla', compact('listBitacoras'))->render();
     
             return response()->json([

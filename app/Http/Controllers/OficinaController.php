@@ -19,7 +19,13 @@ class OficinaController extends Controller
 
         if ($r->ajax()) {
 
-            $oficinas = Oficina::all();
+            $r->validate([
+                'anio' => 'required|integer|min:2023|max:' . date('Y')
+            ]);
+
+            $anio = $r->input('anio');
+
+            $oficinas = Oficina::where('anio', $anio)->get();
 
             $html = view('admin.oficinas.tabla', compact('oficinas'))->render();
 

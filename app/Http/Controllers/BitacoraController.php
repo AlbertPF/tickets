@@ -25,6 +25,15 @@ class BitacoraController extends Controller
         $usuarioActual = Auth::check() ? Auth::user()->id_usuario : null;
 
         if ($usuarioActual) {
+            
+            $fechaInicio = $r->input('fecha_inicio', now()->startOfMonth()->format('Y-m-d'));
+            $fechaFin    = $r->input('fecha_fin',    now()->format('Y-m-d'));
+
+            $r->validate([
+                'fecha_inicio' => 'nullable|date_format:Y-m-d',
+                'fecha_fin' => 'nullable|date_format:Y-m-d|after_or_equal:fecha_inicio',
+            ]);
+
             //$miBitacoras = Bitacora::all();
             /*$miBitacoras = Bitacora::with(['personal', 'usuario'])
                 ->where('id_usuario', $usuarioActual)
@@ -32,6 +41,9 @@ class BitacoraController extends Controller
 
             $miBitacoras = Bitacora::with(['usuario', 'oficina'])
                 ->where('id_usuario', $usuarioActual)
+                ->whereDate('fecha_reg', '>=', $fechaInicio)
+                ->whereDate('fecha_reg', '<=', $fechaFin)
+                ->orderBy('fecha_reg', 'desc')
                 ->get();
 
             // Renderizar la vista con los tickets asignados

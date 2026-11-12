@@ -34,7 +34,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-9 col-lg-10">
+                        <div class="col-xl-8 col-lg-8">
                             <h4 class="header-title">Lista de Oficinas</h4>
                             <p class="text-muted font-14">
                                 El Gobierno Regional de Apurímac cuenta con diversas oficinas que están distribuidas de
@@ -45,16 +45,32 @@
                                 a la ciudadanía.
                             </p>
                         </div>
-                        <div class="col-xl-3 col-lg-2">
-                            <div class="d-grid">
-                                {{-- <button type="button" class="btn btn-sm btn-info"><i class="uil-circuit"></i>Nuevo Usuario</button> --}}
-                                <button type="button" class="btn btn-success agregar_oficina" data-bs-toggle="modal"
-                                    data-bs-target="#modal-nueva-oficina"><i class="mdi mdi-notebook-plus me-2"></i>Agregar Oficina
-                                </button>
-                                <br>
-                                <button type="button" class="btn btn-warning copiar_oficinas" id="copiarOficinasBtn">
-                                    <i class="mdi mdi-content-copy me-2"></i> Duplicar Oficinas
-                                </button> 
+                        <div class="col-xl-4 col-lg-4">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-xl-6 col-lg-6">
+                                            <div class="d-grid">
+                                                <button type="button" class="btn btn-success agregar_oficina" data-bs-toggle="modal"
+                                                    data-bs-target="#modal-nueva-oficina"><i class="mdi mdi-notebook-plus me-2"></i>Agregar
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-6">
+                                            <div class="d-grid">
+                                                <button type="button" class="btn btn-warning copiar_oficinas" id="copiarOficinasBtn">
+                                                    <i class="mdi mdi-content-copy me-2"></i> Duplicar
+                                                </button> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 mt-2">
+                                    <div class="mb-3 form-group">
+                                        <label class="form-label">Año</label>
+                                        <input type="text" class="form-control date" id="tsanio" name="tsanio" placeholder="Año">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -103,7 +119,23 @@
 
     <script>
         $(document).ready(function() {
+            var currentYear = new Date().getFullYear();
+            
+            $('#tsanio').datepicker({
+                format: "yyyy",          
+                viewMode: "years",       
+                minViewMode: "years",    
+                autoclose: true,
+                endDate: currentYear.toString()
+            });
+
+            $('#tsanio').datepicker('setDate', new Date(currentYear, 0, 1));
+
             mostrar_tabla();
+
+            $('#tsanio').on('changeDate', function() {
+                mostrar_tabla();
+            });
 
             $('#copiarOficinasBtn').click(function() {
                 Swal.fire({
@@ -158,18 +190,26 @@
         /*----------- funciones--------------*/
 
         function mostrar_tabla() {
-            //console.log('mostrar tabla');
+            let anio = $('#tsanio').val();
             $.ajax({
                 type: 'POST',
                 url: '{{ route('listar.oficina') }}',
                 dataType: 'json',
-                data: {_token: '{{ csrf_token() }}'},
+                headers: {
+                    'Accept': 'application/json'
+                },
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    anio: anio
+                },
                 beforeSend: function() {
-
-                    var spinner =
-                        `<div class="spinner-border text-info ms-auto cargando" role="status" aria-hidden="true"></div>`;
-                    $("#contenedorRegistros").html(spinner);
-
+                   $("#contenedorRegistros").html(`
+                        <div class="text-center p-4">
+                            <div class="spinner-border text-info" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                    `);
                 },
                 error: function(data) {
 

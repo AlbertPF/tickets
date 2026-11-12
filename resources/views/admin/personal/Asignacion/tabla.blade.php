@@ -1,4 +1,4 @@
-<table id="alternative-page-datatable" class="table table-striped nowrap w-100">
+<table id="alternative-page-datatable" class="table table-striped nowrap w-100" STYLE="font-size: 12px; !important;">
     <thead>
         <tr>
             <th>Personal</th>
@@ -23,7 +23,10 @@
                         <h5 style="margin: 0px 0 !important;"><span class="badge badge-danger-lighten"><i class="mdi mdi-cancel"></i> Inactivo</span></h5>
                     @endif
                 </td>
-                <td>{{ $ofiPersonal->created_at }}</td>
+                <td>
+                    {{ \Carbon\Carbon::parse($ofiPersonal->created_at)->format('d/m/Y') }}<br>
+                    <small class="text-muted">{{ \Carbon\Carbon::parse($ofiPersonal->created_at)->format('H:i:s') }}</small>
+                </td>
                 {{-- <td class="table-action">
                     <a href="javascript: void(0);" class="action-icon text-info rounded editarAsig_personal"
                         data-id-personal="{{ $ofiPersonal->id_personal }}"> 

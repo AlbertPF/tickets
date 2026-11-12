@@ -51,6 +51,30 @@
                             </div>
                         </div> --}}
                     </div>
+                    <div class="row mb-2">
+                        <label class="form-label">Filtro por Fecha :</label>
+                        <div class="col-xl-3 col-lg-3">
+                            <select class="form-control" id="selectUsuario" name="id_usuario" data-toggle="select2" title="Usuarios Informáticos">
+                                <option value="" disabled selected>Seleccionar Usuario</option>
+                                <!-- Las opciones serán llenadas dinámicamente -->
+                            </select> 
+                        </div>  
+                        <div class="col-xl-3 col-lg-3">
+                            <input type="text" class="form-control date" id="fecha_inicio" name="fecha_inicio"
+                                placeholder="Fecha Inicio">
+                        </div>
+                        <div class="col-xl-3 col-lg-3">
+                            <input type="text" class="form-control date" id="fecha_fin" name="fecha_fin"
+                                placeholder="Fecha Fin">
+                        </div>
+                        <div class="col-xl-2 col-lg-2">
+                            <div class="d-grid">
+                                <button type="button" id="limpiarFiltro" class="btn btn-primary">
+                                    <i class="mdi mdi-file-sign me-2"></i>limpiar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
                     <ul class="nav nav-tabs nav-bordered mb-3">
                         <li class="nav-item">
@@ -101,39 +125,141 @@
 
     <script>
         $(document).ready(function() {
+            let hoy = moment();
+            let primerDia = moment().startOf('month');
 
+            let configuracionFecha = {
+                singleDatePicker: true,
+                autoUpdateInput: false,
+                autoApply: true,
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    applyLabel: 'Aplicar',
+                    cancelLabel: 'Cancelar',
+                    daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    monthNames: [
+                        'Enero', 'Febrero', 'Marzo', 'Abril',
+                        'Mayo', 'Junio', 'Julio', 'Agosto',
+                        'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                    ],
+                    firstDay: 1
+                }
+            };
+
+            $('#fecha_inicio').daterangepicker({
+                ...configuracionFecha, startDate: primerDia, endDate: primerDia
+            });
+
+            $('#fecha_fin').daterangepicker({
+                ...configuracionFecha, startDate: hoy, endDate: hoy
+            });
+
+            $('#fecha_inicio').val(primerDia.format('DD/MM/YYYY'));
+            $('#fecha_fin').val(hoy.format('DD/MM/YYYY'));
+
+            listar_usuario();
             mostrar_tablaAsig();
 
+            $('#fecha_inicio, #fecha_fin').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                mostrar_tablaAsig();
+            });
+
+            $('#selectUsuario').on('change', function() {
+                mostrar_tablaAsig();
+            });
+
+            $('#limpiarFiltro').on('click', function() {
+
+                $('#selectUsuario').val('').trigger('change.select2');
+
+                let hoy = moment();
+                let primerDia = moment().startOf('month');
+
+                let pickerInicio = $('#fecha_inicio').data('daterangepicker');
+
+                pickerInicio.setStartDate(primerDia);
+                pickerInicio.setEndDate(primerDia);
+
+                let pickerFin = $('#fecha_fin').data('daterangepicker');
+
+                pickerFin.setStartDate(hoy);
+                pickerFin.setEndDate(hoy);
+
+                $('#fecha_inicio').val(primerDia.format('DD/MM/YYYY'));
+                $('#fecha_fin').val(hoy.format('DD/MM/YYYY'));
+
+                mostrar_tablaAsig();
+            });
 
         });
 
         function mostrar_tablaAsig() {
             //console.log('listar tickets');
+            let id_usuario = $('#selectUsuario').val();
+            if (id_usuario === '') {
+                id_usuario = null;
+            }
+            let fechaInicioVisual = $('#fecha_inicio').val();
+            let fechaFinVisual = $('#fecha_fin').val();
+
+            let fechaInicio = moment(fechaInicioVisual, 'DD/MM/YYYY', true);
+            let fechaFin = moment(fechaFinVisual, 'DD/MM/YYYY', true);
+
+            if (!fechaInicio.isValid() || !fechaFin.isValid()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Fechas inválidas',
+                    text: 'Seleccione correctamente ambas fechas.'
+                });
+                return;
+            }
+
+            if (fechaFin.isBefore(fechaInicio, 'day')) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Rango de fechas incorrecto',
+                    text: 'La fecha de fin no puede ser menor que la fecha de inicio.'
+                });
+                return;
+            }
+
+            let fecha_inicio = fechaInicio.format('YYYY-MM-DD');
+            let fecha_fin = fechaFin.format('YYYY-MM-DD');
 
             $.ajax({
                 type: 'POST',
                 url: '{{ route('listar.ticketsAsigGeneral') }}',
                 dataType: 'json',
+                headers: {
+                    'Accept': 'application/json'
+                },
                 data: {
-                    _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}',
+                    id_usuario: id_usuario,
+                    fecha_inicio: fecha_inicio,
+                    fecha_fin: fecha_fin
                 },
                 beforeSend: function() {
-
-                    var spinner =
-                        `<div class="spinner-border text-info ms-auto cargando" role="status" aria-hidden="true"></div>`;
-                    $("#contenedorRegistrosAsig").html(spinner);
-
+                     $("#contenedorRegistrosAsig").html(`
+                        <div class="text-center p-4">
+                            <div class="spinner-border text-info" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                    `);
                 },
-                error: function(data) {
-
-                    let errorJson = JSON.parse(data.responseText);
-
+                error: function(xhr, status, error) {
+                    let mensaje = xhr.responseJSON?.message ||
+                        'Hubo un problema al filtrar las asignaciones de tickets.';
                     Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: errorJson.message,
-                        footer: '<a href="">Vuelva a intentarlo</a>'
+                        icon: 'error',
+                        title: 'Error',
+                        text: mensaje,
+                        timer: 3000,
+                        timerProgressBar: true
                     });
+
                 },
                 success: function(data) {
                     //console.log(data.html);
@@ -199,6 +325,41 @@
             });
         }
 
+        function listar_usuario() {
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('dashListaUsuario') }}',
+                dataType: 'json',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(data) {
+                    //console.log('Oficinas:', data);
+                    if (data.code === 200) {
+                        let usuarios = data.usuarios;
+                        let select = $('#selectUsuario'); // Seleccionar el <select>
+                        select.empty(); // Limpiar opciones anteriores
+
+                        // Agregar nuevamente la opción predeterminada
+                        select.append('<option value="" disabled selected>Seleccionar Usuarios</option>');
+
+                        // Iterar sobre las categorías jerárquicas para agregarlas al select
+                        usuarios.forEach(function(usuario) {
+                            // Añadir opción al select con un formato visual basado en el nivel
+                            let optionText = usuario.nombreCompleto;
+                            select.append(
+                                $('<option></option>')
+                                .val(usuario.id_usuario)
+                                .text(optionText)
+                            );
+                        });
+                    }
+                },
+                error: function(data) {
+                    console.error('Error en listar usuario:', data);
+                }
+            });
+        }
 
     </script>
 @endsection

@@ -19,7 +19,11 @@
                 <td>{{ $personal->apellidoPaterno }} {{ $personal->apellidoMaterno }}</td>
                 <td>{{ $personal->regimenLaboral->nombre ?? 'Sin asignar' }}</td>
                 <td>{{ $personal->telefono }}</td>
-                <td>{{ $personal->created_at }}</td>
+                {{-- <td>{{ $personal->created_at }}</td> --}}
+                <td>
+                    {{ \Carbon\Carbon::parse($personal->created_at)->format('d/m/Y') }}<br>
+                    <small class="text-muted">{{ \Carbon\Carbon::parse($personal->created_at)->format('H:i:s') }}</small>
+                </td>
                 <td class="table-action">
                     <a href="javascript: void(0);" class="action-icon text-info rounded ver_personal"
                         data-id-personal="{{ $personal->id_personal }}"> 

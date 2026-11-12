@@ -22,8 +22,17 @@ class OficinaPeronsalController extends Controller
 
         if ($r->ajax()) {
 
-            //$ofiPersonals = OficinaPersonal::all();
-            $ofiPersonals = OficinaPersonal::with(['personal', 'oficina'])->get();
+            $r->validate([
+                'anio' => 'required|integer|min:2023|max:' . date('Y')
+            ]);
+
+            $anio = $r->input('anio');
+
+            $ofiPersonals = OficinaPersonal::with(['personal', 'oficina'])
+                ->where('anio', $anio)
+                ->get();
+
+            //$ofiPersonals = OficinaPersonal::with(['personal', 'oficina'])->get();
 
             $html = view('admin.personal.Asignacion.tabla', compact('ofiPersonals'))->render();
 

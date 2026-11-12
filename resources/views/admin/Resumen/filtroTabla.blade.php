@@ -1,9 +1,8 @@
 <script>
-
     function imgPathToBase64(imagePath, callback) {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', imagePath, true);
-        xhr.responseType = 'blob';  // Solicitar la imagen como un blob
+        xhr.responseType = 'blob'; // Solicitar la imagen como un blob
 
         xhr.onload = function(e) {
             if (this.status === 200) {
@@ -58,8 +57,8 @@
     }*/
 
     function InicializacionTabla() {
-        const imagePath1 = "{{url('Images/Gore/logoFile.png')}}";
-        const imagePath2 = "{{url('Images/Gore/logo-GORE.png')}}";
+        const imagePath1 = "{{ url('Images/Gore/logoFile.png') }}";
+        const imagePath2 = "{{ url('Images/Gore/logo-GORE.png') }}";
 
         imgPathToBase64(imagePath1, function(base64Data1) {
             if (base64Data1) {
@@ -85,13 +84,17 @@
                                 [4, 'desc']
                                 //[0, 'asc']
                             ],
-                            lengthMenu: [10, 25, 50, 100], // Opciones de cuántos registros mostrar por página
+                            lengthMenu: [10, 25, 50,
+                                100
+                            ], // Opciones de cuántos registros mostrar por página
                             responsive: true,
                             //scrollX: true,
                             dom:
                                 // Botones en una fila superior y debajo el lengthMenu alineado con el buscador
-                                "<'row'<'col-md-12'B>>" + // Botones en una fila independiente con margen superior
-                                "<'row mt-2'<'col-md-6'l><'col-md-6'f>>" + // LengthMenu y buscador alineados en la misma fila
+                                "<'row'<'col-md-12'B>>" +
+                                // Botones en una fila independiente con margen superior
+                                "<'row mt-2'<'col-md-6'l><'col-md-6'f>>" +
+                                // LengthMenu y buscador alineados en la misma fila
                                 "<'row'<'col-sm-12'tr>>" + // Tabla de datos
                                 "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>", // Información y paginación en la última fila
                             buttons: [{
@@ -115,46 +118,55 @@
                                     className: 'btn btn-danger',
                                     orientation: 'landscape', // Opción para orientación horizontal
                                     pageSize: 'A4', // Tamaño de página PDF
-                                    customize: function (doc) {
+                                    customize: function(doc) {
                                         doc.pageMargins = [30, 70, 30, 50];
-                                       
+
                                         const headerHeight = 60;
 
                                         // Encabezado
-                                        doc['header'] = (currentPage, pageCount, pageSize) => {
+                                        doc['header'] = (currentPage, pageCount,
+                                            pageSize) => {
                                             return {
-                                                margin: [10, 0, 10, 0], 
+                                                margin: [10, 0, 10, 0],
                                                 height: headerHeight,
-                                                columns: [
-                                                    {
+                                                columns: [{
                                                         image: base64Data1,
                                                         width: 50,
                                                         height: 50,
-                                                        margin: [30, 10, 0, 0], 
-                                                        alignment: 'left'  
+                                                        margin: [30, 10, 0, 0],
+                                                        alignment: 'left'
                                                     },
                                                     {
-                                                        stack: [ 
-                                                            {
+                                                        stack: [{
                                                                 text: 'Gobierno Regional de Apurímac',
                                                                 fontSize: 13,
-                                                                margin: [0, 15, 0, 0], // Ajuste del margen superior
+                                                                margin: [0,
+                                                                    15,
+                                                                    0, 0
+                                                                ], // Ajuste del margen superior
                                                                 alignment: 'center'
                                                             },
                                                             {
                                                                 text: 'Sub Gerencia de Desarrollo Institucional Estadística e Informática',
                                                                 fontSize: 10,
-                                                                margin: [0, 5, 0, 0], // Menor margen superior para moverlo más abajo
+                                                                margin: [0,
+                                                                    5,
+                                                                    0, 0
+                                                                ], // Menor margen superior para moverlo más abajo
                                                                 alignment: 'center'
                                                             }
                                                         ]
-                                                        
+
                                                     },
                                                     {
                                                         image: base64Data2,
                                                         width: 50,
                                                         height: 50,
-                                                        absolutePosition: { x: pageSize.width - 80, y: 10 }
+                                                        absolutePosition: {
+                                                            x: pageSize.width -
+                                                                80,
+                                                            y: 10
+                                                        }
                                                     }
                                                 ],
                                             };
@@ -163,13 +175,13 @@
                                         // Pie de página
                                         doc['footer'] = (currentPage, pageCount) => {
                                             return {
-                                                columns: [
-                                                    {
-                                                        text: 'Página ' + currentPage + ' de ' + pageCount,
-                                                        alignment: 'right',
-                                                        margin: [0, 0, 20, 0]
-                                                    }
-                                                ],
+                                                columns: [{
+                                                    text: 'Página ' +
+                                                        currentPage +
+                                                        ' de ' + pageCount,
+                                                    alignment: 'right',
+                                                    margin: [0, 0, 20, 0]
+                                                }],
                                                 margin: [20, 10]
                                             };
                                         };
@@ -193,9 +205,12 @@
                                         };
 
                                         // Ajusta el padding de las celdas
-                                        doc.content[1].table.body.forEach(function(row) {
+                                        doc.content[1].table.body.forEach(function(
+                                            row) {
                                             row.forEach(function(cell) {
-                                                cell.margin = [5, 5, 5, 5]; // margen de 5 unidades en todos los lados
+                                                cell.margin = [5, 5, 5,
+                                                    5
+                                                ]; // margen de 5 unidades en todos los lados
                                             });
                                         });
                                     }
@@ -210,13 +225,16 @@
                                         $(win.document.body)
                                             .css('font-size', '10pt')
                                             .prepend(
-                                                '<div id="printHeader" style="margin: 30px 0; text-align: center;">' + 
-                                                '<img src="' + base64Data1 + '" style="width:70px; height:70px; position:absolute; left:20px; top:0;"/>' +
-                                                '<div style="display: inline-block;">' + // Contenedor para centrar
+                                                '<div id="printHeader" style="margin: 30px 0; text-align: center;">' +
+                                                '<img src="' + base64Data1 +
+                                                '" style="width:70px; height:70px; position:absolute; left:20px; top:0;"/>' +
+                                                '<div style="display: inline-block;">' +
+                                                // Contenedor para centrar
                                                 '<h3 style="margin: 0; padding: 0;">Gobierno Regional de Apurímac</h3>' +
                                                 '<h4 style="margin: 0; padding: 0;">Sub Gerencia de Desarrollo Institucional Estadística e Informática</h4>' +
                                                 '</div>' +
-                                                '<img src="' + base64Data2 + '" style="width:70px; height:70px; position:absolute; right:20px; top:0;"/>' +
+                                                '<img src="' + base64Data2 +
+                                                '" style="width:70px; height:70px; position:absolute; right:20px; top:0;"/>' +
                                                 '</div>'
                                             );
 
@@ -224,18 +242,25 @@
                                         $(win.document.head).append(
                                             '<style>' +
                                             '@media print {' +
-                                            '  @page { margin: 5mm; }' + // Define el margen de 20mm en la página
-                                            '  body { -webkit-print-color-adjust: exact; }' + // Asegura que los colores se impriman correctamente
+                                            '  @page { margin: 5mm; }' +
+                                            // Define el margen de 20mm en la página
+                                            '  body { -webkit-print-color-adjust: exact; }' +
+                                            // Asegura que los colores se impriman correctamente
                                             '  #printHeader {' +
-                                            '    position: relative;' + // Deja que el encabezado se posicione relativo al flujo de contenido
-                                            '    margin-bottom: 10px;' + // Añade un margen inferior para separarlo del contenido
+                                            '    position: relative;' +
+                                            // Deja que el encabezado se posicione relativo al flujo de contenido
+                                            '    margin-bottom: 10px;' +
+                                            // Añade un margen inferior para separarlo del contenido
                                             '    width: 100%;' +
-                                            '    height: 100px;' + // Ajusta la altura del encabezado si es necesario
+                                            '    height: 100px;' +
+                                            // Ajusta la altura del encabezado si es necesario
                                             '    background-color: white;' +
                                             '    text-align: center;' +
-                                            '    z-index: 1000;' + // Asegura que el encabezado esté encima de otros elementos si es necesario
+                                            '    z-index: 1000;' +
+                                            // Asegura que el encabezado esté encima de otros elementos si es necesario
                                             '  }' +
-                                            '  table { margin-top: 20px; }' + // Añade un margen superior para que no se superponga con el contenido
+                                            '  table { margin-top: 20px; }' +
+                                            // Añade un margen superior para que no se superponga con el contenido
                                             /*'  #printFooter {' +
                                             '    position: fixed;' + // Fijar el pie de página en la parte inferior de cada página
                                             '    bottom: 0;' +
@@ -257,14 +282,17 @@
                                         );*/
 
                                         // Estilo para la tabla
-                                        const table = $(win.document.body).find('table');
-                                        table.addClass('compact').css('font-size', 'inherit');
-                                        
+                                        const table = $(win.document.body).find(
+                                            'table');
+                                        table.addClass('compact').css('font-size',
+                                            'inherit');
+
                                     }
                                 },
                             ],
                             drawCallback: function() {
-                                $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
+                                $(".dataTables_paginate > .pagination").addClass(
+                                    "pagination-rounded");
                             }
                         });
                     }
@@ -311,31 +339,43 @@
 
     function aplicarFiltros() {
         let id_usuario = $('#selectUsuario').val();
-        let fecha_inicio = $('#fecha_inicio').val();
-        let fecha_fin = $('#fecha_fin').val();
-
-        // Validación de fechas
-        if (fecha_inicio && fecha_fin) {
-            let fechaInicioDate = new Date(fecha_inicio);
-            let fechaFinDate = new Date(fecha_fin);
-
-            if (fechaFinDate < fechaInicioDate) {
-                $('#fecha_fin').val('');
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "La fecha de fin no puede ser menor que la fecha de inicio.",
-                    timer: 3000,
-                    timerProgressBar: true,
-                });
-                return;
-            }
+        if (id_usuario === '') {
+            id_usuario = null;
         }
+        let fechaInicioVisual = $('#fecha_inicio').val();
+        let fechaFinVisual = $('#fecha_fin').val();
+
+        let fechaInicio = moment(fechaInicioVisual, 'DD/MM/YYYY', true);
+        let fechaFin = moment(fechaFinVisual, 'DD/MM/YYYY', true);
+
+        if (!fechaInicio.isValid() || !fechaFin.isValid()) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Fechas inválidas',
+                text: 'Seleccione correctamente ambas fechas.'
+            });
+            return;
+        }
+
+        if (fechaFin.isBefore(fechaInicio, 'day')) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Rango de fechas incorrecto',
+                text: 'La fecha de fin no puede ser menor que la fecha de inicio.'
+            });
+            return;
+        }
+
+        let fecha_inicio = fechaInicio.format('YYYY-MM-DD');
+        let fecha_fin = fechaFin.format('YYYY-MM-DD');
 
         $.ajax({
             type: 'POST',
-            url: '{{ route('filtrar.resumen') }}', // Asegúrate de definir esta ruta en web.php
+            url: '{{ route('filtrar.resumen') }}', 
             dataType: 'json',
+            headers: {
+                'Accept': 'application/json'
+            },
             data: {
                 _token: '{{ csrf_token() }}',
                 id_usuario: id_usuario,
@@ -343,10 +383,13 @@
                 fecha_fin: fecha_fin
             },
             beforeSend: function() {
-                // Agregar un spinner de carga antes de recibir la respuesta
-                let spinner =
-                    `<div class="spinner-border text-info ms-auto cargando" role="status" aria-hidden="true"></div>`;
-                $("#contenedorRegistros").html(spinner);
+                $("#contenedorRegistros").html(`
+                    <div class="text-center p-4">
+                        <div class="spinner-border text-info" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>
+                `);
             },
             success: function(data) {
                 if (data.code === 200) {
@@ -355,7 +398,7 @@
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Error al filtrar:', xhr.responseText);
+                //console.error('Error al filtrar:', xhr.responseText);
                 Swal.fire({
                     icon: "error",
                     title: "Error",

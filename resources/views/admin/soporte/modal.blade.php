@@ -27,7 +27,7 @@
                                 <div class="col-xl-6 col-lg-6">
                                     <div class="mb-3 form-group">
                                         <label class="form-label">Nombre de la Incidencia :</label>
-                                        <input type="text" class="form-control" id="nombre" name="nombre"
+                                        <input type="text" class="form-control text-mayus" id="nombre" name="nombre"
                                             placeholder="Nombre del régimen laboral">
                                     </div>
                                 </div>
@@ -67,6 +67,12 @@
 
 <script>
     $(document).ready(function() {
+
+        $(document).on('input', '.text-mayus', function() {
+            let pos = this.selectionStart;
+            this.value = this.value.toUpperCase();
+            this.setSelectionRange(pos, pos);
+        });
 
         $('.agregar_incidencia').click(function() {
             console.log('agregar Incidencia');

@@ -43,11 +43,21 @@
                             </p>
                         </div>
                         <div class="col-xl-3 col-lg-2">
-                            <div class="d-grid">
-                                <button type="button" class="btn btn-success asignar_personal" data-bs-toggle="modal"
-                                    data-bs-target="#modal-asignar-personal"><i class="mdi mdi-account-convert-outline me-2"></i>
-                                    Asignar
-                                </button>
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12">
+                                    <div class="d-grid">
+                                        <button type="button" class="btn btn-success asignar_personal" data-bs-toggle="modal"
+                                            data-bs-target="#modal-asignar-personal"><i class="mdi mdi-account-convert-outline me-2"></i>
+                                            Asignar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 col-lg-12 mt-2">
+                                    <div class="mb-3 form-group">
+                                        <label class="form-label">Año</label>
+                                        <input type="text" class="form-control date" id="tsanio" name="tsanio" placeholder="Año">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -97,29 +107,53 @@
     <!-- end demo js-->
 
     <script>
-         $(document).ready(function() {
+        $(document).ready(function() {
+            //cargarAnios('tsanio');
+            var currentYear = new Date().getFullYear();
+            
+            $('#tsanio').datepicker({
+                format: "yyyy",          
+                viewMode: "years",       
+                minViewMode: "years",    
+                autoclose: true,
+                endDate: currentYear.toString()
+            });
+
+            $('#tsanio').datepicker('setDate', new Date(currentYear, 0, 1));
+
             mostrar_tabla();
+
+            $('#tsanio').on('changeDate', function() {
+                mostrar_tabla();
+            });
 
         });
 
         /*----------- funciones--------------*/
 
         function mostrar_tabla() {
-            //console.log('hola luis');
+            
+            let anio = $('#tsanio').val();
 
             $.ajax({
                 type: 'POST',
                 url: '{{ route('listar.ofiPersonal') }}',
                 dataType: 'json',
+                headers: {
+                    'Accept': 'application/json'
+                },
                 data: {
-                    _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}',
+                    anio: anio
                 },
                 beforeSend: function() {
-
-                    var spinner =
-                        `<div class="spinner-border text-info ms-auto cargando" role="status" aria-hidden="true"></div>`;
-                    $("#contenedorRegistros").html(spinner);
-
+                    $("#contenedorRegistros").html(`
+                        <div class="text-center p-4">
+                            <div class="spinner-border text-info" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                    `);
                 },
                 error: function(data) {
 
@@ -169,6 +203,29 @@
                 responsive: true,
                 scrollX: true
             });
+        }
+
+        function cargarAnios(selectId) {
+            let select = document.getElementById(selectId);
+            if (!select) return;
+
+            let yearActual = new Date().getFullYear();
+            let yearInicio = 2023;
+
+            select.innerHTML = '';
+
+            for (let year = yearActual; year >= yearInicio; year--) {
+                let option = document.createElement('option');
+
+                option.value = year;
+                option.textContent = year;
+
+                if (year === yearActual) {
+                    option.selected = true;
+                }
+
+                select.appendChild(option);
+            }
         }
 
     </script>

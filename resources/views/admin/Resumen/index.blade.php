@@ -47,7 +47,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row mb-2">
                         <label class="form-label">Aplicar Filtros :</label>
                         <div class="col-xl-4 col-lg-4">
                             <select class="form-control" id="selectUsuario" name="id_usuario" data-toggle="select2" title="Usuarios Informáticos">
@@ -58,11 +58,9 @@
                         
                         <div class="col-lg-3">
                             <input type="text" class="form-control date" id="fecha_inicio" name="fecha_inicio" placeholder="Fecha Inicio">
-                            {{-- <input type="text" class="form-control date" id="birthdatepicker" data-toggle="date-picker" data-single-date-picker="true"> --}}
                         </div> <!-- end col -->
                         <div class="col-lg-3">
                             <input type="text" class="form-control date" id="fecha_fin" name="fecha_fin" placeholder="Fecha Fin">
-                            {{-- <input type="text" class="form-control date" id="birthdatepicker" data-toggle="date-picker" data-single-date-picker="true"> --}}
                         </div>
                         
                         <div class="col-xl-2 col-lg-2">
@@ -118,33 +116,74 @@
 
     <script>
         $(document).ready(function() {
-            mostrar_tabla();
-            listar_usuario();
+            let hoy = moment();
+            let primerDia = moment().startOf('month');
 
-            $('#fecha_inicio').datepicker({
+            let configuracionFecha = {
                 singleDatePicker: true,
+                autoUpdateInput: false,
+                autoApply: true,
                 locale: {
-                    format: 'YYYY/MM/DD'
+                    format: 'DD/MM/YYYY',
+                    applyLabel: 'Aplicar',
+                    cancelLabel: 'Cancelar',
+                    daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    monthNames: [
+                        'Enero', 'Febrero', 'Marzo', 'Abril',
+                        'Mayo', 'Junio', 'Julio', 'Agosto',
+                        'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                    ],
+                    firstDay: 1
                 }
+            };
+
+            $('#fecha_inicio').daterangepicker({
+                ...configuracionFecha, startDate: primerDia, endDate: primerDia
             });
 
-            $('#fecha_fin').datepicker({
-                singleDatePicker: true,
-                locale: {
-                    format: 'YYYY/MM/DD'
-                }
+            $('#fecha_fin').daterangepicker({
+                ...configuracionFecha, startDate: hoy, endDate: hoy
             });
 
+            $('#fecha_inicio').val(primerDia.format('DD/MM/YYYY'));
+            $('#fecha_fin').val(hoy.format('DD/MM/YYYY'));
 
-            $('#selectUsuario, #fecha_inicio, #fecha_fin').on('change', aplicarFiltros);
-        });
-
-        $('#limpiarFiltro').click(function() {
-            $('#selectUsuario').val('');
-            $('#fecha_inicio').val('');
-            $('#fecha_fin').val('');
             listar_usuario();
-            mostrar_tabla();
+            aplicarFiltros();
+
+            $('#fecha_inicio, #fecha_fin').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                aplicarFiltros();
+            });
+
+            $('#selectUsuario').on('change', function() {
+                aplicarFiltros();
+            });
+
+            $('#limpiarFiltro').on('click', function() {
+
+                $('#selectUsuario').val('').trigger('change.select2');
+
+                let hoy = moment();
+                let primerDia = moment().startOf('month');
+
+                let pickerInicio = $('#fecha_inicio').data('daterangepicker');
+
+                pickerInicio.setStartDate(primerDia);
+                pickerInicio.setEndDate(primerDia);
+
+                let pickerFin = $('#fecha_fin').data('daterangepicker');
+
+                pickerFin.setStartDate(hoy);
+                pickerFin.setEndDate(hoy);
+
+                $('#fecha_inicio').val(primerDia.format('DD/MM/YYYY'));
+                $('#fecha_fin').val(hoy.format('DD/MM/YYYY'));
+
+                aplicarFiltros();
+
+            });
+            
         });
 
         function mostrar_tabla() {

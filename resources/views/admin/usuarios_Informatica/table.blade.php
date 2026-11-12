@@ -16,12 +16,15 @@
         @foreach ($usuarios as $usuario)
             <tr>
                 <td>{{ $usuario->dni }}</td>
-                <td>{{ $usuario->nombre }}</td>
-                <td>{{ $usuario->apellidoPaterno }} {{ $usuario->apellidoMaterno }}</td>
+                <td style="font-size: 12px">{{ $usuario->nombre }}</td>
+                <td style="font-size: 12px">{{ $usuario->apellidoPaterno }} {{ $usuario->apellidoMaterno }}</td>
                 <td>{{ $usuario->usuario }}</td>
                 <td>{{ $usuario->tipo }}</td>
                 <td>{{ $usuario->telefono }}</td>
-                <td>{{ $usuario->created_at }}</td>
+                <td>
+                    {{ \Carbon\Carbon::parse($usuario->created_at)->format('d/m/Y') }}<br>
+                    <small class="text-muted">{{ \Carbon\Carbon::parse($usuario->created_at)->format('H:i:s') }}</small>
+                </td>
                 <td class="table-action">
                     {{-- <a href="{{ route('ver.usuario',$usuario->id_usuario) }}"class="action-icon text-primary rounded visualizar_usuario"
                         data-id-usuario="{{ $usuario->id_usuario }}">  

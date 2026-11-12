@@ -33,19 +33,19 @@
                                 <div class="col-xl-6 col-lg-6">
                                     <div class="mb-3 form-group">
                                         <label class="form-label">Nombres:</label>
-                                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombres">
+                                        <input type="text" class="form-control text-mayus" id="nombre" name="nombre" placeholder="Nombres">
                                     </div>
                                 </div>
                                 <div class="col-xl-6 col-lg-6">
                                     <div class="mb-3 form-group">
                                         <label class="form-label">Apellido Paterno:</label>
-                                        <input type="text" class="form-control" id="apellidoPaterno" name="apellidoPaterno" placeholder="Apellido Paterno">
+                                        <input type="text" class="form-control text-mayus" id="apellidoPaterno" name="apellidoPaterno" placeholder="Apellido Paterno">
                                     </div>
                                 </div>
                                 <div class="col-xl-6 col-lg-6">
                                     <div class="mb-3 form-group">
                                         <label class="form-label">Apellido Materno:</label>
-                                        <input type="text" class="form-control" id="apellidoMaterno" name="apellidoMaterno" placeholder="Apellido Materno">
+                                        <input type="text" class="form-control text-mayus" id="apellidoMaterno" name="apellidoMaterno" placeholder="Apellido Materno">
                                     </div>
                                 </div>
                                 <div class="col-xl-6 col-lg-6">
@@ -107,6 +107,12 @@
 
 <script>
     $(document).ready(function() {
+
+        $(document).on('input', '.text-mayus', function() {
+            let pos = this.selectionStart;
+            this.value = this.value.toUpperCase();
+            this.setSelectionRange(pos, pos);
+        });
 
         $('select[data-toggle="select2"]').select2({
             dropdownParent: $('#modal-nuevo-usuario'),

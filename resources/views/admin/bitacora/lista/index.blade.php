@@ -62,7 +62,7 @@
                             </p>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-2">
                         <label class="form-label">Aplicar Filtros :</label>
                         <div class="col-xl-4 col-lg-4">
                             <select class="form-control" id="selectUsuario" name="id_usuario" data-toggle="select2" title="Usuarios Informáticos">
@@ -141,44 +141,75 @@
     
     <script>
         $(document).ready(function() {
-            mostrar_tabla();
+            
+            let hoy = moment();
+            let primerDia = moment().startOf('month');
+
+            let configuracionFecha = {
+                singleDatePicker: true,
+                autoUpdateInput: false,
+                autoApply: true,
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    applyLabel: 'Aplicar',
+                    cancelLabel: 'Cancelar',
+                    daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    monthNames: [
+                        'Enero', 'Febrero', 'Marzo', 'Abril',
+                        'Mayo', 'Junio', 'Julio', 'Agosto',
+                        'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                    ],
+                    firstDay: 1
+                }
+            };
+
+            $('#fecha_inicio').daterangepicker({
+                ...configuracionFecha, startDate: primerDia, endDate: primerDia
+            });
+
+            $('#fecha_fin').daterangepicker({
+                ...configuracionFecha, startDate: hoy, endDate: hoy
+            });
+
+            $('#fecha_inicio').val(primerDia.format('DD/MM/YYYY'));
+            $('#fecha_fin').val(hoy.format('DD/MM/YYYY'));
+
             listar_usuario();
-
-            /*$('#selectUsuario').change(function() {
-                let id_usuario = $(this).val();
-                
-                if (id_usuario) {
-                    filtrarPorUsuario(id_usuario); 
-                } else {
-                    mostrar_tabla(); 
-                }
-            });*/
-
-            $('#fecha_inicio').datepicker({
-                singleDatePicker: true,
-                locale: {
-                    format: 'YYYY/MM/DD'
-                }
-            });
-
-            $('#fecha_fin').datepicker({
-                singleDatePicker: true,
-                locale: {
-                    format: 'YYYY/MM/DD'
-                }
-            });
-
-            $('#limpiarFiltro').click(function() {
-                $('#selectUsuario').val('');
-                $('#fecha_inicio').val(''); 
-                $('#fecha_fin').val(''); 
-                listar_usuario();
-                mostrar_tabla();
-            });
-
+            aplicarFiltros();
             actividadUsuario();
 
-            $('#selectUsuario, #fecha_inicio, #fecha_fin').on('change', aplicarFiltros);
+            $('#fecha_inicio, #fecha_fin').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY'));
+                aplicarFiltros();
+            });
+
+            $('#selectUsuario').on('change', function() {
+                aplicarFiltros();
+            });
+
+            $('#limpiarFiltro').on('click', function() {
+
+                $('#selectUsuario').val('').trigger('change.select2');
+
+                let hoy = moment();
+                let primerDia = moment().startOf('month');
+
+                let pickerInicio = $('#fecha_inicio').data('daterangepicker');
+
+                pickerInicio.setStartDate(primerDia);
+                pickerInicio.setEndDate(primerDia);
+
+                let pickerFin = $('#fecha_fin').data('daterangepicker');
+
+                pickerFin.setStartDate(hoy);
+                pickerFin.setEndDate(hoy);
+
+                $('#fecha_inicio').val(primerDia.format('DD/MM/YYYY'));
+                $('#fecha_fin').val(hoy.format('DD/MM/YYYY'));
+
+                aplicarFiltros();
+
+            });
         });
 
         function imgPathToBase64(imagePath, callback) {
@@ -537,31 +568,44 @@
 
         function aplicarFiltros() {
             let id_usuario = $('#selectUsuario').val();
-            let fecha_inicio = $('#fecha_inicio').val();
-            let fecha_fin = $('#fecha_fin').val();
-
-            // Validación de fechas
-            if (fecha_inicio && fecha_fin) {
-                let fechaInicioDate = new Date(fecha_inicio);
-                let fechaFinDate = new Date(fecha_fin);
-
-                if (fechaFinDate < fechaInicioDate) {
-                    $('#fecha_fin').val('');
-                    Swal.fire({
-                        icon: "error",
-                        title: "Oops...",
-                        text: "La fecha de fin no puede ser menor que la fecha de inicio.",
-                        timer: 3000,
-                        timerProgressBar: true,
-                    });
-                    return;
-                }
+            if (id_usuario === '') {
+                id_usuario = null;
             }
+            let fechaInicioVisual = $('#fecha_inicio').val();
+            let fechaFinVisual = $('#fecha_fin').val();
+
+            let fechaInicio = moment(fechaInicioVisual, 'DD/MM/YYYY', true);
+            let fechaFin = moment(fechaFinVisual, 'DD/MM/YYYY', true);
+
+            if (!fechaInicio.isValid() || !fechaFin.isValid()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Fechas inválidas',
+                    text: 'Seleccione correctamente ambas fechas.'
+                });
+                return;
+            }
+
+            if (fechaFin.isBefore(fechaInicio, 'day')) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Rango de fechas incorrecto',
+                    text: 'La fecha de fin no puede ser menor que la fecha de inicio.'
+                });
+                return;
+            }
+
+            let fecha_inicio = fechaInicio.format('YYYY-MM-DD');
+            let fecha_fin = fechaFin.format('YYYY-MM-DD');
+
 
             $.ajax({
                 type: 'POST',
-                url: '{{ route('filtrar.listActividades') }}', // Asegúrate de definir esta ruta en tu web.php
-                dataType: 'json',
+                url: '{{ route('filtrar.listActividades') }}',
+                dataType: 'json', 
+                headers: {
+                    'Accept': 'application/json'
+                },
                 data: {
                     _token: '{{ csrf_token() }}',
                     id_usuario: id_usuario,
@@ -569,8 +613,13 @@
                     fecha_fin: fecha_fin
                 },
                 beforeSend: function() {
-                    var spinner = `<div class="spinner-border text-info ms-auto cargando" role="status" aria-hidden="true"></div>`;
-                    $("#contenedorRegistros").html(spinner);
+                    $("#contenedorRegistros").html(`
+                        <div class="text-center p-4">
+                            <div class="spinner-border text-info" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                    `);
                 },
                 success: function(data) {
                     if (data.code === 200) {
@@ -578,8 +627,16 @@
                         InicializacionTabla();
                     }
                 },
-                error: function(data) {
-                    console.error('Error al filtrar bitácora:', data);
+                error: function(xhr, status, error) {
+                    /*console.error('Error AJAX:', error);
+                    console.error('Código HTTP:', xhr.status);
+                    console.error('Respuesta:', xhr.responseText);*/
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al filtrar actividades',
+                        text: xhr.responseJSON?.message || 'No se pudieron cargar los registros.'
+                    });
+
                 }
             });
         }

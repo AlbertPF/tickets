@@ -218,6 +218,44 @@ table.tablaOfiPersonal td:nth-child(5) {
     width: 20% !important; 
 }
 
+/* ============== Tabla  Asig  ================*/
+
+
+table.tablaAsig th,
+table.tablaAsig td  {
+    /* text-align: center !important;  */
+    white-space: normal !important; 
+    word-wrap: break-word !important;
+}
+
+
+table.tablaAsig th:nth-child(1),
+table.tablaAsig td:nth-child(1) {
+    width: 30% !important; 
+    text-align: justify !important;
+}
+
+table.tablaAsig th:nth-child(2),
+table.tablaAsig td:nth-child(2) {
+    width: 40% !important; 
+    text-align: justify !important;
+}
+
+table.tablaAsig th:nth-child(3),
+table.tablaAsig td:nth-child(3) {
+    width: 10% !important; 
+}
+
+table.tablaAsig th:nth-child(4),
+table.tablaAsig td:nth-child(4) {
+    width: 10% !important; 
+    text-align: justify !important;
+}
+
+table.tablaAsig th:nth-child(5),
+table.tablaAsig td:nth-child(5) {
+    width: 10% !important; 
+}
 
 /* ============== Tabla tablaTicketsAsig  ================*/
 

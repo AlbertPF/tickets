@@ -23,8 +23,8 @@ class PersonalController extends Controller
 
         if ($r->ajax()) {
 
-            $personals = Personal::all();
-            //dd($personals);
+            //$personals = Personal::all();
+            $personals = Personal::orderBy('created_at', 'desc')->get();
 
             $html = view('admin.personal.tabla', compact('personals'))->render();
 

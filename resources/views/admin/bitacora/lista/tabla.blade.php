@@ -20,7 +20,10 @@
                 <td>{{ $listBitacora->usuario->nombre }} {{ $listBitacora->usuario->apellidoPaterno }} {{ $listBitacora->usuario->apellidoMaterno }}</td>
                 <td>{{ $listBitacora->actividad->nombre }}</td>
                 <td>{{ $listBitacora->doc_ref }}</td>
-                <td><strong>Registrado : </strong> <br>{{ $listBitacora->fecha_reg }}</td>
+                <td>
+                    <strong>Registrado : </strong> <br>{{ \Carbon\Carbon::parse($listBitacora->fecha_reg)->format('d/m/Y') }}<br>
+                    <small class="text-muted">{{ \Carbon\Carbon::parse($listBitacora->fecha_reg)->format('H:i:s') }}</small>
+                </td>
                 <td>
                     <h5 style="margin: 0px 0 !important;">
                         <span class="badge {{ $listBitacora->getEstadoClase() }}"> <!-- Usando el método de estado -->
@@ -29,7 +32,10 @@
                     </h5>
                 </td>
                 <td>{{ $listBitacora->doc_aten }}</td>
-                <td> <strong>Atendido : </strong> <br>{{ $listBitacora->fecha_aten }}</td>
+                <td> 
+                    <strong>Atendido : </strong> <br>{{ \Carbon\Carbon::parse($listBitacora->fecha_aten)->format('d/m/Y') }}<br>
+                    <small class="text-muted">{{ \Carbon\Carbon::parse($listBitacora->fecha_aten)->format('H:i:s') }}</small>
+                </td>
                 <td class="table-action">
                     <a href="javascript: void(0);"class="action-icon text-primary rounded ver_actividad" data-id-actividad="{{ $listBitacora->id_bitacora }}">  
                         <i class="mdi mdi-file-eye" title="Visualizar"></i>

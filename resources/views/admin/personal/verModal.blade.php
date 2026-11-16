@@ -234,8 +234,7 @@
                 emptyTable: "No hay datos disponibles en la tabla",
                 processing: "Procesando...",
             },
-            order: [[2, 'desc']],
-            order: [[4, 'desc']],
+            order: [[4, 'asc']],
             drawCallback: function() {
                 $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
             },

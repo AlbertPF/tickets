@@ -1,4 +1,4 @@
-<table id="basic-datatable" class="table table-striped nowrap w-100">
+<table id="basic-datatable" class="table table-striped nowrap w-100 tablaAsig">
     <thead>
         <tr>
             <th>Personal</th>
@@ -12,7 +12,7 @@
     <tbody>
         @foreach ($ofiPersonals as $ofiPersonal)
             <tr>
-                <td>{{ $ofiPersonal->personal->nombre }} {{ $ofiPersonal->personal->apellidoPaterno }}</td>
+                <td>{{ $ofiPersonal->personal->nombre }} {{ $ofiPersonal->personal->apellidoPaterno }} {{ $ofiPersonal->personal->apellidoMaterno }}</td>
                 <td>{{ $ofiPersonal->oficina->nombre }}</td>
                 <td>{{ $ofiPersonal->anio }}</td>
                 <td>
@@ -22,7 +22,10 @@
                         <h5 style="margin: 0px 0 !important;"><span class="badge badge-danger-lighten"><i class="mdi mdi-cancel"></i> Inactivo</span></h5>
                     @endif
                 </td>
-                <td>{{ $ofiPersonal->created_at }}</td>
+                <td>
+                    {{ \Carbon\Carbon::parse($ofiPersonal->created_at)->format('d/m/Y') }}<br>
+                    <small class="text-muted">{{ \Carbon\Carbon::parse($ofiPersonal->created_at)->format('H:i:s') }}</small>
+                </td>
             </tr>
         @endforeach
     </tbody>

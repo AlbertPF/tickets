@@ -160,7 +160,7 @@
                     processing: "Procesando...",
                 },
                 order: [
-                    [1, 'desc']
+                    [6, 'desc']
                 ],
                 drawCallback: function() {
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
@@ -178,7 +178,7 @@
                     text: "¡No podrás revertir esto!",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: 'danger',
+                    confirmButtonColor: '#fa5c7c',
                     confirmButtonText: 'Sí, eliminarlo',
                     cancelButtonText: 'Cancelar',
                     showLoaderOnConfirm: true,

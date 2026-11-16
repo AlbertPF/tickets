@@ -44,11 +44,14 @@
 @forelse($tickets as $ticket)
     <tr>
         {{-- <td>{{ $loop->iteration }}</td> --}}
-        <td>{{ $ticket->id_ticket }}</td>
-        <td>{{ $ticket->oficinaPersonal->personal->nombre }} {{ $ticket->oficinaPersonal->personal->apellidoPaterno }} {{ $ticket->oficinaPersonal->personal->apellidoMaterno }}
+        <td>
+            <span class="fw-bold font-monospace" style="color: #25549c;">{{ $ticket->id_ticket }}</span>
         </td>
-        <td>{{ $ticket->oficinaPersonal->oficina->nombre }}</td>
-        <td>{{ $ticket->soporte->nombre }}</td>
+        <td class="fw-semibold">
+            {{ $ticket->oficinaPersonal->personal->nombre }} {{ $ticket->oficinaPersonal->personal->apellidoPaterno }} {{ $ticket->oficinaPersonal->personal->apellidoMaterno }}
+        </td>
+        <td><span class="text-muted" style="font-size: 12px;">{{ $ticket->oficinaPersonal->oficina->nombre }}</span></td>
+        <td><span class="badge bg-light text-dark border">{{ $ticket->soporte->nombre }}</span></td>
         <td>{{ $ticket->descripcion }}</td>
         <td>
             @switch($ticket->estado)
@@ -76,14 +79,15 @@
                     <span class="badge bg-dark text-white">Desconocido</span>
             @endswitch
         </td>
-        <td>{{ \Carbon\Carbon::parse($ticket->fecha_env)->format('d/m/Y H:i') }}</td>
+        <td class="text-muted" style="font-size: 12px;">
+            {{ \Carbon\Carbon::parse($ticket->fecha_env)->format('d/m/Y H:i') }}
+        </td>
+        
         <td>
             @forelse($ticket->asignaciones as $asignacion)
-                <div>
-                    <strong>{{ $asignacion->usuario->nombre }}  {{ $asignacion->usuario->apellidoPaterno }}  {{ $asignacion->usuario->apellidoMaterno }}</strong><br>
-                    <strong>Descripción:</strong> {{ $asignacion->descripcion }}
-                </div>
+                <span class="text-primary fw-semibold" style="font-size: 12.5px;"><i class="bi bi-person-badge me-1"></i>{{ $asignacion->usuario->nombre }} {{ $asignacion->usuario->apellidoPaterno }} {{ $asignacion->usuario->apellidoMaterno }}</span>
             @empty
+            <span class="text-primary fw-semibold" style="font-size: 12.5px;">No hay asignaciones</span>
                 <div>No hay asignaciones</div>
             @endforelse
         </td>

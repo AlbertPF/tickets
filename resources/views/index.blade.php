@@ -13,7 +13,6 @@
 
     <script src="{{ url('assets/js/vendor/jquery/jquery.min.js') }}"></script>
 
-
     <!-- Vendor CSS Files -->
     <link href="{{ url('portal/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url('portal/assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
@@ -53,6 +52,13 @@
     <script src="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.js.iife.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.css" />
 
+    <!-- Librerías de Animación y Dinamismo -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+
     <style>
         .dni-input {
             padding-right: 2.5rem;
@@ -78,6 +84,57 @@
 
         .input-group .input-group-text i {
             color: #bdbaba;
+        }
+
+        :root {
+            --gore-blue: #25549c;
+        }
+
+        /* Animación de flotación para ilustraciones del carrusel */
+        @keyframes floatHero {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .floating-illustration {
+            animation: floatHero 4.8s ease-in-out infinite;
+        }
+
+        /* Quick Search Box en Hero */
+        .quick-track-box {
+            max-width: 580px;
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 50px;
+            padding: 6px 6px 6px 20px;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.07);
+            transition: all 0.25s ease;
+        }
+
+        .quick-track-box:focus-within {
+            border-color: var(--gore-blue);
+            box-shadow: 0 0 0 4px rgba(37, 84, 156, 0.12);
+        }
+
+        /* Swiper Hero */
+        .heroSwiper {
+            max-width: 680px;
+            width: 100%;
+            padding-bottom: 38px !important;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: var(--gore-blue) !important;
+            width: 24px !important;
+            border-radius: 99px !important;
         }
     </style>
 
@@ -116,9 +173,18 @@
             </div>
             <div class="container text-center">
                 <div class="d-flex flex-column justify-content-center align-items-center">
-                    <h1 data-aos="fade-up">Bienvenidos a <span>Asistencia Técnica</span></h1>
+
+                    <div
+                        class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/80 shadow-xs text-xs font-semibold mb-6">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        <span>Mesa de Ayuda Digital</span>
+                    </div>
+
+                    <h1 data-aos="fade-up">Bienvenidos a <span id="typed-hero"></span></h1>
                     <p data-aos="fade-up" data-aos-delay="100">Soluciones rápidas y efectivas para sus requerimientos
-                        técnicos en el GORE Apurímac<br></p>
+                        técnicos en el <strong>GORE Apurímac</strong><br>
+                    </p>
+
                     <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
                         <a href="#incidencias" class="btn-get-started">Reportar Incidencia</a>
                         <a href="../Manuales/Manual del Personal.pdf" target="_blank"
@@ -129,8 +195,160 @@
                             class="glightbox btn-watch-video d-flex align-items-center"><i
                                 class="bi bi-play-circle"></i><span>Ver Tutorial</span></a> --}}
                     </div>
-                    <img src="{{ url('portal/assets/img/hero-services-img.webp') }}" class="img-fluid hero-img"
-                        alt="" data-aos="zoom-out" data-aos-delay="300">
+
+                    <!-- CARRUSEL SWIPER DE ILUSTRACIONES DINÁMICAS -->
+                    <div class="swiper heroSwiper" data-aos="zoom-out" data-aos-delay="250">
+                        <div class="swiper-wrapper">
+
+                            <!-- Slide 1: Atención 24/7 -->
+                            <div class="swiper-slide">
+                                <div class="floating-illustration px-3">
+                                    <svg viewBox="0 0 500 320" class="w-100" style="max-width: 830px; margin: 0 auto;"
+                                        fill="none">
+                                        <circle cx="250" cy="165" r="130" fill="#EBF2FC" />
+                                        <circle cx="250" cy="165" r="98" fill="#DCE8F8"
+                                            fill-opacity="0.6" />
+                                        <!-- Burbujas -->
+                                        <rect x="75" y="55" width="90" height="46" rx="12"
+                                            fill="#FBBF24" />
+                                        <rect x="90" y="70" width="55" height="5" rx="2.5"
+                                            fill="white" />
+                                        <rect x="90" y="81" width="38" height="5" rx="2.5"
+                                            fill="white" fill-opacity="0.8" />
+
+                                        <circle cx="390" cy="95" r="28" fill="#38BDF8" />
+                                        <text x="390" y="101" text-anchor="middle" fill="white" font-weight="800"
+                                            font-size="16">24/7</text>
+
+                                        <rect x="345" y="155" width="76" height="48" rx="12"
+                                            fill="#F59E0B" />
+                                        <rect x="364" y="168" width="38" height="22" rx="4"
+                                            fill="white" />
+                                        <path d="M366 170L383 181L400 170" stroke="#F59E0B" stroke-width="2.5"
+                                            stroke-linecap="round" />
+
+                                        <!-- Agente -->
+                                        <path d="M180 280C180 230 208 202 250 202C292 202 320 230 320 280H180Z"
+                                            fill="#3B82F6" />
+                                        <path d="M226 202L250 238L274 202H226Z" fill="white" />
+                                        <rect x="239" y="175" width="22" height="28" rx="9"
+                                            fill="#FDBA74" />
+                                        <circle cx="250" cy="145" r="38" fill="#FED7AA" />
+                                        <path
+                                            d="M210 145C210 116 227 100 250 100C273 100 290 116 290 145C290 165 284 184 278 190C278 162 273 134 250 134C227 134 222 162 222 190C216 184 210 165 210 145Z"
+                                            fill="#475569" />
+                                        <circle cx="237" cy="145" r="3" fill="#1E293B" />
+                                        <circle cx="263" cy="145" r="3" fill="#1E293B" />
+                                        <path d="M242 157C245 162 255 162 258 157" stroke="#1E293B" stroke-width="2.5"
+                                            stroke-linecap="round" />
+                                        <path d="M208 145C208 120 226 100 250 100C274 100 292 120 292 145"
+                                            stroke="#1E3A8A" stroke-width="5" stroke-linecap="round" />
+                                        <rect x="201" y="135" width="11" height="24" rx="5"
+                                            fill="#2563EB" />
+                                        <rect x="288" y="135" width="11" height="24" rx="5"
+                                            fill="#2563EB" />
+
+                                        <!-- Laptop -->
+                                        <rect x="188" y="210" width="124" height="70" rx="9"
+                                            fill="#F8FAFC" stroke="#CBD5E1" stroke-width="3" />
+                                        <circle cx="250" cy="245" r="10" fill="#DBEAFE" />
+                                        <circle cx="250" cy="245" r="4.5" fill="#25549C" />
+                                        <line x1="85" y1="281" x2="415" y2="281"
+                                            stroke="#1E3A8A" stroke-width="4" stroke-linecap="round" />
+                                    </svg>
+                                </div>
+                                <span class="badge rounded-pill px-3 py-2 fw-semibold"
+                                    style="background: #ebf2fc; color: #25549c;">
+                                    Atención Personalizada y Mesa de Ayuda en Línea
+                                </span>
+                            </div>
+
+                            <!-- Slide 2: Sistemas SIGA / SIAF -->
+                            <div class="swiper-slide">
+                                <div class="floating-illustration px-3">
+                                    <svg viewBox="0 0 500 320" class="w-100"
+                                        style="max-width: 830px; margin: 0 auto;" fill="none">
+                                        <circle cx="250" cy="165" r="130" fill="#ECFDF5" />
+                                        <rect x="120" y="70" width="260" height="175" rx="15"
+                                            fill="white" stroke="#CBD5E1" stroke-width="3" />
+                                        <path
+                                            d="M120 85C120 76.7 126.7 70 135 70H365C373.3 70 380 76.7 380 85V98H120V85Z"
+                                            fill="#25549C" />
+                                        <text x="250" y="88" text-anchor="middle" fill="white" font-weight="700"
+                                            font-size="11">PLATAFORMA SIGA / SIAF - GORE</text>
+                                        <rect x="142" y="116" width="100" height="50" rx="8"
+                                            fill="#EFF6FF" />
+                                        <rect x="154" y="128" width="48" height="6" rx="3"
+                                            fill="#25549C" />
+                                        <rect x="154" y="142" width="72" height="6" rx="3"
+                                            fill="#93C5FD" />
+                                        <rect x="258" y="116" width="100" height="50" rx="8"
+                                            fill="#ECFDF5" />
+                                        <circle cx="284" cy="141" r="14" fill="#10B981" />
+                                        <path d="M278 141L282 145L290 137" stroke="white" stroke-width="2.5"
+                                            stroke-linecap="round" />
+                                        <rect x="142" y="180" width="216" height="44" rx="8"
+                                            fill="#F8FAFC" stroke="#E2E8F0" stroke-width="2" />
+                                        <rect x="295" y="191" width="50" height="22" rx="6"
+                                            fill="#10B981" />
+                                        <text x="320" y="205" text-anchor="middle" fill="white" font-weight="700"
+                                            font-size="9.5">ACTIVO</text>
+                                        <line x1="85" y1="281" x2="415" y2="281"
+                                            stroke="#10B981" stroke-width="4" stroke-linecap="round" />
+                                    </svg>
+                                </div>
+                                <span class="badge rounded-pill px-3 py-2 fw-semibold bg-success-subtle text-success">
+                                    Soporte Especializado en SIGA, SIAF y Firma Digital
+                                </span>
+                            </div>
+
+                            <!-- Slide 3: Redes e Infraestructura -->
+                            <div class="swiper-slide">
+                                <div class="floating-illustration px-3">
+                                    <svg viewBox="0 0 500 320" class="w-100"
+                                        style="max-width: 830px; margin: 0 auto;" fill="none">
+                                        <circle cx="250" cy="165" r="130" fill="#FEF3C7"
+                                            fill-opacity="0.65" />
+                                        <rect x="200" y="65" width="100" height="135" rx="14"
+                                            fill="#1E293B" />
+                                        <rect x="214" y="82" width="72" height="22" rx="5"
+                                            fill="#334155" />
+                                        <circle cx="226" cy="93" r="4" fill="#10B981" />
+                                        <rect x="214" y="116" width="72" height="22" rx="5"
+                                            fill="#334155" />
+                                        <circle cx="226" cy="127" r="4" fill="#38BDF8" />
+                                        <rect x="214" y="150" width="72" height="22" rx="5"
+                                            fill="#334155" />
+                                        <circle cx="226" cy="161" r="4" fill="#F59E0B" />
+                                        <path d="M200 135H135V195" stroke="#25549C" stroke-width="3"
+                                            stroke-dasharray="5 4" />
+                                        <path d="M300 135H365V195" stroke="#25549C" stroke-width="3"
+                                            stroke-dasharray="5 4" />
+                                        <rect x="98" y="195" width="74" height="48" rx="8"
+                                            fill="white" stroke="#25549C" stroke-width="3" />
+                                        <rect x="328" y="195" width="74" height="48" rx="8"
+                                            fill="white" stroke="#25549C" stroke-width="3" />
+                                        <circle cx="250" cy="245" r="20" fill="#25549C" />
+                                        <path d="M240 243C246 238 254 238 260 243" stroke="white" stroke-width="2.5"
+                                            stroke-linecap="round" />
+                                        <circle cx="250" cy="251" r="2.5" fill="white" />
+                                        <line x1="85" y1="281" x2="415" y2="281"
+                                            stroke="#F59E0B" stroke-width="4" stroke-linecap="round" />
+                                    </svg>
+                                </div>
+                                <span
+                                    class="badge rounded-pill px-3 py-2 fw-semibold bg-warning-subtle text-warning-emphasis">
+                                    Conectividad, Redes y Mantenimiento de Equipos
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+
+
+                    {{-- <img src="{{ url('portal/assets/img/hero-services-img.webp') }}" class="img-fluid hero-img"
+                        alt="" data-aos="zoom-out" data-aos-delay="300"> --}}
                 </div>
             </div>
 
@@ -195,7 +413,7 @@
 
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
-                <h2>Registrar Incidencias</h2>
+                <h2>Registrar <span style="color: #25549c;">Incidencias</span></h2>
                 <p>Registre sus incidencias de manera fácil y rápida a través de nuestro sistema, asegurando que cada
                     problema sea atendido por nuestro equipo de soporte técnico para una solución efectiva.</p>
             </div><!-- End Section Title -->
@@ -209,6 +427,11 @@
                         <form id="guardarTicket" class="php-form" style="border-radius: 15px"
                             enctype="multipart/form-data">
                             @csrf
+                            <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                <span class="fw-bold text-dark" style="font-size: 15px;">
+                                    <i class="bi bi-ticket-perforated text-primary me-1"></i> Nuevo Ticket de Atención
+                                </span>
+                            </div>
                             <div class="row gy-4">
 
                                 <!-- DNI input -->
@@ -277,21 +500,43 @@
                                 </div>
 
                                 <div class="col-md-12 text-center">
-                                    <button type="submit">Registrar Incidencia</button>
+                                    <button type="submit">
+                                        <i class="bi bi-send-check me-1"></i> Registrar Incidencia
+                                    </button>
                                 </div>
 
                             </div>
                         </form>
                     </div>
 
-                    <div class="col-lg-6 d-flex align-items-center" data-aos="fade-up" data-aos-delay="300">
-                        <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
+                    <div class="col-lg-6 d-flex align-items-center justify-content-center" data-aos="fade-up"
+                        data-aos-delay="300">
+                        <!-- Quitamos tab-content y usamos un div normal -->
+                        <div class="w-100 p-4 rounded-4 bg-light border text-center" style="max-width: 500px;">
 
-                            <div class="tab-pane fade active show" id="features-tab-1">
-                                <img src="{{ url('portal/assets/img/Soporte-Tecnico.jpg') }}" alt=""
-                                    class="img-fluid" style="border-radius: 15px;">
-                            </div>
+                            <!-- Ilustración Moderna Soporte Técnico -->
+                            <svg viewBox="0 0 460 310" class="w-100 mx-auto d-block" style="max-width: 400px;"
+                                fill="none">
+                                <rect x="30" y="25" width="400" height="260" rx="24" fill="#EBF2FC" />
+                                <rect x="75" y="55" width="310" height="190" rx="16" fill="white"
+                                    stroke="#CBD5E1" stroke-width="2.5" />
+                                <circle cx="145" cy="135" r="34" fill="#25549C" />
+                                <path d="M133 135L141 143L158 126" stroke="white" stroke-width="4"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                                <rect x="200" y="108" width="150" height="12" rx="6" fill="#1E293B" />
+                                <rect x="200" y="130" width="120" height="9" rx="4.5" fill="#94A3B8" />
+                                <rect x="200" y="148" width="95" height="9" rx="4.5" fill="#CBD5E1" />
+                                <rect x="105" y="192" width="250" height="32" rx="10" fill="#ECFDF5" />
+                                <circle cx="125" cy="208" r="6" fill="#10B981" />
+                                <text x="140" y="212" fill="#065F46" font-weight="700" font-size="11">Asignación al
+                                    especialista de turno</text>
+                            </svg>
 
+                            <h5 class="fw-bold text-dark mt-3 mb-1">Atención Ágil y Trazable</h5>
+                            <p class="text-muted mb-0 mx-auto" style="font-size: 13.5px; max-width: 90%;">
+                                Al registrar tu ticket recibirás un código único (ej. <strong>tik0000</strong>) para
+                                hacer seguimiento paso a paso hasta su solución.
+                            </p>
                         </div>
                     </div>
 
@@ -306,29 +551,35 @@
 
             <!-- Section Title -->
             <div class="container section-title" data-aos="fade-up">
-                <h2>Seguimiento de Tickets</h2>
+                <h2>Seguimiento de <span style="color: #25549c;">Tickets</span></h2>
                 <p>Ingresa tu DNI para consultar el estado de tus tickets generados.</p>
             </div><!-- End Section Title -->
 
             <div class="container">
                 <div class="row gy-12">
                     <div class="col-lg-12" data-aos="zoom-in" data-aos-delay="200">
-                        <div class="pricing-item featured">
+                        <div class="pricing-item featured" style="background: #ffffff; border-radius: 20px; padding: 32px; border: 1px solid #e2e8f0; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);">
                             <div class="tracking-item featured">
-                                <h3>Consultar estado de ticket</h3>
+                                {{-- <h3>Consultar estado de ticket</h3> --}}
                                 {{-- <p class="description">Ingresa tu número de DNI para consultar el estado de tus tickets.</p> --}}
+
+                                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                                    <h3 class="mb-0"><i class="bi bi-search text-primary me-2"></i>Consultar estado
+                                        de ticket</h3>
+                                </div>
 
                                 <!-- Formulario para seguimiento de tickets -->
                                 <form id="ConsultarTicket">
                                     @csrf
-                                    <div class="row">
+                                    <div class="row g-2">
                                         <div class="col-md-9">
                                             <input type="text" name="buscar_cons" id="buscar_cons"
-                                                class="form-control" placeholder="Ingrese DNI o Código de Ticket">
+                                                class="form-control" style="height: 44px; border-radius: 10px;"
+                                                placeholder="Ingrese DNI o Código de Ticket">
                                         </div>
                                         <div class="col-md-3">
-                                            <button type="submit" class="cta-btn w-100"
-                                                style="padding: 5px 35px; margin-top: 0px;">Consultar</button>
+                                            <button type="submit" class="cta-btn w-100" style="margin-top: 0px;">
+                                                <i class="bi bi-search me-1"></i> Consultar</button>
                                             {{-- <button type="submit" class="cta-btn">Consultar</button> --}}
                                         </div>
                                     </div>
@@ -450,6 +701,10 @@
 
     <script src="{{ url('assets/js/vendor/jquery-validation/jquery.validate.min.js') }}"></script>
 
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script src="{{ url('assets/js/portal.js') }}"></script>
 
     <script>
         document.getElementById('dni').addEventListener('keypress', function(e) {
@@ -1132,7 +1387,7 @@
                     $(".dataTables_paginate > .pagination").addClass("pagination-rounded");
                 },
                 responsive: true,
-                destroy: true, // Permite la reinicialización del DataTable
+                destroy: true,
                 scrollX: true
             });
         }
